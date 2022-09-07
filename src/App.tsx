@@ -1,9 +1,10 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+import './App.scss';
+import { Layout } from './components';
 
 const App = () => {
-  return <>PLACEHOLDER</>;
+  return <Layout>Hello World!</Layout>;
 };
 
 export default App;

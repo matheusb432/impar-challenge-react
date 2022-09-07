@@ -1,4 +1,4 @@
-import styles from './CardForm.module.scss';
+import styles from './style.module.scss';
 
 interface CardFormProps {
   isEditing: boolean;
