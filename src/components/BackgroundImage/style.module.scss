@@ -1,0 +1,10 @@
+@use 'src/styles/_variables.scss' as vars;
+
+.background-image {
+  background-image: url('../../../public/images/people-background.png');
+  height: 198px;
+  background-color: #ceb6a9;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+}

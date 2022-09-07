@@ -1,3 +1,5 @@
+@use 'variables' as vars;
+
 @import url('https://use.typekit.net/boa7mju.css');
 
 * {
@@ -10,6 +12,7 @@ body {
     'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: vars.$bg-primary-color;
 }
 
 code {

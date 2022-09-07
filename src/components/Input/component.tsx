@@ -1,12 +1,20 @@
-import { ChangeEvent, forwardRef, useImperativeHandle, useState } from 'react';
+import {
+  ChangeEvent,
+  forwardRef,
+  HTMLInputTypeAttribute,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import { useInputRef } from '../../hooks';
 
 import styles from './style.module.scss';
 
 interface InputProps {
-  type: string;
   id: string;
-  label: string;
+  label?: string;
+  placeholder?: string;
+  className?: string;
+  type?: HTMLInputTypeAttribute;
   isInvalid?: boolean;
   value?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -19,7 +27,16 @@ export interface InputForwardRef {
 
 const Input = forwardRef<InputForwardRef, InputProps>(
   (
-    { type, id, label, onChange, onBlur, isInvalid = false }: InputProps,
+    {
+      type = 'text',
+      className,
+      placeholder,
+      id,
+      label,
+      onChange,
+      onBlur,
+      isInvalid = false,
+    }: InputProps,
     ref
   ) => {
     const [touched, setTouched] = useState(false);
@@ -45,14 +62,17 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       <div
         className={`${styles.control} ${
           touched && isInvalid ? styles.invalid : ''
-        }`}>
-        <label htmlFor={id}>{label}</label>
+        }`}
+      >
+        {!!label?.trim() && <label htmlFor={id}>{label}</label>}
         <input
           ref={inputRef}
           type={type}
           id={id}
           onBlur={handleBlur}
           onChange={onChange}
+          placeholder={placeholder ?? ''}
+          className={className ?? ''}
         />
       </div>
     );

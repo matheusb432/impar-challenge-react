@@ -1,10 +1,18 @@
 import React from 'react';
 
-import './App.scss';
-import { Layout } from './components';
+import './assets/styles/styles.scss';
+import { Layout, SearchInput } from './components';
+import { BackgroundImage } from './components/BackgroundImage';
 
 const App = () => {
-  return <Layout>Hello World!</Layout>;
+  return (
+    <Layout>
+      <BackgroundImage>
+        <SearchInput id="searchCards" placeholder="Digite aqui sua busca..." />
+      </BackgroundImage>
+      Hello World!
+    </Layout>
+  );
 };
 
 export default App;
