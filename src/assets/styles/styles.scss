@@ -1,5 +1,4 @@
-@use 'variables' as vars;
-
+@use './_variables.scss' as vars;
 @import url('https://use.typekit.net/boa7mju.css');
 
 * {
@@ -18,4 +17,9 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+button,
+input {
+  font-family: inherit;
 }

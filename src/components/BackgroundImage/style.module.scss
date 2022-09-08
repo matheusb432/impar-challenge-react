@@ -1,4 +1,4 @@
-@use 'src/styles/_variables.scss' as vars;
+@use 'src/assets/styles/_variables.scss' as vars;
 
 .background-image {
   background-image: url('../../../public/images/people-background.png');
@@ -7,4 +7,5 @@
   background-position: center;
   background-size: cover;
   position: relative;
+  overflow: hidden;
 }

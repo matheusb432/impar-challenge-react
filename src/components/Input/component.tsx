@@ -2,6 +2,7 @@ import {
   ChangeEvent,
   forwardRef,
   HTMLInputTypeAttribute,
+  ReactNode,
   useImperativeHandle,
   useState,
 } from 'react';
@@ -10,6 +11,7 @@ import { useInputRef } from '../../hooks';
 import styles from './style.module.scss';
 
 interface InputProps {
+  children?: ReactNode;
   id: string;
   label?: string;
   placeholder?: string;
@@ -28,6 +30,7 @@ export interface InputForwardRef {
 const Input = forwardRef<InputForwardRef, InputProps>(
   (
     {
+      children,
       type = 'text',
       className,
       placeholder,
@@ -62,7 +65,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       <div
         className={`${styles.control} ${
           touched && isInvalid ? styles.invalid : ''
-        }`}
+        } ${!!className && className}`}
       >
         {!!label?.trim() && <label htmlFor={id}>{label}</label>}
         <input
@@ -72,8 +75,8 @@ const Input = forwardRef<InputForwardRef, InputProps>(
           onBlur={handleBlur}
           onChange={onChange}
           placeholder={placeholder ?? ''}
-          className={className ?? ''}
-        />
+        ></input>
+        {children}
       </div>
     );
   }

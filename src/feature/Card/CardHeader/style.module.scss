@@ -1,0 +1,13 @@
+@use 'src/assets/styles/_variables.scss' as vars;
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 36px;
+
+  h2 {
+    font-size: 32px;
+    color: vars.$primary-color;
+    margin: 0;
+  }
+}

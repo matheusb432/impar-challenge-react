@@ -1,0 +1,37 @@
+@use 'src/assets/styles/_variables.scss' as vars;
+
+.button {
+  height: 48px;
+  width: 172px;
+  white-space: nowrap;
+  background-color: vars.$highlight-color;
+  color: white;
+  padding: 12px 42px;
+  cursor: pointer;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0px 3px 6px #92207242;
+  transition: all 0.15s ease-out;
+
+  &:hover,
+  &:active {
+    background-color: darken(vars.$highlight-color, 10%);
+  }
+
+  &:active {
+    background-color: darken(vars.$highlight-color, 15%);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    background: #ccc;
+    color: #000;
+    opacity: 0.75;
+    box-shadow: 0px 3px 6px #00000042;
+    cursor: not-allowed;
+  }
+}

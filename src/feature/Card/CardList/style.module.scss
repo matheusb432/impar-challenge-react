@@ -1,0 +1,7 @@
+@use 'src/assets/styles/_variables.scss' as vars;
+
+.card-list {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  justify-content: space-evenly;
+}

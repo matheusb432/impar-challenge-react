@@ -1,8 +1,11 @@
+@use 'src/assets/styles/_variables.scss' as vars;
+
 .control {
   margin: 1rem 0;
   display: flex;
   align-items: stretch;
   flex-direction: column;
+  position: relative;
 
   label,
   input {
@@ -18,21 +21,19 @@
 
   input {
     flex: 3;
-    font: inherit;
     padding: 0.35rem 0.35rem;
     border-radius: 6px;
     border: 1px solid #ccc;
-
+    transition: all 0.2s ease-out;
     &:focus {
       outline: none;
-      border-color: #4f005f;
-      background: #f6dbfc;
+      border-width: 1px;
+      border-color: vars.$primary-color;
     }
   }
 
   &.invalid input {
-    border-color: red;
-    background: #fbdada;
+    border-color: vars.$danger-color;
   }
 
   @media (min-width: 768px) {

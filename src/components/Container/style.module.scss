@@ -1,0 +1,6 @@
+@use 'src/assets/styles/_variables.scss' as vars;
+
+.container {
+  //   padding: 40px 168px;
+  padding: vars.$container-p-y vars.$container-p-x;
+}
