@@ -1,5 +1,3 @@
-@use 'src/assets/styles/_variables.scss' as vars;
-
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -7,7 +5,8 @@
 
   h2 {
     font-size: 32px;
-    color: vars.$primary-color;
+    font-weight: normal;
+    color: var(--primary-color);
     margin: 0;
   }
 }

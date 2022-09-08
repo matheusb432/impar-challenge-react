@@ -1,4 +1,4 @@
-@use './_variables.scss' as vars;
+@use 'variables';
 @import url('https://use.typekit.net/boa7mju.css');
 
 * {
@@ -11,7 +11,7 @@ body {
     'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: vars.$bg-primary-color;
+  background-color: var(--bg-primary-color);
 }
 
 code {

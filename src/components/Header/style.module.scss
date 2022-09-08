@@ -1,15 +1,12 @@
-@use 'src/assets/styles/_variables.scss' as vars;
-
 .nav {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 64px;
   background-image: linear-gradient(
     to right,
-    vars.$primary-color,
-    vars.$secondary-color
+    var(--primary-color),
+    var(--secondary-color)
   );
 
   header {

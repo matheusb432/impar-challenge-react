@@ -2,7 +2,7 @@
 
 .card-search-input {
   margin: 0;
-  margin-top: calc(80px - vars.$container-p-y);
+  margin-top: calc(80px - var(container-p-y));
 
   input {
     padding: 24px 28px;

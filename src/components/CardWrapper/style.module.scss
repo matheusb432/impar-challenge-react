@@ -1,0 +1,41 @@
+@use 'src/assets/styles/_mixins.scss' as mxs;
+
+$card-h: 268px;
+$actions-h: 48px;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  border-radius: 8px 8px 0 0;
+  width: var(--card-w);
+  height: calc($card-h - $actions-h);
+  background-color: #fff;
+  padding: 20px;
+
+  .image {
+    @include mxs.flex-center;
+    width: 95px;
+    height: 95px;
+    border-radius: 100%;
+    background-color: var(--bg-primary-color);
+  }
+}
+
+.actions {
+  @include mxs.flex-center;
+  justify-content: space-between;
+  box-shadow: inset 0px 3px 6px #0000000f;
+  border-radius: 0 0 8px 8px;
+  width: 100%;
+  height: $actions-h;
+  padding: 18px 24px;
+  background: #fff;
+}
+
+.vertical-dash {
+  border: 1px solid #f6f4f6;
+  width: 100%;
+}

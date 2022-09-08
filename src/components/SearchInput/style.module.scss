@@ -1,3 +1,5 @@
+@use 'src/assets/styles/_mixins.scss' as mxs;
+
 .search-input button {
   position: absolute;
   right: 32px;
@@ -5,6 +7,5 @@
 }
 
 .search-icon {
-  width: 40px;
-  height: 40px;
+  @include mxs.size(40px);
 }

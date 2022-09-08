@@ -10,15 +10,20 @@ interface CardWrapperProps {
 
 const CardWrapper = ({ children, image, actions }: CardWrapperProps) => {
   return (
-    <article>
-      {image ? (
-        'PLACEHOLDER'
-      ) : (
-        <Image src={'images/fist-icon.svg'} alt="Fist icon" />
-      )}
-      {children}
-      {actions && <div>{actions}</div>}
-    </article>
+    <>
+      <article className={styles.card}>
+        <div className={styles.image}>
+          {image ? (
+            'PLACEHOLDER'
+          ) : (
+            <Image src={'images/fist-icon.svg'} alt="Fist icon" />
+          )}
+        </div>
+        <div className={styles['vertical-dash']}></div>
+        {children}
+      </article>
+      {actions && <div className={styles.actions}>{actions}</div>}
+    </>
   );
 };
 

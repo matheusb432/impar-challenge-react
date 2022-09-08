@@ -1,7 +1,9 @@
-@use 'src/assets/styles/_variables.scss' as vars;
+@use 'src/assets/styles/_mixins.scss' as mxs;
 
 .card-list {
   display: grid;
-  grid-template-columns: auto auto auto auto;
-  justify-content: space-evenly;
+  grid-template-columns: repeat(auto-fit, min(calc(var(--card-w))));
+  justify-content: space-between;
+  row-gap: 38px;
+  @include mxs.reset-list;
 }

@@ -1,4 +1,5 @@
-import { CardWrapper } from '../../../components';
+import { PencilIcon, TrashIcon } from '../../../assets/icons';
+import { CardWrapper, IconButton } from '../../../components';
 import { CardModel } from '../types';
 import styles from './style.module.scss';
 
@@ -7,10 +8,34 @@ interface CardItemProps {
 }
 
 const CardItem = ({ card }: CardItemProps) => {
-  const onEdit = () => {};
+  const onEdit = () => {
+    // TODO open edit form with selected card
+  };
 
   const onDelete = () => {};
-  return <CardWrapper>Lorem ipsum dolor sit amet consectetur</CardWrapper>;
+  return (
+    <li>
+      <CardWrapper
+        actions={
+          <>
+            <IconButton
+              icon={<TrashIcon className={styles['remove-icon']} />}
+              onClick={onDelete}
+              label="Excluir"
+            />
+            <div className={styles.dash}></div>
+            <IconButton
+              icon={<PencilIcon className={styles['edit-icon']} />}
+              onClick={onEdit}
+              label="Editar"
+            />
+          </>
+        }
+      >
+        {card.name}
+      </CardWrapper>
+    </li>
+  );
 };
 
 export default CardItem;

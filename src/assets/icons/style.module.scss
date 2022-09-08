@@ -1,4 +1,7 @@
+@use '../styles/mixins' as mxs;
+
 .icon {
-  width: 24px;
-  height: 24px;
+  @include mxs.size(24px);
+  // width: 24px;
+  // height: 24px;
 }

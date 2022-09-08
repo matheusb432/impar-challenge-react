@@ -12,7 +12,7 @@ const Button = ({
   children,
   onClick,
   className,
-  disabled = true,
+  disabled = false,
   type = 'submit',
 }: ButtonProps) => {
   return (

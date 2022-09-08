@@ -1,4 +1,23 @@
+@use 'src/assets/styles/_mixins.scss' as mxs;
+
 .icon-button {
   all: unset;
   cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  transition: all 0.25s ease-out;
+  filter: brightness(1);
+
+  div {
+    margin-left: 12px;
+  }
+
+  &:hover,
+  &:active {
+    filter: brightness(0.7);
+  }
+
+  &:active {
+    filter: brightness(0.5);
+  }
 }
