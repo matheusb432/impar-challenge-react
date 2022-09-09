@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react';
 import styles from './style.module.scss';
 
 interface ButtonProps {
@@ -5,6 +6,8 @@ interface ButtonProps {
   disabled?: boolean;
   type?: 'button' | 'submit';
   className?: string;
+  style?: CSSProperties;
+  outlineStyle?: boolean;
   onClick?: () => void;
 }
 
@@ -12,14 +15,19 @@ const Button = ({
   children,
   onClick,
   className,
+  style,
+  outlineStyle = false,
   disabled = false,
-  type = 'submit',
+  type = 'button',
 }: ButtonProps) => {
   return (
     <button
       type={type}
       disabled={disabled}
-      className={`${styles.button} ${className ?? ''}`}
+      style={style}
+      className={`${styles.button} ${className ?? ''} ${
+        outlineStyle ? styles.outline : ''
+      }`}
       onClick={onClick}
     >
       {children}

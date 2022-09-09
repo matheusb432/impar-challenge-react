@@ -4,25 +4,25 @@ $highlight-color: #e76316;
 
 .button {
   height: 48px;
-  width: 172px;
   white-space: nowrap;
   background-color: var(--highlight-color);
   color: white;
-  padding: 12px 42px;
+  padding: 12px 40px;
   cursor: pointer;
+  font-weight: bold;
   font-size: 18px;
-  border: none;
+  border: 1px solid var(--highlight-color);
   border-radius: 8px;
   @include mxs.add-shadow(#92207242);
   transition: all 0.15s ease-out;
 
   &:hover,
   &:active {
-    background-color: darken($highlight-color, 10%);
+    filter: brightness(0.85);
   }
 
   &:active {
-    background-color: darken($highlight-color, 15%);
+    filter: brightness(0.7);
   }
 
   &:focus {
@@ -30,10 +30,16 @@ $highlight-color: #e76316;
   }
 
   &:disabled {
+    @include mxs.add-shadow(#00000042);
     background: #ccc;
     color: #000;
     opacity: 0.75;
-    @include mxs.add-shadow(#00000042);
     cursor: not-allowed;
   }
+}
+
+.outline {
+  @include mxs.add-shadow(#e763162e);
+  background-color: #fff;
+  color: var(--highlight-color);
 }

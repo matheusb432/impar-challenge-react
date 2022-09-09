@@ -1,4 +1,5 @@
 import { Button } from '../../../components';
+import { Title } from '../../../components/Title';
 import styles from './style.module.scss';
 
 const CardHeader = () => {
@@ -8,7 +9,7 @@ const CardHeader = () => {
 
   return (
     <header className={styles['card-header']}>
-      <h2>Resultado de busca</h2>
+      <Title text="Resultado de busca" />
       <Button type="button" onClick={openNewCard}>
         Novo Card
       </Button>

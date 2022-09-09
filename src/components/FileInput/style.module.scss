@@ -1,0 +1,14 @@
+@use 'src/assets/styles/_mixins.scss' as mxs;
+
+.file-input {
+  ::-webkit-file-upload-button {
+    display: none;
+  }
+
+  button {
+    position: absolute;
+    right: 8px;
+    // top: 16px;
+    bottom: 4px;
+  }
+}

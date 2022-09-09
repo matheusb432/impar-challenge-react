@@ -1,0 +1,39 @@
+@use 'src/assets/styles/_mixins.scss' as mxs;
+
+.form-layout {
+  padding: 40px 32px;
+
+  header {
+    @include mxs.dash(bottom);
+    display: flex;
+    align-items: flex-end;
+
+    :first-child {
+      margin-right: 16px;
+    }
+  }
+
+  form {
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    div {
+      margin-bottom: 40px;
+    }
+
+    :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  footer {
+    @include mxs.dash(top, 24px);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    :first-child {
+      margin-right: 16px;
+    }
+  }
+}

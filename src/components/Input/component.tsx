@@ -24,7 +24,7 @@ interface InputProps {
 }
 
 export interface InputForwardRef {
-  activate: () => void;
+  clickInput: () => void;
 }
 
 const Input = forwardRef<InputForwardRef, InputProps>(
@@ -45,7 +45,8 @@ const Input = forwardRef<InputForwardRef, InputProps>(
     const [touched, setTouched] = useState(false);
     const inputRef = useInputRef();
 
-    const focusInput = () => {
+    const clickInput = () => {
+      inputRef.current?.click();
       inputRef.current?.focus();
     };
 
@@ -57,7 +58,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
 
     useImperativeHandle(ref, () => {
       return {
-        activate: focusInput,
+        clickInput: clickInput,
       };
     });
 
@@ -65,7 +66,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       <div
         className={`${styles.control} ${
           touched && isInvalid ? styles.invalid : ''
-        } ${!!className && className}`}
+        } ${className ?? ''}`}
       >
         {!!label?.trim() && <label htmlFor={id}>{label}</label>}
         <input
