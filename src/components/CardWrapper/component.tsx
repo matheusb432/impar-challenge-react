@@ -16,7 +16,7 @@ const CardWrapper = ({ children, image, actions }: CardWrapperProps) => {
           {image ? (
             'PLACEHOLDER'
           ) : (
-            <Image src={'images/fist-icon.svg'} alt="Fist icon" />
+            <Image src={'/images/fist-icon.svg'} alt="Fist icon" />
           )}
         </div>
         <div className={styles['vertical-dash']}></div>

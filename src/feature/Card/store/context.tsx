@@ -1,11 +1,9 @@
 import { createContext, Dispatch, ReactNode, useReducer } from 'react';
+import { Outlet } from 'react-router-dom';
 import cardReducer, { initialCardState } from './reducer';
 import { CardAction, CardState } from './types';
 
-// extends CardState
 interface CardContextProps {
-  // cards: CardModel[];
-  // formCard: CardModel;
   cardState: CardState;
   dispatchCard: Dispatch<CardAction>;
 }
@@ -20,8 +18,6 @@ const CardContext = createContext<CardContextProps>({
 });
 
 const CardContextProvider = ({ children }: CardContextProviderProps) => {
-  // const cards;
-  // const formCard;
   const [cardState, dispatchCard] = useReducer(cardReducer, initialCardState());
 
   return (
@@ -31,5 +27,11 @@ const CardContextProvider = ({ children }: CardContextProviderProps) => {
   );
 };
 
+const CardContextLayout = () => (
+  <CardContextProvider>
+    <Outlet />
+  </CardContextProvider>
+);
+
 export default CardContext;
-export { CardContextProvider };
+export { CardContextProvider, CardContextLayout };

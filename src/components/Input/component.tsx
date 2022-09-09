@@ -25,6 +25,7 @@ interface InputProps {
 
 export interface InputForwardRef {
   clickInput: () => void;
+  setValue: (value: string) => void;
 }
 
 const Input = forwardRef<InputForwardRef, InputProps>(
@@ -51,6 +52,10 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       inputRef.current?.focus();
     };
 
+    const setValue = (value: string) => {
+      inputRef.current!.value = value;
+    };
+
     const handleBlur = () => {
       setTouched(true);
 
@@ -60,6 +65,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
     useImperativeHandle(ref, () => {
       return {
         clickInput: clickInput,
+        setValue: setValue,
       };
     });
 

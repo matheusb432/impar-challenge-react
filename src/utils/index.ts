@@ -1,1 +1,2 @@
-export { validateText } from './validations';
+export * from './validations';
+export * from './utils';

@@ -7,7 +7,7 @@ const MainHeader = () => {
     <header className={classes.header}>
       {/* <header> */}
       <figure>
-        <Image src="images/logo-teste.png" alt="Impar Logo" />
+        <Image src="/images/logo-teste.png" alt="Impar Logo" />
       </figure>
       {/* </header> */}
       <Navigation />

@@ -1,5 +1,16 @@
 @use 'src/assets/styles/_mixins.scss' as mxs;
 
+.search-input {
+  margin: 0;
+  margin-top: calc(80px - var(container-p-y));
+
+  input {
+    padding: 24px 28px;
+    height: 76px;
+    font-size: 24px;
+  }
+}
+
 .search-icon {
   @include mxs.size(40px);
   position: absolute;

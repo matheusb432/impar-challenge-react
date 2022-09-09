@@ -16,7 +16,7 @@ const IndexRouter = () => {
           <Route path={urls.Home} element={<Home />} />
           <Route path={urls.Cards} element={<Card />}>
             <Route path={suffixes.Create} element={<CardCreate />} />
-            <Route path={`${suffixes.Edit}:id`} element={<CardEdit />} />
+            <Route path={`${suffixes.Edit}/:id`} element={<CardEdit />} />
           </Route>
         </Route>
       </Routes>

@@ -5,7 +5,7 @@ export * from './CardWrapper';
 export * from './Container';
 export * from './FileInput';
 export * from './FormLayout';
-export * from './Header';
+export * from './MainHeader';
 export * from './IconButton';
 export * from './Image';
 export * from './Input';

@@ -24,7 +24,7 @@ const FormLayout = ({
   return (
     <section className={styles['form-layout']}>
       <header>
-        <Image src={'images/create-icon.svg'} alt="Create icon" />
+        <Image src={'/images/create-icon.svg'} alt="Create icon" />
         <Title text={title} style={{ fontWeight: 'bold' }} />
       </header>
       {children}

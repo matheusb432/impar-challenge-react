@@ -4,4 +4,6 @@ const validateText = (text: string, min?: number, max?: number) => {
   return !!text?.trim() && (!min || len >= min) && (!max || len <= max);
 };
 
-export { validateText };
+const validateId = (id: any) => id != null && typeof +id === 'number';
+
+export { validateText, validateId };

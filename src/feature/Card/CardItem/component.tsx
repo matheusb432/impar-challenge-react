@@ -1,18 +1,20 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PencilIcon, TrashIcon } from '../../../assets/icons';
 import { CardWrapper, IconButton } from '../../../components';
+import { RouteUrls } from '../../../types';
+import { useCardContext } from '../hooks';
+import { CardActions } from '../store';
 import { CardModel } from '../types';
 import styles from './style.module.scss';
 
 interface CardItemProps {
   card: CardModel;
+  onEdit: (card: CardModel) => void;
+  onDelete: (card: CardModel) => void;
 }
 
-const CardItem = ({ card }: CardItemProps) => {
-  const onEdit = () => {
-    // TODO open edit form with selected card
-  };
-
-  const onDelete = () => {};
+const CardItem = ({ card, onEdit, onDelete }: CardItemProps) => {
   return (
     <li>
       <CardWrapper
@@ -20,13 +22,13 @@ const CardItem = ({ card }: CardItemProps) => {
           <>
             <IconButton
               icon={<TrashIcon className={'ui__remove-icon'} />}
-              onClick={onDelete}
+              onClick={() => onDelete(card)}
               label="Excluir"
             />
             <div className={styles.dash}></div>
             <IconButton
               icon={<PencilIcon className={'ui__edit-icon'} />}
-              onClick={onEdit}
+              onClick={() => onEdit(card)}
               label="Editar"
             />
           </>
