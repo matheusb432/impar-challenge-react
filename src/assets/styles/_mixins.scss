@@ -15,7 +15,18 @@
   flex-direction: $direction;
 }
 
+@mixin center-fixed {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 @mixin size($size) {
   width: $size;
   height: $size;
+}
+
+@mixin dash($position, $padding: 32px, $width: 1px) {
+  border-#{$position}: $width solid var(--bg-primary-color);
+  padding-#{$position}: $padding;
 }
