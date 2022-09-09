@@ -32,10 +32,7 @@ const SearchInput = ({
       onChange={onChange}
       onBlur={onBlur}
     >
-      <IconButton
-        onClick={filter}
-        icon={<SearchIcon className={`${styles['search-icon']}`} />}
-      />
+      <SearchIcon onClick={filter} className={`${styles['search-icon']}`} />
     </Input>
   );
 };

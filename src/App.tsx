@@ -3,6 +3,7 @@ import { TrashIcon } from './assets/icons';
 
 import './assets/styles/styles.scss';
 import {
+  Button,
   Layout,
   Modal,
   ModalData,
@@ -25,13 +26,21 @@ const App = () => {
   };
   // TODO set to show on delete confirm
   const [showModal, setShowModal] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
-  const handleCloseModal = () => {
+  const handleClose = () => {
+    console.log('closing modal...');
+    setShowModal(false);
+  };
+
+  const handleConfirm = () => {
+    console.log('confirming modal action!');
     setShowModal(false);
   };
 
   // TODO implement
-  const handleBackdropClick = () => {
+  const handleFormClose = () => {
+    setShowForm(false);
     console.log('backdrop clicked!');
   };
 
@@ -51,14 +60,18 @@ const App = () => {
         <CardList />
       </Container>
 
-      {/* <SideContainer onBackdropClick={handleBackdropClick}>
+      <SideContainer show={showForm} onClose={handleFormClose}>
         <CardForm isEditing={false} />
-      </SideContainer> */}
+      </SideContainer>
 
+      {/* TODO remove debug buttons  */}
+      <Button onClick={() => setShowModal(true)}>showModal</Button>
+      <Button onClick={() => setShowForm(true)}>showForm</Button>
       <Modal
         modalData={modalData}
         show={showModal}
-        closeModal={handleCloseModal}
+        onClose={handleClose}
+        onConfirm={handleConfirm}
       >
         Certeza que deseja excluir?
       </Modal>

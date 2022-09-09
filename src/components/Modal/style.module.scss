@@ -4,13 +4,24 @@
   @include mxs.size(440px);
   @include mxs.center-fixed;
   position: fixed;
-  z-index: 999;
+  // z-index: 999;
   background-color: #fff;
   padding: 28px 36px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+
+  top: -50%;
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
+
+  &.visible {
+    visibility: visible;
+    z-index: 999;
+    top: 50%;
+    opacity: 1;
+  }
 }
 
 .footer {
@@ -31,4 +42,14 @@
 
 .icon {
   @include mxs.size(68px);
+}
+
+.close-icon {
+  @include mxs.size(48px);
+  @include mxs.btn-effects;
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  color: var(--highlight-color);
+  cursor: pointer;
 }

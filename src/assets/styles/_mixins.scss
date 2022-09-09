@@ -30,3 +30,14 @@
   border-#{$position}: $width solid var(--bg-primary-color);
   padding-#{$position}: $padding;
 }
+
+@mixin btn-effects {
+  &:hover,
+  &:active {
+    filter: brightness(0.85);
+  }
+
+  &:active {
+    filter: brightness(0.7);
+  }
+}

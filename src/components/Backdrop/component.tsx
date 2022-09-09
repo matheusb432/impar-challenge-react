@@ -3,13 +3,14 @@ import styles from './style.module.scss';
 
 interface BackdropProps {
   bgColor?: string;
+  show?: boolean;
   onClick?: () => void;
 }
 
-const Backdrop = ({ bgColor, onClick }: BackdropProps) => {
+const Backdrop = ({ bgColor, show = true, onClick }: BackdropProps) => {
   return createPortal(
     <div
-      className={styles.backdrop}
+      className={`${styles.backdrop} ${show ? styles.show : ''}`}
       style={{ backgroundColor: bgColor ?? '' }}
       onClick={onClick}
     ></div>,

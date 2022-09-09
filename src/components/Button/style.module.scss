@@ -3,6 +3,7 @@
 $highlight-color: #e76316;
 
 .button {
+  @include mxs.btn-effects;
   height: 48px;
   white-space: nowrap;
   background-color: var(--highlight-color);
@@ -15,15 +16,6 @@ $highlight-color: #e76316;
   border-radius: 8px;
   @include mxs.add-shadow(#92207242);
   transition: all 0.15s ease-out;
-
-  &:hover,
-  &:active {
-    filter: brightness(0.85);
-  }
-
-  &:active {
-    filter: brightness(0.7);
-  }
 
   &:focus {
     outline: none;

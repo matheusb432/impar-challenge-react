@@ -4,14 +4,23 @@ import styles from './style.module.scss';
 
 interface SideContainerProps {
   children: ReactNode;
-  onBackdropClick: () => void;
+  show?: boolean;
+  onClose: () => void;
 }
 
-const SideContainer = ({ children, onBackdropClick }: SideContainerProps) => {
+const SideContainer = ({
+  children,
+  onClose,
+  show = true,
+}: SideContainerProps) => {
   return (
     <>
-      <Backdrop onClick={onBackdropClick} />
-      <section className={styles['side-container']}>{children}</section>
+      <Backdrop onClick={onClose} show={show} />
+      <section
+        className={`${styles['side-container']} ${show ? styles.visible : ''}`}
+      >
+        {children}
+      </section>
     </>
   );
 };
