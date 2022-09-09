@@ -8,8 +8,6 @@ export class CardModel {
   [SharedProps.Status]?: string;
   [SharedProps.Photo]?: PhotoModel;
 
-  // private constructor() {}
-
   static empty(): CardModel {
     const card = new CardModel();
 

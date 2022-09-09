@@ -27,8 +27,6 @@ const Modal = ({
   let iconProps = modalData.iconProps ?? { className: '' };
   iconProps.className += ` ${styles.icon}`;
 
-  // return show
-  //   ?
   return createPortal(
     <>
       <Backdrop onClick={onClose} show={show} />
@@ -62,7 +60,6 @@ const Modal = ({
     </>,
     document.getElementById('overlay-root')!
   );
-  // : null;
 };
 
 export default Modal;

@@ -1,5 +1,6 @@
 import { SearchIcon } from '../../assets/icons';
 import { ChangeInputEvent } from '../../types';
+import { onEnterPress } from '../../utils';
 import { IconButton } from '../IconButton';
 import { Input } from '../Input';
 import styles from './style.module.scss';
@@ -11,7 +12,8 @@ interface SearchInputProps {
   className?: string;
   onChange?: (event: ChangeInputEvent) => void;
   onBlur?: () => void;
-  filter: () => void;
+  onEnter?: () => void;
+  onIconClick: () => void;
 }
 
 const SearchInput = ({
@@ -21,7 +23,8 @@ const SearchInput = ({
   className,
   onChange,
   onBlur,
-  filter,
+  onIconClick,
+  onEnter,
 }: SearchInputProps) => {
   return (
     <Input
@@ -31,8 +34,12 @@ const SearchInput = ({
       value={value}
       onChange={onChange}
       onBlur={onBlur}
+      onKeyDown={(e) => onEnterPress<HTMLInputElement>(e, onEnter)}
     >
-      <SearchIcon onClick={filter} className={`${styles['search-icon']}`} />
+      <SearchIcon
+        onClick={() => onIconClick()}
+        className={`${styles['search-icon']}`}
+      />
     </Input>
   );
 };

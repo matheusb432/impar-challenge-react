@@ -1,7 +1,7 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { FileInput, Image, Input, InputForwardRef } from '../../../components';
+import { FileInput, Input, InputForwardRef } from '../../../components';
 import { FormLayout } from '../../../components/FormLayout';
 import { useInputRef } from '../../../hooks';
 import { ChangeInputEvent, RouteUrls } from '../../../types';
@@ -81,7 +81,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     setInputs(formCard);
   }, [formCard]);
 
-  // TODO generic method for this?
   useEffect(() => {
     nameRef.current!.setValue(name!);
   }, [nameRef, name]);
@@ -100,7 +99,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     setPhoto(photo?.base64 ?? '');
   };
 
-  // TODO implement
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
 
@@ -127,14 +125,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     clearForm();
   };
 
-  // TODO clean
-  // const clearForm = () => {
-  //   dispatchCard({
-  //     type: CardActions.SetFormCard,
-  //     payload: CardModel.empty(),
-  //   });
-  // };
-
   const handleNameChange = (event: ChangeInputEvent) => {
     setName(event.target.value);
   };
@@ -150,7 +140,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   return (
     <FormLayout onSubmit={handleFormSubmit} title={label} submitLabel={label}>
       <form onSubmit={handleSubmit}>
-        {/* value={name} */}
         <Input
           id="cardName"
           label="Digite um nome para o card"
@@ -158,7 +147,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           ref={nameRef}
           onChange={handleNameChange}
         />
-        {/* value={status} */}
         <Input
           id="cardStatus"
           label="Defina o status do card"

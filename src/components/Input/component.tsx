@@ -21,6 +21,7 @@ interface InputProps {
   value?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
+  onKeyDown?: ((e: React.KeyboardEvent<HTMLInputElement>) => void) | null;
 }
 
 export interface InputForwardRef {
@@ -40,6 +41,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       label,
       onChange,
       onBlur,
+      onKeyDown,
       isInvalid = false,
     }: InputProps,
     ref
@@ -84,6 +86,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
           onChange={onChange}
           value={value}
           placeholder={placeholder ?? ''}
+          onKeyDown={(e) => onKeyDown?.(e)}
         ></input>
         {children}
       </div>

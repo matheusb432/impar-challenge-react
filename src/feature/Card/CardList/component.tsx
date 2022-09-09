@@ -6,6 +6,7 @@ import { RouteUrls } from '../../../types';
 import { sortArrayByProp } from '../../../utils';
 import { CardItem } from '../CardItem';
 import { useCardContext } from '../hooks';
+import { useCardApi } from '../hooks/use-card-api';
 import { CardActions } from '../store';
 import { CardModel } from '../types';
 import { SharedProps } from '../types/shared-props.enum';
@@ -13,6 +14,9 @@ import styles from './style.module.scss';
 
 const CardList = () => {
   const navigate = useNavigate();
+  const api = useCardApi();
+
+  const [deleteStatus, setDeleteStatus] = useState<number | undefined>(0);
 
   const [showModal, setShowModal] = useState(false);
   const [cardToDelete, setCardToDelete] = useState<CardModel | null>(null);
@@ -21,6 +25,20 @@ const CardList = () => {
   const { cardState, dispatchCard } = useCardContext();
 
   const { cards } = cardState;
+
+  useEffect(() => {
+    // if (deleteStatus) return;
+    console.log(deleteStatus);
+
+    return;
+    // dispatchCard({
+    //   type: CardActions.RemoveCard,
+    //   payload: cardToDelete,
+    // });
+
+    // TODO add success toast here
+    navigate(RouteUrls.Cards);
+  }, [deleteStatus, cardToDelete, dispatchCard, navigate]);
 
   const modalData: ModalData = {
     title: 'Excluir',
@@ -46,11 +64,10 @@ const CardList = () => {
   }, []);
 
   const renderCards = useCallback(() => {
-    const mappedCards = cards.map((c) => c);
+    console.log(cards);
+    sortArrayByProp(cards, SharedProps.Id);
 
-    sortArrayByProp(mappedCards, SharedProps.Id);
-
-    return mappedCards.map((c) => (
+    return cards.map((c) => (
       <CardItem
         key={c.id ?? Math.random()}
         card={c}
@@ -68,20 +85,16 @@ const CardList = () => {
     // TODO add error toast here
     if (cardToDelete == null) return;
 
+    const { isLoading, data } = api.useDelete(cardToDelete.id!);
+
+    setDeleteStatus(data?.status);
+
     // try {
     // TODO add delete api call here
     // } catch (ex) {
     // TODO handle error here or on service?
     //   throw ex;
     // }
-
-    dispatchCard({
-      type: CardActions.RemoveCard,
-      payload: cardToDelete,
-    });
-
-    // TODO add success toast here
-    navigate(RouteUrls.Cards);
   };
 
   const handleClose = () => {
