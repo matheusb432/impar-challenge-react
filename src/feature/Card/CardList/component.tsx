@@ -4,7 +4,6 @@ import { CardModel } from '../types';
 import styles from './style.module.scss';
 
 const CardList = () => {
-  // TODO header tag to component?
   const cards: CardModel[] = [
     {
       id: 1,

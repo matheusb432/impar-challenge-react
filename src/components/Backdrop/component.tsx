@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import styles from './style.module.scss';
 
 interface BackdropProps {
@@ -6,12 +7,13 @@ interface BackdropProps {
 }
 
 const Backdrop = ({ bgColor, onClick }: BackdropProps) => {
-  return (
+  return createPortal(
     <div
       className={styles.backdrop}
       style={{ backgroundColor: bgColor ?? '' }}
       onClick={onClick}
-    ></div>
+    ></div>,
+    document.getElementById('backdrop-root')!
   );
 };
 

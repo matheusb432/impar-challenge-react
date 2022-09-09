@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { Backdrop } from '../Backdrop';
 import { Button } from '../Button';
 import styles from './style.module.scss';
@@ -18,41 +19,39 @@ const Modal = ({ children, modalData, show, closeModal }: ModalProps) => {
   iconProps.className += ` ${styles.icon}`;
 
   // TODO Add X on modal
-  // TODO Add portal to body
-  return show ? (
-    <>
-      <Backdrop />
-      <div className={styles.modal}>
-        <header className={styles.header}>
-          <div
-            className={styles['icon-container']}
-            style={{ backgroundColor: colorTheme && `${colorTheme}0f` }}
-          >
-            {icon(iconProps)}
+  return show
+    ? createPortal(
+        <>
+          <Backdrop />
+          <div className={styles.modal}>
+            <header className={styles.header}>
+              <div
+                className={styles['icon-container']}
+                style={{ backgroundColor: colorTheme && `${colorTheme}0f` }}
+              >
+                {icon(iconProps)}
+              </div>
+              <h2>{title}</h2>
+            </header>
+            <article className={styles.body}>{children}</article>
+            <footer className={styles.footer}>
+              <Button
+                style={{
+                  backgroundColor: colorTheme ?? '',
+                  marginRight: '16px',
+                }}
+              >
+                {confirmText}
+              </Button>
+              <Button colorTheme={colorTheme} outlineStyle={true}>
+                Cancelar
+              </Button>
+            </footer>
           </div>
-          <h2>{title}</h2>
-        </header>
-        <article className={styles.body}>{children}</article>
-        <footer className={styles.footer}>
-          <Button
-            style={{ backgroundColor: colorTheme ?? '', marginRight: '16px' }}
-          >
-            {confirmText}
-          </Button>
-          {/* TODO refactor */}
-          <Button
-            style={{
-              backgroundColor: colorTheme && '#fff',
-              color: colorTheme ?? '',
-              border: colorTheme && `1px solid ${colorTheme}`,
-            }}
-          >
-            Cancelar
-          </Button>
-        </footer>
-      </div>
-    </>
-  ) : null;
+        </>,
+        document.getElementById('overlay-root')!
+      )
+    : null;
 };
 
 export default Modal;

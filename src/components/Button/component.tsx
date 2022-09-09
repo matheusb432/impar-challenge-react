@@ -1,13 +1,14 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 import styles from './style.module.scss';
 
 interface ButtonProps {
-  children: React.ReactNode;
+  children: ReactNode;
   disabled?: boolean;
   type?: 'button' | 'submit';
   className?: string;
   style?: CSSProperties;
   outlineStyle?: boolean;
+  colorTheme?: string;
   onClick?: () => void;
 }
 
@@ -16,6 +17,7 @@ const Button = ({
   onClick,
   className,
   style,
+  colorTheme,
   outlineStyle = false,
   disabled = false,
   type = 'button',
@@ -24,7 +26,11 @@ const Button = ({
     <button
       type={type}
       disabled={disabled}
-      style={style}
+      style={{
+        color: colorTheme ?? '',
+        border: colorTheme ? `1px solid ${colorTheme}` : '',
+        ...style,
+      }}
       className={`${styles.button} ${className ?? ''} ${
         outlineStyle ? styles.outline : ''
       }`}

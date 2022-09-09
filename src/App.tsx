@@ -19,9 +19,8 @@ const App = () => {
   const modalData: ModalData = {
     title: 'Excluir',
     confirmText: 'Excluir',
-    // icon: <TrashIcon className={styles['trash-icon']}></TrashIcon>,
     iconFn: TrashIcon,
-    iconProps: { className: styles['trash-icon'] },
+    iconProps: { className: styles['ui__remove-icon'] },
     colorTheme: '#db2525',
   };
   // TODO set to show on delete confirm
@@ -52,9 +51,9 @@ const App = () => {
         <CardList />
       </Container>
 
-      <SideContainer onBackdropClick={handleBackdropClick}>
+      {/* <SideContainer onBackdropClick={handleBackdropClick}>
         <CardForm isEditing={false} />
-      </SideContainer>
+      </SideContainer> */}
 
       <Modal
         modalData={modalData}

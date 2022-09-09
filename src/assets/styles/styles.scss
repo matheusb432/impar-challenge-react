@@ -1,4 +1,5 @@
 @use 'variables';
+@use 'src/assets/styles/_mixins.scss' as mxs;
 @import url('https://use.typekit.net/boa7mju.css');
 
 * {
@@ -22,4 +23,18 @@ code {
 button,
 input {
   font-family: inherit;
+}
+
+.ui__icon {
+  @include mxs.size(20px);
+}
+
+.ui__edit-icon {
+  @extend .ui__icon;
+  color: var(--highlight-color);
+}
+
+.ui__remove-icon {
+  @extend .ui__icon;
+  color: var(--danger-color);
 }

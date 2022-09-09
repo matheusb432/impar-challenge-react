@@ -8,7 +8,6 @@ interface SideContainerProps {
 }
 
 const SideContainer = ({ children, onBackdropClick }: SideContainerProps) => {
-  // TODO Add portal to body
   return (
     <>
       <Backdrop onClick={onBackdropClick} />

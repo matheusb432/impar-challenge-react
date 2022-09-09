@@ -1,8 +1,8 @@
-@use 'src/assets/styles/_mixins' as mx;
+@use 'src/assets/styles/_mixins' as mxs;
 
 .modal {
-  @include mx.size(440px);
-  @include mx.center-fixed;
+  @include mxs.size(440px);
+  @include mxs.center-fixed;
   position: fixed;
   z-index: 999;
   background-color: #fff;
@@ -14,22 +14,21 @@
 }
 
 .footer {
-  @include mx.flex-center();
-  border-top: 1px solid var(--bg-primary-color);
-  margin-top: 24px;
+  @include mxs.flex-center();
+  @include mxs.dash(top, 20px);
 }
 
 .header {
-  @include mx.flex-center(column);
+  @include mxs.flex-center(column);
 }
 
 .icon-container {
-  @include mx.size(160px);
-  @include mx.flex-center;
+  @include mxs.size(160px);
+  @include mxs.flex-center;
   border-radius: 100%;
   border: 6px solid #e4e4e4;
 }
 
 .icon {
-  @include mx.size(68px);
+  @include mxs.size(68px);
 }

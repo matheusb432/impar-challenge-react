@@ -35,6 +35,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       className,
       placeholder,
       id,
+      value,
       label,
       onChange,
       onBlur,
@@ -75,6 +76,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
           id={id}
           onBlur={handleBlur}
           onChange={onChange}
+          value={value}
           placeholder={placeholder ?? ''}
         ></input>
         {children}

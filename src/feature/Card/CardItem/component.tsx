@@ -19,13 +19,13 @@ const CardItem = ({ card }: CardItemProps) => {
         actions={
           <>
             <IconButton
-              icon={<TrashIcon className={styles['remove-icon']} />}
+              icon={<TrashIcon className={'ui__remove-icon'} />}
               onClick={onDelete}
               label="Excluir"
             />
             <div className={styles.dash}></div>
             <IconButton
-              icon={<PencilIcon className={styles['edit-icon']} />}
+              icon={<PencilIcon className={'ui__edit-icon'} />}
               onClick={onEdit}
               label="Editar"
             />

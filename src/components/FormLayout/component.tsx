@@ -31,8 +31,6 @@ const FormLayout = ({
       <footer>
         {onCancel ? (
           <Button type="button" onClick={onCancel} outlineStyle={true}>
-            {/* TODO clean */}
-            {/* style={{ backgroundColor: '#fff', color: '#e76316' }} */}
             Cancelar
           </Button>
         ) : null}

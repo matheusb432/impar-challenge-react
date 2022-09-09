@@ -10,7 +10,7 @@ interface FileInputProps {
   id: string;
   label: string;
   placeholder: string;
-  value?: string;
+
   className?: string;
   onChange?: (event: ChangeInputEvent) => void;
   onBlur?: () => void;
@@ -20,18 +20,14 @@ const FileInput = ({
   id,
   label,
   placeholder,
-  value,
   className,
   onChange,
   onBlur,
 }: FileInputProps) => {
   const ref = useInputRef<InputForwardRef>();
 
-  // TODO implement
   const selectFile = () => {
     ref.current?.clickInput();
-
-    console.log(value);
   };
 
   return (
@@ -42,7 +38,6 @@ const FileInput = ({
       ref={ref}
       label={label}
       placeholder={placeholder}
-      value={value}
       onChange={onChange}
       onBlur={onBlur}
     >

@@ -4,17 +4,3 @@
   border: 1px solid #f6f4f6;
   height: 24px;
 }
-
-.icon {
-  @include mxs.size(20px);
-}
-
-.edit-icon {
-  @extend .icon;
-  color: var(--highlight-color);
-}
-
-.remove-icon {
-  @extend .icon;
-  color: var(--danger-color);
-}
