@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { BackgroundImage } from '../BackgroundImage';
-import { Header } from '../Header';
+import { MainHeader } from '../MainHeader';
 import { Image } from '../Image';
 import styles from './style.module.scss';
 
@@ -11,7 +11,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <div className={styles.container}>
-      <Header />
+      <MainHeader />
       {/* <Image
         src="images/people-background.png"
         alt="People hanging out in an office"

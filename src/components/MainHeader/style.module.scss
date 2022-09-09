@@ -1,5 +1,6 @@
-.nav {
+.header {
   display: flex;
+  position: relative;
   align-items: center;
   width: 100%;
   height: 64px;
@@ -9,8 +10,10 @@
     var(--secondary-color)
   );
 
-  header {
+  figure {
+    position: absolute;
     margin-left: 24px;
-    width: 100%;
+    // width: 100%;
+    // flex: 2;
   }
 }

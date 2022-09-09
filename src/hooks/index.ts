@@ -1,3 +1,3 @@
-import useInputRef from './useInputRef';
+import useInputRef from './use-input-ref';
 
 export { useInputRef };

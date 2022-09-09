@@ -1,0 +1,11 @@
+@use 'src/assets/styles/_mixins.scss' as mxs;
+
+.nav {
+  @include mxs.flex-center;
+  flex: 1;
+}
+
+.nav-items {
+  @include mxs.reset-list;
+  @include mxs.flex-center;
+}
