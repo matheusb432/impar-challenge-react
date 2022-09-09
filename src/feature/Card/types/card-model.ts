@@ -7,4 +7,13 @@ export class CardModel {
   [SharedProps.Name]?: string;
   [SharedProps.Status]?: string;
   [SharedProps.Photo]?: PhotoModel;
+
+  static empty() {
+    const card = new CardModel();
+
+    card.name = '';
+    card.status = '';
+
+    return card;
+  }
 }
