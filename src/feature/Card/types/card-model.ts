@@ -21,7 +21,7 @@ export class CardModel {
     return card;
   }
 
-  static fromEdit(
+  static fromApiUpdate(
     id: number,
     name: string,
     status: string,
@@ -55,6 +55,22 @@ export class CardModel {
   ): CardModel {
     const card = new CardModel();
 
+    card.name = name;
+    card.status = status;
+    card.photoId = photoId;
+
+    return card;
+  }
+
+  static forPut(
+    id: number | undefined,
+    name: string | undefined,
+    status: string | undefined,
+    photoId: number | undefined
+  ): CardModel {
+    const card = new CardModel();
+
+    card.id = id;
     card.name = name;
     card.status = status;
     card.photoId = photoId;

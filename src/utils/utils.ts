@@ -8,6 +8,8 @@ const sortArrayByProp = <T>(arr: T[], prop: keyof T): void => {
   arr.sort((a, b) => (a[prop] > b[prop] ? 1 : -1));
 };
 
+const base64Format = (base64: string) => `data:image/png;base64,${base64}`;
+
 const onEnterPress = <T>(
   event: React.KeyboardEvent<T>,
   callback?: () => void
@@ -31,6 +33,7 @@ const deepClone = (value: any) => structuredClone(value);
 export {
   sleep,
   sortArrayByProp,
+  base64Format,
   onEnterPress,
   getEnvValue,
   errorCodeToKey,

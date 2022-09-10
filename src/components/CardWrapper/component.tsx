@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { base64Format } from '../../utils';
 import { Image } from '../Image';
 import styles from './style.module.scss';
 
@@ -20,7 +21,7 @@ const CardWrapper = ({
       <article className={styles.card}>
         <div className={styles.image}>
           <Image
-            src={base64 ? `data:image/png;base64,${base64}` : fallbackImageSrc}
+            src={base64 ? base64Format(base64) : fallbackImageSrc}
             alt={base64 ? '' : 'Fist icon'}
             width={96}
             height={96}

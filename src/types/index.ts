@@ -1,6 +1,7 @@
 export * from './change-input-event';
 export * from './env-keys.enum';
 export * from './http-methods.enum';
+export * from './odata-operators.enum';
 export * from './odata-params';
 export * from './odata-utils';
 export * from './paginated-result';

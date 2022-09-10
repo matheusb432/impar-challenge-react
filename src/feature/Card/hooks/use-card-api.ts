@@ -10,15 +10,25 @@ const photosUrl = '/photos';
 const useCardApi = () => {
   return {
     useOData,
+    useODataMutation,
     usePost,
     usePut,
     useDelete,
     usePostPhoto,
+    usePutPhoto,
   };
 };
 
 const useOData = <TReturn>(odataParams: ODataParams) => {
   return useAxios<TReturn>({
+    method: HttpMethods.Get,
+    url: `${url}/odata`,
+    params: odataParams,
+  });
+};
+
+const useODataMutation = <TReturn>(odataParams: ODataParams) => {
+  return useAxiosMutation<TReturn>({
     method: HttpMethods.Get,
     url: `${url}/odata`,
     params: odataParams,
@@ -33,9 +43,7 @@ const usePost = (entity: CardModel) => {
   });
 };
 
-const usePut = (id: number, entity: CardModel) => {
-  if (typeof id !== 'number') throw Error('Invalid id argument!');
-
+const usePut = (id?: number, entity?: CardModel) => {
   return useAxiosMutation<void>({
     method: HttpMethods.Put,
     url: `${url}/${id}`,
@@ -58,6 +66,18 @@ const usePostPhoto = (file?: File) => {
   return useAxiosMutation<PostReturn>({
     method: HttpMethods.Post,
     url: photosUrl,
+    data: formData,
+  });
+};
+
+const usePutPhoto = (id?: number, file?: File) => {
+  const formData = new FormData();
+
+  if (file != null) formData.append('photo', file);
+
+  return useAxiosMutation<void>({
+    method: HttpMethods.Put,
+    url: `${photosUrl}/${id}`,
     data: formData,
   });
 };

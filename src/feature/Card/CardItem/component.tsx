@@ -24,12 +24,14 @@ const CardItem = ({ card, onEdit, onDelete }: CardItemProps) => {
               icon={<TrashIcon className={'ui__remove-icon'} />}
               onClick={() => onDelete(card)}
               label="Excluir"
+              theme="#db2525"
             />
             <div className={styles.dash}></div>
             <IconButton
               icon={<PencilIcon className={'ui__edit-icon'} />}
               onClick={() => onEdit(card)}
               label="Editar"
+              theme="#e76316"
             />
           </>
         }

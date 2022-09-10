@@ -1,3 +1,4 @@
+import { forwardRef, useImperativeHandle } from 'react';
 import { SearchIcon } from '../../assets/icons';
 import { useInputRef } from '../../hooks';
 import { ChangeInputEvent } from '../../types';
@@ -9,43 +10,61 @@ import styles from './style.module.scss';
 interface FileInputProps {
   id: string;
   label: string;
-  placeholder: string;
-
+  placeholder?: string;
   className?: string;
   onChange?: (event: ChangeInputEvent) => void;
   onBlur?: () => void;
 }
 
-const FileInput = ({
-  id,
-  label,
-  placeholder,
-  className,
-  onChange,
-  onBlur,
-}: FileInputProps) => {
-  const ref = useInputRef<InputForwardRef>();
+export interface FileInputForwardRef {
+  clickInput: () => void;
+  getValue: () => string;
+}
 
-  const selectFile = () => {
-    ref.current?.clickInput();
-  };
+const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
+  (
+    {
+      id,
+      label,
+      placeholder = 'Nenhum arquivo selecionado',
+      className,
+      onChange,
+      onBlur,
+    }: FileInputProps,
+    ref
+  ) => {
+    const fileInputRef = useInputRef<InputForwardRef>();
 
-  return (
-    <Input
-      type="file"
-      className={`${styles['file-input']} ${className ?? ''}`}
-      id={id}
-      ref={ref}
-      label={label}
-      placeholder={placeholder}
-      onChange={onChange}
-      onBlur={onBlur}
-    >
-      <Button onClick={selectFile} outlineStyle={true}>
-        Escolher arquivo
-      </Button>
-    </Input>
-  );
-};
+    const selectFile = () => {
+      fileInputRef.current?.clickInput();
+    };
+
+    useImperativeHandle(ref, () => ({
+      clickInput: () => {
+        fileInputRef.current?.clickInput();
+      },
+      getValue: () => {
+        return fileInputRef.current?.getValue()!;
+      },
+    }));
+
+    return (
+      <Input
+        type="file"
+        className={`${styles['file-input']} ${className ?? ''}`}
+        id={id}
+        label={label}
+        placeholder={placeholder}
+        onChange={onChange}
+        onBlur={onBlur}
+        ref={fileInputRef}
+      >
+        <Button onClick={selectFile} outlineStyle={true}>
+          Escolher arquivo
+        </Button>
+      </Input>
+    );
+  }
+);
 
 export default FileInput;
