@@ -213,14 +213,10 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     handleFormSubmit();
   };
 
-  const handleFormSubmit = () => {
-    if (!isEditing) {
-      uploadPhoto();
-    } else {
-      if (imageChanged) updatePhoto();
-      else updateCard();
-    }
-    // TODO update photo if necessary on PUT
+  const handleFormSubmit = (): void => {
+    if (!isEditing) return uploadPhoto();
+    if (imageChanged) return updatePhoto();
+    updateCard();
   };
 
   const handlePhotoChange = (event: ChangeInputEvent) => {

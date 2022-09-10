@@ -6,3 +6,7 @@ export enum ODataOperators {
   Not = 'not',
   NotNull = '',
 }
+
+export enum ParenthesesOperators {
+  Contains = 'contains',
+}

@@ -35,9 +35,13 @@ const CardContext = createContext<CardContextProps>({
 const CardContextProvider = ({ children }: CardContextProviderProps) => {
   const [cardState, dispatchCard] = useReducer(cardReducer, initialCardState());
 
-  const { data, status, error } = useCardApi().useOData<
+  const { data, status, mutate } = useCardApi().useODataMutation<
     PaginatedResult<CardModel>
   >(paginationQuery());
+
+  useEffect(() => {
+    mutate();
+  }, [mutate]);
 
   const result = data?.data;
 
@@ -48,7 +52,7 @@ const CardContextProvider = ({ children }: CardContextProviderProps) => {
       type: CardActions.SetCards,
       payload: new Mapper(CardModel).map(result.items) as CardModel[],
     });
-  }, [error, status, result]);
+  }, [status, result]);
 
   return (
     <CardContext.Provider value={{ cardState, dispatchCard }}>

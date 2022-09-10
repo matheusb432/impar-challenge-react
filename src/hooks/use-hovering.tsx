@@ -1,12 +1,6 @@
 import { useState } from 'react';
 
-interface HoveringData {
-  hovering: boolean;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
-}
-
-const useHovering = (): HoveringData => {
+const useHovering = () => {
   const [hovering, setHovering] = useState(false);
 
   const onMouseEnter = () => {

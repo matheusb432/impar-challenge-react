@@ -1,18 +1,75 @@
-import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Mapper } from 'mapper-ts/lib-esm';
+import { useCallback, useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import {
   BackgroundImage,
   Container,
   Layout,
   SearchInput,
 } from '../../../../components';
-import { useAxios } from '../../../../hooks';
+import {
+  useAppContext,
+  useAxios,
+  useDebounce,
+  useQueryParams,
+} from '../../../../hooks';
+import {
+  ChangeInputEvent,
+  PaginatedResult,
+  paginationQuery,
+  QueryStatuses,
+} from '../../../../types';
+import { buildContains, buildEqId, errorMessages } from '../../../../utils';
 import { CardHeader } from '../../CardHeader';
 import { CardList } from '../../CardList';
+import { useCardApi, useCardContext } from '../../hooks';
+import { CardActions } from '../../store';
+import { CardModel } from '../../types';
+import { SharedProps } from '../../types/shared-props.enum';
 
 const Card = () => {
-  const handleFilter = (withDebouce = false) => {
-    console.log('filter!', withDebouce);
+  // TODO add filter params?
+  // const navigate = useNavigate();
+  // const params = useQueryParams();
+  const api = useCardApi();
+  const { changeError } = useAppContext();
+
+  const [searchText, setSearchText] = useState<string>('');
+
+  const { dispatchCard } = useCardContext();
+  const { debounceFn, clearTimer } = useDebounce(() => filterCards(), 500);
+
+  const {
+    data: getCardsData,
+    status: getCardsStatus,
+    mutate: getCards,
+  } = api.useODataMutation<PaginatedResult<CardModel>>({
+    ...paginationQuery(),
+    $filter: buildContains(SharedProps.Name, searchText),
+  });
+
+  const filterCards = useCallback(() => {
+    clearTimer();
+    getCards();
+  }, [clearTimer, getCards]);
+
+  useEffect(() => {
+    if (getCardsStatus !== QueryStatuses.Success) return;
+
+    const fetchedCards = getCardsData?.data?.items;
+
+    if (fetchedCards == null) return changeError(errorMessages.cardsError);
+
+    dispatchCard({
+      type: CardActions.SetCards,
+      payload: new Mapper(CardModel).map(fetchedCards),
+    });
+  }, [getCardsStatus, dispatchCard, changeError, getCardsData?.data?.items]);
+
+  const handleFilter = (withDebouce = false, event?: ChangeInputEvent) => {
+    if (event != null) setSearchText(event.target.value);
+
+    withDebouce ? debounceFn()() : filterCards();
   };
 
   return (
@@ -23,7 +80,8 @@ const Card = () => {
           placeholder="Digite aqui sua busca..."
           onIconClick={handleFilter}
           onEnter={handleFilter}
-          onChange={() => handleFilter(true)}
+          value={searchText}
+          onChange={(e) => handleFilter(true, e)}
         />
       </BackgroundImage>
       <Container>

@@ -5,4 +5,5 @@ export const errorMessages = Object.freeze({
   [SharedErrorKeys.BadRequest]: 'Houve algum erro na requisição!',
   [SharedErrorKeys.Default]: 'Houve algum erro!',
   invalidCardId: 'Não foi possível encontrar o Card com o ID informado!',
+  cardsError: 'Houve algum erro ao tentar buscar os Cards!',
 });
