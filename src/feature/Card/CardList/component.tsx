@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '../../../assets/icons';
 import { Modal, ModalData } from '../../../components';
-import { RouteUrls } from '../../../types';
+import { useAxios } from '../../../hooks';
+import { paginationQuery, QueryStatuses, RouteUrls } from '../../../types';
 import { sortArrayByProp } from '../../../utils';
 import { CardItem } from '../CardItem';
 import { useCardContext } from '../hooks';
@@ -16,10 +17,13 @@ const CardList = () => {
   const navigate = useNavigate();
   const api = useCardApi();
 
-  const [deleteStatus, setDeleteStatus] = useState<number | undefined>(0);
+  const [cardToDelete, setCardToDelete] = useState<CardModel | null>(null);
+
+  const { status: deleteStatus, mutate: deleteRequest } = api.useDelete(
+    cardToDelete?.id
+  );
 
   const [showModal, setShowModal] = useState(false);
-  const [cardToDelete, setCardToDelete] = useState<CardModel | null>(null);
   const [renderedCards, setRenderedCards] = useState<JSX.Element[]>([]);
 
   const { cardState, dispatchCard } = useCardContext();
@@ -28,16 +32,13 @@ const CardList = () => {
 
   useEffect(() => {
     // if (deleteStatus) return;
-    console.log(deleteStatus);
+    // TODO add error toast here if it is error
+    if (deleteStatus !== QueryStatuses.Success) return;
 
-    return;
-    // dispatchCard({
-    //   type: CardActions.RemoveCard,
-    //   payload: cardToDelete,
-    // });
-
-    // TODO add success toast here
-    navigate(RouteUrls.Cards);
+    dispatchCard({
+      type: CardActions.RemoveCard,
+      payload: cardToDelete!,
+    });
   }, [deleteStatus, cardToDelete, dispatchCard, navigate]);
 
   const modalData: ModalData = {
@@ -64,7 +65,6 @@ const CardList = () => {
   }, []);
 
   const renderCards = useCallback(() => {
-    console.log(cards);
     sortArrayByProp(cards, SharedProps.Id);
 
     return cards.map((c) => (
@@ -85,16 +85,7 @@ const CardList = () => {
     // TODO add error toast here
     if (cardToDelete == null) return;
 
-    const { isLoading, data } = api.useDelete(cardToDelete.id!);
-
-    setDeleteStatus(data?.status);
-
-    // try {
-    // TODO add delete api call here
-    // } catch (ex) {
-    // TODO handle error here or on service?
-    //   throw ex;
-    // }
+    deleteRequest();
   };
 
   const handleClose = () => {

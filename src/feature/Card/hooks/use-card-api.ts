@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import { useAxios } from '../../../hooks';
+import { useAxiosMutation } from '../../../hooks/use-axios';
 import { HttpMethods, ODataParams } from '../../../types';
 import { CardModel } from '../types';
 
@@ -18,8 +19,8 @@ const useCardApi = () => {
 const useOData = <TReturn>(odataParams: ODataParams) => {
   return useAxios<TReturn>({
     method: HttpMethods.Get,
-    url: `${url}/odata`,
-    params: { $count: true, $skip: 0, $top: 20 },
+    url: `${url}/odatsdasa`,
+    params: odataParams,
   });
 };
 
@@ -41,10 +42,8 @@ const usePut = (id: number, entity: CardModel) => {
   });
 };
 
-const useDelete = (id: number) => {
-  if (typeof id !== 'number') throw Error('Invalid id argument!');
-
-  return useAxios<CardModel>({
+const useDelete = (id?: number) => {
+  return useAxiosMutation<CardModel>({
     method: HttpMethods.Delete,
     url: `${url}/${id}`,
   });

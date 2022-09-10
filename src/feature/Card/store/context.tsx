@@ -8,7 +8,11 @@ import {
 } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useAxios } from '../../../hooks';
-import { PaginatedResult, paginationQuery } from '../../../types';
+import {
+  PaginatedResult,
+  paginationQuery,
+  QueryStatuses,
+} from '../../../types';
 import { useCardApi } from '../hooks/use-card-api';
 import { CardModel } from '../types';
 import cardReducer, { initialCardState } from './reducer';
@@ -31,10 +35,11 @@ const CardContext = createContext<CardContextProps>({
 const CardContextProvider = ({ children }: CardContextProviderProps) => {
   const [cardState, dispatchCard] = useReducer(cardReducer, initialCardState());
 
-  const res = useCardApi().useOData<PaginatedResult<CardModel>>(
-    paginationQuery()
-  );
-  const result = res.data?.data;
+  const { data, status, error } = useCardApi().useOData<
+    PaginatedResult<CardModel>
+  >(paginationQuery());
+
+  const result = data?.data;
 
   useEffect(() => {
     if (result == null) return;
@@ -43,7 +48,7 @@ const CardContextProvider = ({ children }: CardContextProviderProps) => {
       type: CardActions.SetCards,
       payload: new Mapper(CardModel).map(result.items),
     });
-  }, [result]);
+  }, [error, status, result]);
 
   return (
     <CardContext.Provider value={{ cardState, dispatchCard }}>

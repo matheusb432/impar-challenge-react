@@ -3,9 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { FileInput, Input, InputForwardRef } from '../../../components';
 import { FormLayout } from '../../../components/FormLayout';
-import { useInputRef } from '../../../hooks';
+import { useAppContext, useInputRef } from '../../../hooks';
 import { ChangeInputEvent, RouteUrls } from '../../../types';
-import { validateId } from '../../../utils';
+import { errorMessages, validateId } from '../../../utils';
 import { useCardContext } from '../hooks';
 import { CardActions } from '../store';
 import { CardModel } from '../types';
@@ -27,14 +27,15 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const [status, setStatus] = useState<string>();
   const [photo, setPhoto] = useState<string>();
 
+  const { changeError } = useAppContext();
   const { cardState, dispatchCard } = useCardContext();
   const { cards, formCard } = cardState;
 
   const returnToList = useCallback(() => {
-    navigate(RouteUrls.Cards);
+    changeError(errorMessages.invalidCardId);
 
-    // TODO add error toast here
-  }, [navigate]);
+    navigate(RouteUrls.Cards);
+  }, [navigate, changeError]);
 
   const clearForm = useCallback(() => {
     dispatchCard({

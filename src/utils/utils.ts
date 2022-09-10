@@ -1,3 +1,4 @@
+import { SharedErrorKeys } from './../types/shared-error-keys.enum';
 import { EnvKeys } from '../types';
 
 const sleep = async (ms: number): Promise<any> =>
@@ -14,4 +15,15 @@ const onEnterPress = <T>(
 
 const getEnvValue = (key: EnvKeys) => process.env[key];
 
-export { sleep, sortArrayByProp, onEnterPress, getEnvValue };
+const errorCodeToKey = (code?: string) => {
+  switch (code) {
+    case 'ERR_NETWORK':
+      return SharedErrorKeys.NetworkError;
+    case 'ERR_BAD_REQUEST':
+      return SharedErrorKeys.BadRequest;
+    default:
+      return SharedErrorKeys.Default;
+  }
+};
+
+export { sleep, sortArrayByProp, onEnterPress, getEnvValue, errorCodeToKey };
