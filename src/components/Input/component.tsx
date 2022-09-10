@@ -26,7 +26,8 @@ interface InputProps {
 
 export interface InputForwardRef {
   clickInput: () => void;
-  setValue: (value: string) => void;
+  getValue: () => string;
+  setValue: (value?: string) => void;
 }
 
 const Input = forwardRef<InputForwardRef, InputProps>(
@@ -54,8 +55,10 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       inputRef.current?.focus();
     };
 
-    const setValue = (value: string) => {
-      inputRef.current!.value = value;
+    const getValue = () => inputRef.current!.value;
+
+    const setValue = (value?: string) => {
+      inputRef.current!.value = value ?? '';
     };
 
     const handleBlur = () => {
@@ -68,6 +71,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       return {
         clickInput: clickInput,
         setValue: setValue,
+        getValue: getValue,
       };
     });
 

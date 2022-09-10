@@ -1,11 +1,14 @@
+import { PhotoUpload } from '../types/photo-upload';
 import { CardModel } from './../types/card-model';
 import { CardAction, CardActions, CardState } from './types';
 
-const { AddCard, EditCard, RemoveCard, SetFormCard, SetCards } = CardActions;
+const { AddCard, EditCard, RemoveCard, SetFormCard, SetCards, SetPhotoUpload } =
+  CardActions;
 
 const initialCardState = (): CardState => ({
   cards: [],
   formCard: CardModel.empty(),
+  photoUpload: PhotoUpload.empty(),
 });
 
 const cardReducer = (state: CardState, action: CardAction): CardState => {
@@ -36,6 +39,9 @@ const cardReducer = (state: CardState, action: CardAction): CardState => {
 
     case SetCards:
       return { ...state, cards: payload as CardModel[] };
+
+    case SetPhotoUpload:
+      return { ...state, photoUpload: payload as PhotoUpload };
 
     default:
       return { ...state };

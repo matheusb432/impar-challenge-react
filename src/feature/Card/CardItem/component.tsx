@@ -33,6 +33,7 @@ const CardItem = ({ card, onEdit, onDelete }: CardItemProps) => {
             />
           </>
         }
+        base64={card.base64}
       >
         {card.name}
       </CardWrapper>

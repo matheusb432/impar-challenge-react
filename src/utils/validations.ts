@@ -1,7 +1,9 @@
-const validateText = (text: string, min?: number, max?: number) => {
-  const len = text?.length;
+const validateText = (text?: string, min?: number, max?: number) => {
+  if (text == null) return false;
 
-  return !!text?.trim() && (!min || len >= min) && (!max || len <= max);
+  const len = text.length;
+
+  return !!text.trim() && (!min || len >= min) && (!max || len <= max);
 };
 
 const validateId = (id: any) => id != null && typeof +id === 'number';

@@ -26,4 +26,13 @@ const errorCodeToKey = (code?: string) => {
   }
 };
 
-export { sleep, sortArrayByProp, onEnterPress, getEnvValue, errorCodeToKey };
+const deepClone = (value: any) => structuredClone(value);
+
+export {
+  sleep,
+  sortArrayByProp,
+  onEnterPress,
+  getEnvValue,
+  errorCodeToKey,
+  deepClone,
+};

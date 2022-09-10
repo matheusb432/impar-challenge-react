@@ -4,20 +4,28 @@ import styles from './style.module.scss';
 
 interface CardWrapperProps {
   children: ReactNode;
-  image?: ImageData;
+  base64?: string;
+  fallbackImageSrc?: string;
   actions?: ReactNode;
 }
 
-const CardWrapper = ({ children, image, actions }: CardWrapperProps) => {
+const CardWrapper = ({
+  children,
+  base64,
+  fallbackImageSrc = '/images/fist-icon.svg',
+  actions,
+}: CardWrapperProps) => {
   return (
     <>
       <article className={styles.card}>
         <div className={styles.image}>
-          {image ? (
-            'PLACEHOLDER'
-          ) : (
-            <Image src={'/images/fist-icon.svg'} alt="Fist icon" />
-          )}
+          <Image
+            src={base64 ? `data:image/png;base64,${base64}` : fallbackImageSrc}
+            alt={base64 ? '' : 'Fist icon'}
+            width={96}
+            height={96}
+            circular={true}
+          />
         </div>
         <div className={styles['vertical-dash']}></div>
         {children}

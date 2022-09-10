@@ -46,7 +46,7 @@ const CardContextProvider = ({ children }: CardContextProviderProps) => {
 
     dispatchCard({
       type: CardActions.SetCards,
-      payload: new Mapper(CardModel).map(result.items),
+      payload: new Mapper(CardModel).map(result.items) as CardModel[],
     });
   }, [error, status, result]);
 

@@ -4,6 +4,7 @@ export * from './http-methods.enum';
 export * from './odata-params';
 export * from './odata-utils';
 export * from './paginated-result';
+export * from './post-return';
 export * from './query-statuses.enum';
 export * from './route-suffixes.enum';
 export * from './route-urls.enum';
