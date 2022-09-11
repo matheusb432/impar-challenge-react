@@ -8,10 +8,10 @@ const sortArrayByProp = <T>(arr: T[], prop: keyof T): void => {
   arr.sort((a, b) => (a[prop] > b[prop] ? 1 : -1));
 };
 
-const base64Format = (base64: string) =>
-  base64.startsWith('data:image/png;base64')
+const base64Format = (base64: string, extension = 'png') =>
+  base64.startsWith('data:image/') && base64.includes(';base64,')
     ? base64
-    : `data:image/png;base64,${base64}`;
+    : `data:image/${extension};base64,${base64}`;
 
 const onEnterPress = <T>(
   event: React.KeyboardEvent<T>,

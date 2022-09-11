@@ -25,11 +25,13 @@ export class CardModel {
     id: number,
     name: string,
     status: string,
-    photoBase64: string
+    photoBase64: string,
+    photoId: number
   ): CardModel {
     const card = this.fromInputs(name, status, photoBase64);
 
     card.id = id;
+    card.photoId = photoId;
 
     return card;
   }

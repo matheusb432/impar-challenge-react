@@ -67,6 +67,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   const {
     isLoading: isLoadingUpdatePhoto,
+    data: updatePhotoData,
     status: updatePhotoStatus,
     mutate: updatePhoto,
   } = api.usePutPhoto(formCard?.photoId, photoUpload?.file);
@@ -97,6 +98,14 @@ const CardForm = ({ isEditing }: CardFormProps) => {
       uploadPhotoData?.data?.id ?? formCard?.photoId
     )
   );
+
+  const getDispatchBase64Photo = useCallback(async (): Promise<
+    string | unknown
+  > => {
+    const file = photoUpload?.file;
+
+    return file != null ? toBase64(file) : formCard?.base64;
+  }, [formCard?.base64, photoUpload?.file]);
 
   useEffect(() => {
     setIsLoadingSubmit(
@@ -143,7 +152,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
       const status = statusRef.current!.getValue();
       let photoBase64: string | unknown = '';
       try {
-        photoBase64 = await toBase64(photoUpload?.file!);
+        photoBase64 = await getDispatchBase64Photo();
       } catch (ex) {
         // TODO error toast here
       }
@@ -154,7 +163,8 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           formCard?.id!,
           name,
           status,
-          photoBase64 as string
+          photoBase64 as string,
+          formCard?.photoId!
         ),
       });
 
@@ -168,7 +178,9 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     navigate,
     dispatchCard,
     updateCardStatus,
-    photoUpload?.file,
+    photoUpload.file,
+    formCard?.photoId,
+    getDispatchBase64Photo,
   ]);
 
   useEffect(() => {
@@ -179,7 +191,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
       const status = statusRef.current!.getValue();
       let photoBase64: string | unknown = '';
       try {
-        photoBase64 = await toBase64(photoUpload?.file!);
+        photoBase64 = await getDispatchBase64Photo();
       } catch (ex) {
         // TODO error toast here
       }
@@ -189,7 +201,8 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           createdCardData?.data.id!,
           name,
           status,
-          photoBase64 as string
+          photoBase64 as string,
+          uploadPhotoData?.data?.id!
         ),
       });
 
@@ -203,7 +216,9 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     dispatchCard,
     createCardStatus,
     navigate,
-    photoUpload?.file,
+    photoUpload.file,
+    uploadPhotoData?.data?.id,
+    getDispatchBase64Photo,
   ]);
 
   useEffect(() => {
@@ -230,6 +245,11 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     dispatchCard({
       type: CardActions.SetFormCard,
       payload: CardModel.empty(),
+    });
+
+    dispatchCard({
+      type: CardActions.SetPhotoUpload,
+      payload: PhotoUpload.empty(),
     });
   }, [dispatchCard]);
 
@@ -375,6 +395,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           accept=""
           helperText={'Arquivo inválido!'}
           isInvalid={!photoValid}
+          blurOnChange={true}
           label={
             isEditing
               ? 'Inclua uma imagem para substituir a imagem no card'

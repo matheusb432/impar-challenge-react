@@ -14,6 +14,7 @@ interface FileInputProps {
   helperText?: string;
   placeholder?: string;
   className?: string;
+  blurOnChange?: boolean;
   onChange?: (event: ChangeInputEvent) => void;
   onBlur?: () => void;
 }
@@ -30,6 +31,7 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
       label,
       accept,
       helperText,
+      blurOnChange = false,
       isInvalid = false,
       required = true,
       placeholder = 'Nenhum arquivo selecionado',
@@ -42,6 +44,7 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
       label,
       isInvalid,
       required,
+      blurOnChange,
       accept,
       helperText,
       placeholder,

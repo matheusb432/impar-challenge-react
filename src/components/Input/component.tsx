@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 import { useInputRef } from '../../hooks';
-import { DynamicJsx } from '../../types';
+import { ChangeInputEvent, DynamicJsx } from '../../types';
 import { validateText } from '../../utils';
 
 import styles from './style.module.scss';
@@ -27,6 +27,7 @@ interface InputProps {
   accept?: string;
   required?: boolean;
   showHelperIfValid?: boolean;
+  blurOnChange?: boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
   onKeyDown?: ((e: React.KeyboardEvent<HTMLInputElement>) => void) | null;
@@ -52,6 +53,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       onChange,
       onBlur,
       onKeyDown,
+      blurOnChange = false,
       helperText,
       showHelperIfValid = false,
       required = true,
@@ -107,9 +109,15 @@ const Input = forwardRef<InputForwardRef, InputProps>(
     };
 
     const handleBlur = () => {
-      setTouched(true);
+      if (!blurOnChange) setTouched(true);
 
       onBlur?.();
+    };
+
+    const handleChange = (event: ChangeInputEvent) => {
+      if (blurOnChange) setTouched(true);
+
+      onChange?.(event);
     };
 
     const controlCssClasses = () =>
@@ -133,7 +141,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
           type={type}
           id={id}
           onBlur={handleBlur}
-          onChange={onChange}
+          onChange={handleChange}
           accept={accept}
           value={value}
           placeholder={placeholder ?? ''}
