@@ -32,12 +32,12 @@
 }
 
 @mixin btn-effects {
-  &:hover,
-  &:active {
+  &:hover:not(:disabled),
+  &:active:not(:disabled) {
     filter: brightness(0.85);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     filter: brightness(0.7);
   }
 }

@@ -1,0 +1,18 @@
+@use 'src/assets/styles/_mixins.scss' as mxs;
+
+.loading-spinner {
+  @include mxs.size(50px);
+  border: 10px solid var(--highlight-color);
+  border-top: 10px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spinner 1.5s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,4 +1,5 @@
 import { CSSProperties, ReactNode } from 'react';
+import { buildSpinnerSize, LoadingSpinner } from '../LoadingSpinner';
 import styles from './style.module.scss';
 
 interface ButtonProps {
@@ -7,7 +8,9 @@ interface ButtonProps {
   type?: 'button' | 'submit';
   className?: string;
   style?: CSSProperties;
+  isLoading?: boolean;
   outlineStyle?: boolean;
+  disabledReason?: string;
   colorTheme?: string;
   onClick?: () => void;
 }
@@ -18,6 +21,8 @@ const Button = ({
   className,
   style,
   colorTheme,
+  isLoading = false,
+  disabledReason = '',
   outlineStyle = false,
   disabled = false,
   type = 'button',
@@ -26,6 +31,7 @@ const Button = ({
     <button
       type={type}
       disabled={disabled}
+      title={disabled ? disabledReason : ''}
       style={{
         color: colorTheme ?? '',
         border: colorTheme ? `1px solid ${colorTheme}` : '',
@@ -36,7 +42,14 @@ const Button = ({
       }`}
       onClick={onClick}
     >
-      {children}
+      <div className={styles.children}>
+        {isLoading ? (
+          <LoadingSpinner
+            style={{ ...buildSpinnerSize(24), marginRight: '12px' }}
+          />
+        ) : null}
+        {children}
+      </div>
     </button>
   );
 };

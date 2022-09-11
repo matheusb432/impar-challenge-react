@@ -25,6 +25,7 @@ $highlight-color: #e76316;
     @include mxs.add-shadow(#00000042);
     background: #ccc;
     color: #000;
+    border: none;
     opacity: 0.75;
     cursor: not-allowed;
   }
@@ -34,4 +35,9 @@ $highlight-color: #e76316;
   @include mxs.add-shadow(#e763162e);
   background-color: #fff;
   color: var(--highlight-color);
+}
+
+.children {
+  display: flex;
+  align-items: center;
 }

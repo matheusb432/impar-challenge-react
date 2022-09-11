@@ -10,6 +10,7 @@ interface FormLayoutProps {
   submitLabel: string;
   onSubmit: () => void;
   canSubmit?: boolean;
+  isLoadingSubmit?: boolean;
   onCancel?: () => void;
 }
 
@@ -19,6 +20,7 @@ const FormLayout = ({
   submitLabel,
   onSubmit,
   canSubmit = true,
+  isLoadingSubmit = false,
   onCancel,
 }: FormLayoutProps) => {
   return (
@@ -34,7 +36,17 @@ const FormLayout = ({
             Cancelar
           </Button>
         ) : null}
-        <Button type="button" onClick={onSubmit} disabled={!canSubmit}>
+        <Button
+          type="button"
+          onClick={onSubmit}
+          disabled={!canSubmit || isLoadingSubmit}
+          isLoading={isLoadingSubmit}
+          disabledReason={
+            isLoadingSubmit
+              ? 'Processando requisição...'
+              : 'Um ou mais campos do formulário estão inválidos'
+          }
+        >
           {submitLabel}
         </Button>
       </footer>

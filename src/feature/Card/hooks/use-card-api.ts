@@ -44,7 +44,6 @@ const usePost = (entity: CardModel) => {
 };
 
 const usePut = (id?: number, entity?: CardModel) => {
-  console.log(entity);
   return useAxiosMutation<void>({
     method: HttpMethods.Put,
     url: `${url}/${id}`,

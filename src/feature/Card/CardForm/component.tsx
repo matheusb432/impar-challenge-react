@@ -39,28 +39,38 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const [statusValid, setStatusValid] = useState(false);
   const [photoValid, setPhotoValid] = useState(false);
 
+  const [toggle, setToggle] = useState<boolean | undefined>(undefined);
+
+  const [formIsValid, setFormIsValid] = useState(false);
+
   const { changeError } = useAppContext();
   const { cardState, dispatchCard } = useCardContext();
   const { cards, formCard, photoUpload } = cardState;
 
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
+
   const {
+    isLoading: isLoadingCard,
     data: getData,
     status: getStatus,
     mutate: getCard,
   } = api.useODataMutation<CardModel[]>({ $filter: buildEqId(id) });
 
   const {
+    isLoading: isLoadingPhotoUpload,
     data: uploadPhotoData,
     status: uploadPhotoStatus,
     mutate: uploadPhoto,
   } = api.usePostPhoto(photoUpload?.file);
 
-  const { status: updatePhotoStatus, mutate: updatePhoto } = api.usePutPhoto(
-    formCard?.photoId,
-    photoUpload?.file
-  );
+  const {
+    isLoading: isLoadingUpdatePhoto,
+    status: updatePhotoStatus,
+    mutate: updatePhoto,
+  } = api.usePutPhoto(formCard?.photoId, photoUpload?.file);
 
   const {
+    isLoading: isLoadingCreateCard,
     data: createdCardData,
     status: createCardStatus,
     mutate: createCard,
@@ -72,17 +82,39 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     )
   );
 
-  const { status: updateCardStatus, mutate: updateCard } = api.usePut(
+  const {
+    isLoading: isLoadingUpdateCard,
+    status: updateCardStatus,
+    mutate: updateCard,
+  } = api.usePut(
     formCard?.id,
-    structuredClone(
-      CardModel.forPut(
-        formCard?.id,
-        nameRef.current?.getValue(),
-        statusRef.current?.getValue(),
-        uploadPhotoData?.data?.id ?? formCard?.photoId
-      )
+    CardModel.forPut(
+      formCard?.id,
+      nameRef.current?.getValue(),
+      statusRef.current?.getValue(),
+      uploadPhotoData?.data?.id ?? formCard?.photoId
     )
   );
+
+  useEffect(() => {
+    setIsLoadingSubmit(
+      isLoadingCreateCard ||
+        isLoadingUpdateCard ||
+        isLoadingPhotoUpload ||
+        isLoadingUpdatePhoto
+    );
+  }, [
+    isLoadingCreateCard,
+    isLoadingPhotoUpload,
+    isLoadingUpdateCard,
+    isLoadingUpdatePhoto,
+  ]);
+
+  useEffect(() => {
+    if (toggle === undefined) return;
+
+    updateCard();
+  }, [toggle, updateCard]);
 
   const setInputs = useCallback(
     (card: CardModel) => {
@@ -225,6 +257,10 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     setInputs(formCard);
   }, [setInputs, formCard]);
 
+  useEffect(() => {
+    setFormIsValid(nameValid && statusValid && photoValid);
+  }, [nameValid, photoValid, statusValid]);
+
   const handleFormSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
 
@@ -232,24 +268,28 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   };
 
   const handleSubmit = (): void => {
-    if (!isFormValid()) {
+    if (!formIsValid) {
       // TODO toast warning here
       console.log('not valid!');
 
       return;
     }
 
+    console.log(imageChanged);
     if (!isEditing) return uploadPhoto();
     if (imageChanged) return updatePhoto();
     console.log(nameRef?.current?.getValue().toString());
     console.log(statusRef?.current?.getValue().toString());
-    updateCard();
+    setToggle((prevState) => !prevState);
+    // updateCard();
   };
 
   const handlePhotoChange = (event: ChangeInputEvent) => {
     const file = event.target.files![0];
 
     const result = validatePhoto(file);
+
+    console.log(result, isEditing);
     if (!result) return;
 
     dispatchCard({
@@ -275,8 +315,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   };
 
   const validatePhoto = (photo?: File) => {
-    if (isEditing) return;
-
     photo ??= photoUpload?.file;
     // const photo = photoRef.current?.getValue();
     console.log(photo?.type);
@@ -287,10 +325,14 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     return result;
   };
 
-  const isFormValid = () => nameValid && statusValid && photoValid;
-
   return (
-    <FormLayout onSubmit={handleSubmit} title={label} submitLabel={label}>
+    <FormLayout
+      onSubmit={handleSubmit}
+      title={label}
+      submitLabel={label}
+      canSubmit={formIsValid}
+      isLoadingSubmit={isLoadingSubmit}
+    >
       <form onSubmit={handleFormSubmit}>
         <Input
           id="cardName"
