@@ -1,6 +1,3 @@
-import { ImgHTMLAttributes } from 'react';
-import styles from './style.module.scss';
-
 interface ImageProps {
   src: string;
   alt: string;

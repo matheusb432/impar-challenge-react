@@ -4,6 +4,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, min(calc(var(--card-w))));
   justify-content: space-between;
-  row-gap: 38px;
+  row-gap: 36px;
   @include mxs.reset-list;
 }

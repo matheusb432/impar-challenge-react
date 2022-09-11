@@ -8,7 +8,10 @@ const sortArrayByProp = <T>(arr: T[], prop: keyof T): void => {
   arr.sort((a, b) => (a[prop] > b[prop] ? 1 : -1));
 };
 
-const base64Format = (base64: string) => `data:image/png;base64,${base64}`;
+const base64Format = (base64: string) =>
+  base64.startsWith('data:image/png;base64')
+    ? base64
+    : `data:image/png;base64,${base64}`;
 
 const onEnterPress = <T>(
   event: React.KeyboardEvent<T>,
@@ -30,6 +33,15 @@ const errorCodeToKey = (code?: string) => {
 
 const deepClone = (value: any) => structuredClone(value);
 
+const toBase64 = (file: File): Promise<string | unknown> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
 export {
   sleep,
   sortArrayByProp,
@@ -38,4 +50,5 @@ export {
   getEnvValue,
   errorCodeToKey,
   deepClone,
+  toBase64,
 };

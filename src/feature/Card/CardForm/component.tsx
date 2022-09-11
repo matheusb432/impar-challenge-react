@@ -9,6 +9,7 @@ import { ChangeInputEvent, QueryStatuses, RouteUrls } from '../../../types';
 import {
   buildEqId,
   errorMessages,
+  toBase64,
   validateId,
   validateImage,
   validateText,
@@ -136,18 +137,30 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   useEffect(() => {
     if (updateCardStatus !== QueryStatuses.Success) return;
+    async function dispatchUpdatedCard() {
+      //  TODO add create card success toast
+      const name = nameRef.current!.getValue();
+      const status = statusRef.current!.getValue();
+      let photoBase64: string | unknown = '';
+      try {
+        photoBase64 = await toBase64(photoUpload?.file!);
+      } catch (ex) {
+        // TODO error toast here
+      }
 
-    //  TODO add create card success toast
-    const name = nameRef.current!.getValue();
-    const status = statusRef.current!.getValue();
+      dispatchCard({
+        type: CardActions.EditCard,
+        payload: CardModel.fromApiUpdate(
+          formCard?.id!,
+          name,
+          status,
+          photoBase64 as string
+        ),
+      });
 
-    // TODO add base 64 on dispatch
-    dispatchCard({
-      type: CardActions.EditCard,
-      payload: CardModel.fromApiUpdate(formCard?.id!, name, status, ''),
-    });
-
-    navigate(RouteUrls.Cards);
+      navigate(RouteUrls.Cards);
+    }
+    dispatchUpdatedCard();
   }, [
     nameRef,
     statusRef,
@@ -155,27 +168,34 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     navigate,
     dispatchCard,
     updateCardStatus,
+    photoUpload?.file,
   ]);
 
   useEffect(() => {
     if (createCardStatus !== QueryStatuses.Success) return;
+    async function dispatchCreatedCard() {
+      //  TODO add card success toast
+      const name = nameRef.current!.getValue();
+      const status = statusRef.current!.getValue();
+      let photoBase64: string | unknown = '';
+      try {
+        photoBase64 = await toBase64(photoUpload?.file!);
+      } catch (ex) {
+        // TODO error toast here
+      }
+      dispatchCard({
+        type: CardActions.AddCard,
+        payload: CardModel.fromApiUpdate(
+          createdCardData?.data.id!,
+          name,
+          status,
+          photoBase64 as string
+        ),
+      });
 
-    //  TODO add create card success toast
-    const name = nameRef.current!.getValue();
-    const status = statusRef.current!.getValue();
-
-    // TODO add base 64 on dispatch
-    dispatchCard({
-      type: CardActions.AddCard,
-      payload: CardModel.fromApiUpdate(
-        createdCardData?.data.id,
-        name,
-        status,
-        ''
-      ),
-    });
-
-    navigate(RouteUrls.Cards);
+      navigate(RouteUrls.Cards);
+    }
+    dispatchCreatedCard();
   }, [
     createdCardData?.data.id,
     nameRef,
@@ -183,6 +203,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     dispatchCard,
     createCardStatus,
     navigate,
+    photoUpload?.file,
   ]);
 
   useEffect(() => {

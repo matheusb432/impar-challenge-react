@@ -6,7 +6,6 @@ import { CardModel } from '../types';
 const url = '/cards';
 const photosUrl = '/photos';
 
-// TODO make this generic?
 const useCardApi = () => {
   return {
     useOData,
