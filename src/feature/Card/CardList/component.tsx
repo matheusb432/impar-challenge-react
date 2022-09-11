@@ -2,8 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '../../../assets/icons';
 import { Modal, ModalData } from '../../../components';
-import { useAxios } from '../../../hooks';
-import { paginationQuery, QueryStatuses, RouteUrls } from '../../../types';
+import { QueryStatuses, RouteUrls } from '../../../types';
 import { sortArrayByProp } from '../../../utils';
 import { CardItem } from '../CardItem';
 import { useCardContext } from '../hooks';
@@ -31,8 +30,6 @@ const CardList = () => {
   const { cards } = cardState;
 
   useEffect(() => {
-    // if (deleteStatus) return;
-    // TODO add error toast here if it is error
     if (deleteStatus !== QueryStatuses.Success) return;
 
     dispatchCard({

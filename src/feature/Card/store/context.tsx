@@ -7,12 +7,7 @@ import {
   useReducer,
 } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useAxios } from '../../../hooks';
-import {
-  PaginatedResult,
-  paginationQuery,
-  QueryStatuses,
-} from '../../../types';
+import { PaginatedResult, paginationQuery } from '../../../types';
 import { useCardApi } from '../hooks/use-card-api';
 import { CardModel } from '../types';
 import cardReducer, { initialCardState } from './reducer';

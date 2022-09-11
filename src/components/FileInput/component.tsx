@@ -1,9 +1,7 @@
 import { forwardRef, useImperativeHandle } from 'react';
-import { SearchIcon } from '../../assets/icons';
 import { useInputRef } from '../../hooks';
 import { ChangeInputEvent } from '../../types';
 import { Button } from '../Button';
-import { IconButton } from '../IconButton';
 import { Input, InputForwardRef } from '../Input';
 import styles from './style.module.scss';
 
@@ -26,8 +24,8 @@ export interface FileInputForwardRef {
 }
 
 const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
-  (
-    {
+  (props: FileInputProps, ref) => {
+    const {
       id,
       label,
       accept,
@@ -38,9 +36,19 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
       className,
       onChange,
       onBlur,
-    }: FileInputProps,
-    ref
-  ) => {
+    } = props;
+    const sharedProps = {
+      id,
+      label,
+      isInvalid,
+      required,
+      accept,
+      helperText,
+      placeholder,
+      onChange,
+      onBlur,
+    };
+
     const fileInputRef = useInputRef<InputForwardRef>();
 
     const selectFile = () => {
@@ -56,20 +64,11 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
       },
     }));
 
-    // TODO refactor with sharedProps then {...sharedProps}
     return (
       <Input
+        {...sharedProps}
         type="file"
         className={`${styles['file-input']} ${className ?? ''}`}
-        id={id}
-        label={label}
-        isInvalid={isInvalid}
-        required={required}
-        accept={accept}
-        helperText={helperText}
-        placeholder={placeholder}
-        onChange={onChange}
-        onBlur={onBlur}
         ref={fileInputRef}
       >
         <Button onClick={selectFile} outlineStyle={true}>

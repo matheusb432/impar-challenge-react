@@ -1,10 +1,9 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SideContainer } from '../../../components';
 import { RouteUrls } from '../../../types';
 import { sleep } from '../../../utils';
 import { CardForm } from '../CardForm';
-import styles from './style.module.scss';
 
 interface CardFormLayoutProps {
   isEdit: boolean;

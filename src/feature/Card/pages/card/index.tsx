@@ -1,25 +1,20 @@
 import { Mapper } from 'mapper-ts/lib-esm';
 import { useCallback, useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import {
   BackgroundImage,
   Container,
   Layout,
   SearchInput,
 } from '../../../../components';
-import {
-  useAppContext,
-  useAxios,
-  useDebounce,
-  useQueryParams,
-} from '../../../../hooks';
+import { useAppContext, useDebounce } from '../../../../hooks';
 import {
   ChangeInputEvent,
   PaginatedResult,
   paginationQuery,
   QueryStatuses,
 } from '../../../../types';
-import { buildContains, buildEqId, errorMessages } from '../../../../utils';
+import { buildContains, errorMessages } from '../../../../utils';
 import { CardHeader } from '../../CardHeader';
 import { CardList } from '../../CardList';
 import { useCardApi, useCardContext } from '../../hooks';
@@ -28,9 +23,6 @@ import { CardModel } from '../../types';
 import { SharedProps } from '../../types/shared-props.enum';
 
 const Card = () => {
-  // TODO add filter params?
-  // const navigate = useNavigate();
-  // const params = useQueryParams();
   const api = useCardApi();
   const { changeError } = useAppContext();
 

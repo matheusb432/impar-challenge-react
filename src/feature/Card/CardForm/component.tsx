@@ -16,7 +16,7 @@ import {
 import { useCardContext } from '../hooks';
 import { useCardApi } from '../hooks/use-card-api';
 import { CardActions } from '../store';
-import { CardModel, PhotoModel } from '../types';
+import { CardModel } from '../types';
 import { PhotoUpload } from '../types/photo-upload';
 
 interface CardFormProps {
@@ -39,7 +39,9 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const [statusValid, setStatusValid] = useState(false);
   const [photoValid, setPhotoValid] = useState(false);
 
-  const [toggle, setToggle] = useState<boolean | undefined>(undefined);
+  const [toggleUpdateCard, setToggleUpdateCard] = useState<boolean | undefined>(
+    undefined
+  );
 
   const [formIsValid, setFormIsValid] = useState(false);
 
@@ -50,7 +52,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
 
   const {
-    isLoading: isLoadingCard,
     data: getData,
     status: getStatus,
     mutate: getCard,
@@ -111,10 +112,10 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   ]);
 
   useEffect(() => {
-    if (toggle === undefined) return;
+    if (toggleUpdateCard === undefined) return;
 
     updateCard();
-  }, [toggle, updateCard]);
+  }, [toggleUpdateCard, updateCard]);
 
   const setInputs = useCallback(
     (card: CardModel) => {
@@ -184,7 +185,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     navigate,
   ]);
 
-  // TODO move to callback
   useEffect(() => {
     if (updatePhotoStatus !== QueryStatuses.Success) return;
     // TODO add update photo success toast
@@ -192,7 +192,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     updateCard();
   }, [updatePhotoStatus, updateCard]);
 
-  // TODO move to callback
   useEffect(() => {
     if (uploadPhotoStatus !== QueryStatuses.Success) return;
     // TODO add upload photo success toast
@@ -270,18 +269,13 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const handleSubmit = (): void => {
     if (!formIsValid) {
       // TODO toast warning here
-      console.log('not valid!');
 
       return;
     }
 
-    console.log(imageChanged);
     if (!isEditing) return uploadPhoto();
     if (imageChanged) return updatePhoto();
-    console.log(nameRef?.current?.getValue().toString());
-    console.log(statusRef?.current?.getValue().toString());
-    setToggle((prevState) => !prevState);
-    // updateCard();
+    setToggleUpdateCard((prevState) => !prevState);
   };
 
   const handlePhotoChange = (event: ChangeInputEvent) => {
@@ -289,7 +283,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
     const result = validatePhoto(file);
 
-    console.log(result, isEditing);
     if (!result) return;
 
     dispatchCard({
@@ -316,8 +309,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   const validatePhoto = (photo?: File) => {
     photo ??= photoUpload?.file;
-    // const photo = photoRef.current?.getValue();
-    console.log(photo?.type);
+
     const result = validateImage(photo);
 
     setPhotoValid(result);
