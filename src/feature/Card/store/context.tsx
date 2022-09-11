@@ -22,6 +22,12 @@ interface CardContextProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Contexto para gerenciar o estado do domínio de Cards.
+ *
+ * @param cardState O estado atual de valores relacionados a este domínio.
+ * @param dispatchCard Função para ser chamada sempre que é preciso atualizar o estado.
+ */
 const CardContext = createContext<CardContextProps>({
   cardState: {} as CardState,
   dispatchCard: () => {},

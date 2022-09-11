@@ -1,6 +1,5 @@
 import { AxiosError } from 'axios';
 import { createContext, ReactNode, useEffect, useState } from 'react';
-import { SharedErrorKeys } from '../types';
 import { errorCodeToKey, errorMessages } from '../utils';
 
 type ErrorType = Error | null | string;
@@ -14,6 +13,12 @@ interface AppContextProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Contexto de dados para gerenciar estados globais da aplicação
+ *
+ * @param error Estado mais recente de erro na aplicação.
+ * @param changeError função para atualizar error.
+ */
 const AppContext = createContext<AppContextProps>({
   error: null,
   changeError: (error: ErrorType) => {},

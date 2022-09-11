@@ -6,6 +6,11 @@ import { CardModel } from '../types';
 const url = '/cards';
 const photosUrl = '/photos';
 
+/**
+ * Hook contendo todas as possíveis requisições para endpoints da API relacionados ao domínio de Cards.
+ *
+ * @returns Objeto com referências às funções de requisições.
+ */
 const useCardApi = () => {
   return {
     useOData,

@@ -11,6 +11,13 @@ const initialCardState = (): CardState => ({
   photoUpload: PhotoUpload.empty(),
 });
 
+/**
+ * Reducer para manipular o estado do domínio de Cards.
+ *
+ * @param state O estado atual de valores relacionados a este domínio, implícito na chamada de useReducer
+ * @param action Objeto com ação e payload da atualização do estado.
+ * @returns Novo estado atualizado.
+ */
 const cardReducer = (state: CardState, action: CardAction): CardState => {
   const { type, payload } = action;
   const { cards } = state;

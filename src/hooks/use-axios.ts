@@ -7,6 +7,13 @@ import useAppContext from './use-app-context';
 
 axios.defaults.baseURL = getEnvValue(EnvKeys.ApiUrl);
 
+/**
+ * Hook para abstrair o uso de Axios com react-query e controlar globalmente erros derivados
+ * de consultas para a API.
+ *
+ * @param config Os paramêtros da requisição
+ * @returns Uma consulta
+ */
 const useAxios = <T>(config: AxiosRequestConfig) =>
   useQuery<AxiosResponse<T>, AxiosError<T>>(
     queryKey(config),
