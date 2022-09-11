@@ -8,7 +8,7 @@ import {
   useImperativeHandle,
   useState,
 } from 'react';
-import { useInputRef } from '../../hooks';
+import { useElementRef } from '../../hooks';
 import { ChangeInputEvent, DynamicJsx } from '../../types';
 import { validateText } from '../../utils';
 
@@ -64,7 +64,7 @@ const Input = forwardRef<InputForwardRef, InputProps>(
     const [touched, setTouched] = useState(false);
     const [renderedHelper, setRenderedHelper] = useState<DynamicJsx>();
     const [renderedLabel, setRenderedLabel] = useState<DynamicJsx>();
-    const inputRef = useInputRef();
+    const inputRef = useElementRef();
 
     const renderHelper = useCallback(() => {
       return (

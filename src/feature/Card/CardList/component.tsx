@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '../../../assets/icons';
 import { Modal, ModalData } from '../../../components';
+import { Pagination } from '../../../components/Pagination';
 import { QueryStatuses, RouteUrls } from '../../../types';
 import { sortArrayByProp } from '../../../utils';
 import { CardItem } from '../CardItem';

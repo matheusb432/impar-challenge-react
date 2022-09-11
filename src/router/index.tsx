@@ -1,9 +1,15 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import '../assets/styles/styles.scss';
-import { Card, CardCreate, CardEdit } from '../feature/Card';
+import { Card, CardCreate, CardEdit, useCardApi } from '../feature/Card';
 import { CardContextLayout } from '../feature/Card/store/context';
 import { Home } from '../feature/Home';
-import { RouteSuffixes, RouteUrls } from '../types';
+import {
+  paginationQuery,
+  QueryStatuses,
+  RouteSuffixes,
+  RouteUrls,
+} from '../types';
 
 const urls = { ...RouteUrls };
 const suffixes = { ...RouteSuffixes };

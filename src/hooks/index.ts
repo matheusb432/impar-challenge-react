@@ -2,11 +2,11 @@ import useAppContext from './use-app-context';
 import { useAxios, useAxiosMutation } from './use-axios';
 import useDebounce from './use-debounce';
 import useHovering from './use-hovering';
-import useInputRef from './use-input-ref';
+import useElementRef from './use-element-ref';
 import useQueryParams from './use-query-params';
 
 export {
-  useInputRef,
+  useElementRef,
   useAxios,
   useAxiosMutation,
   useDebounce,

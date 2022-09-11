@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { FileInput, Input, InputForwardRef } from '../../../components';
 import { FormLayout } from '../../../components/FormLayout';
-import { useAppContext, useInputRef } from '../../../hooks';
+import { useAppContext, useElementRef } from '../../../hooks';
 import { ChangeInputEvent, QueryStatuses, RouteUrls } from '../../../types';
 import {
   buildEqId,
@@ -32,9 +32,9 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const [label, setLabel] = useState<string>('');
   const [imageChanged, setImageChanged] = useState(false);
 
-  const nameRef = useInputRef<InputForwardRef>();
-  const statusRef = useInputRef<InputForwardRef>();
-  const photoRef = useInputRef<InputForwardRef>();
+  const nameRef = useElementRef<InputForwardRef>();
+  const statusRef = useElementRef<InputForwardRef>();
+  const photoRef = useElementRef<InputForwardRef>();
 
   const [nameValid, setNameValid] = useState(false);
   const [statusValid, setStatusValid] = useState(false);
@@ -67,7 +67,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   const {
     isLoading: isLoadingUpdatePhoto,
-    data: updatePhotoData,
     status: updatePhotoStatus,
     mutate: updatePhoto,
   } = api.usePutPhoto(formCard?.photoId, photoUpload?.file);
@@ -146,7 +145,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   useEffect(() => {
     if (updateCardStatus !== QueryStatuses.Success) return;
-    async function dispatchUpdatedCard() {
+    async function dispatchUpdatedCard(): Promise<void> {
       //  TODO add create card success toast
       const name = nameRef.current!.getValue();
       const status = statusRef.current!.getValue();
@@ -185,7 +184,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   useEffect(() => {
     if (createCardStatus !== QueryStatuses.Success) return;
-    async function dispatchCreatedCard() {
+    async function dispatchCreatedCard(): Promise<void> {
       //  TODO add card success toast
       const name = nameRef.current!.getValue();
       const status = statusRef.current!.getValue();

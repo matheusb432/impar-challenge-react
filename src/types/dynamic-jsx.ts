@@ -1,1 +1,2 @@
-export type DynamicJsx = JSX.Element | boolean | null | undefined;
+import { ReactNode } from 'react';
+export type DynamicJsx = ReactNode | boolean | null | undefined;

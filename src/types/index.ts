@@ -6,6 +6,7 @@ export * from './odata-operators.enum';
 export * from './odata-params';
 export * from './odata-utils';
 export * from './paginated-result';
+export * from './pagination-data';
 export * from './post-return';
 export * from './query-statuses.enum';
 export * from './route-suffixes.enum';

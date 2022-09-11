@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle } from 'react';
-import { useInputRef } from '../../hooks';
+import { useElementRef } from '../../hooks';
 import { ChangeInputEvent } from '../../types';
 import { Button } from '../Button';
 import { Input, InputForwardRef } from '../Input';
@@ -52,7 +52,7 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
       onBlur,
     };
 
-    const fileInputRef = useInputRef<InputForwardRef>();
+    const fileInputRef = useElementRef<InputForwardRef>();
 
     const selectFile = () => {
       fileInputRef.current?.clickInput();

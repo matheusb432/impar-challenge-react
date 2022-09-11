@@ -42,6 +42,10 @@ const toBase64 = (file: File): Promise<string | unknown> =>
     reader.onerror = (error) => reject(error);
   });
 
+const arrayFrom = (items: number, increment = 0) => {
+  return Array.from(Array(items).keys()).map((i) => i + increment);
+};
+
 export {
   sleep,
   sortArrayByProp,
@@ -51,4 +55,5 @@ export {
   errorCodeToKey,
   deepClone,
   toBase64,
+  arrayFrom,
 };
