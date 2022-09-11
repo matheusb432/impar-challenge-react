@@ -1,5 +1,3 @@
-const uploadPhotoKey = 'photo';
-
 export class PhotoUpload {
   file?: File;
 

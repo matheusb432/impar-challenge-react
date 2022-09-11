@@ -1,9 +1,8 @@
 import { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { CloseIcon, TrashIcon } from '../../assets/icons';
+import { CloseIcon } from '../../assets/icons';
 import { Backdrop } from '../Backdrop';
 import { Button } from '../Button';
-import { IconButton } from '../IconButton';
 import styles from './style.module.scss';
 import { ModalData } from './types';
 

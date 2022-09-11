@@ -1,7 +1,6 @@
 import { SearchIcon } from '../../assets/icons';
 import { ChangeInputEvent } from '../../types';
 import { onEnterPress } from '../../utils';
-import { IconButton } from '../IconButton';
 import { Input } from '../Input';
 import styles from './style.module.scss';
 

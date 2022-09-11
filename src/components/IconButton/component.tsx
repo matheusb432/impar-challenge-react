@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { useHovering } from '../../hooks';
 import styles from './style.module.scss';
 

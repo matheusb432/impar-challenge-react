@@ -1,10 +1,5 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { PencilIcon, TrashIcon } from '../../../assets/icons';
 import { CardWrapper, IconButton } from '../../../components';
-import { RouteUrls } from '../../../types';
-import { useCardContext } from '../hooks';
-import { CardActions } from '../store';
 import { CardModel } from '../types';
 import styles from './style.module.scss';
 

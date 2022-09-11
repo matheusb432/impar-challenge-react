@@ -1,5 +1,4 @@
 import { Container, Layout } from '../../../components';
-import styles from './style.module.scss';
 
 const Home = () => {
   return (
