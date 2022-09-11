@@ -1,4 +1,5 @@
 export * from './change-input-event';
+export * from './dynamic-jsx';
 export * from './env-keys.enum';
 export * from './http-methods.enum';
 export * from './odata-operators.enum';

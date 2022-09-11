@@ -3,10 +3,14 @@ import {
   forwardRef,
   HTMLInputTypeAttribute,
   ReactNode,
+  useCallback,
+  useEffect,
   useImperativeHandle,
   useState,
 } from 'react';
 import { useInputRef } from '../../hooks';
+import { DynamicJsx } from '../../types';
+import { validateText } from '../../utils';
 
 import styles from './style.module.scss';
 
@@ -19,6 +23,10 @@ interface InputProps {
   type?: HTMLInputTypeAttribute;
   isInvalid?: boolean;
   value?: string;
+  helperText?: string;
+  accept?: string;
+  required?: boolean;
+  showHelperIfValid?: boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
   onKeyDown?: ((e: React.KeyboardEvent<HTMLInputElement>) => void) | null;
@@ -39,16 +47,53 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       placeholder,
       id,
       value,
+      accept,
       label,
       onChange,
       onBlur,
       onKeyDown,
+      helperText,
+      showHelperIfValid = false,
+      required = true,
       isInvalid = false,
     }: InputProps,
     ref
   ) => {
     const [touched, setTouched] = useState(false);
+    const [renderedHelper, setRenderedHelper] = useState<DynamicJsx>();
+    const [renderedLabel, setRenderedLabel] = useState<DynamicJsx>();
     const inputRef = useInputRef();
+
+    const renderHelper = useCallback(() => {
+      return (
+        touched &&
+        validateText(helperText) &&
+        (showHelperIfValid || isInvalid) && (
+          <span className={styles.helper}>{helperText}</span>
+        )
+      );
+    }, [touched, showHelperIfValid, isInvalid, helperText]);
+
+    const renderLabel = useCallback(() => {
+      return (
+        !!label?.trim() && (
+          <label htmlFor={id}>
+            <span className={styles.label}>{label}</span>
+            {!required ? (
+              <span className={styles['label-helper']}> - opcional</span>
+            ) : null}
+          </label>
+        )
+      );
+    }, [id, label, required]);
+
+    useEffect(() => {
+      setRenderedHelper(renderHelper());
+    }, [renderHelper]);
+
+    useEffect(() => {
+      setRenderedLabel(renderLabel());
+    }, [renderLabel]);
 
     const clickInput = () => {
       inputRef.current?.click();
@@ -67,6 +112,11 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       onBlur?.();
     };
 
+    const controlCssClasses = () =>
+      `${styles.control} ${touched && isInvalid ? styles.invalid : ''} ${
+        className ?? ''
+      }`;
+
     useImperativeHandle(ref, () => {
       return {
         clickInput: clickInput,
@@ -76,22 +126,20 @@ const Input = forwardRef<InputForwardRef, InputProps>(
     });
 
     return (
-      <div
-        className={`${styles.control} ${
-          touched && isInvalid ? styles.invalid : ''
-        } ${className ?? ''}`}
-      >
-        {!!label?.trim() && <label htmlFor={id}>{label}</label>}
+      <div className={controlCssClasses()}>
+        {renderedLabel}
         <input
           ref={inputRef}
           type={type}
           id={id}
           onBlur={handleBlur}
           onChange={onChange}
+          accept={accept}
           value={value}
           placeholder={placeholder ?? ''}
           onKeyDown={(e) => onKeyDown?.(e)}
         ></input>
+        {renderedHelper}
         {children}
       </div>
     );

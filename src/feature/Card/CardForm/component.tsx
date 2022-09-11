@@ -6,7 +6,13 @@ import { FileInput, Input, InputForwardRef } from '../../../components';
 import { FormLayout } from '../../../components/FormLayout';
 import { useAppContext, useInputRef } from '../../../hooks';
 import { ChangeInputEvent, QueryStatuses, RouteUrls } from '../../../types';
-import { buildEqId, errorMessages, validateId } from '../../../utils';
+import {
+  buildEqId,
+  errorMessages,
+  validateId,
+  validateImage,
+  validateText,
+} from '../../../utils';
 import { useCardContext } from '../hooks';
 import { useCardApi } from '../hooks/use-card-api';
 import { CardActions } from '../store';
@@ -28,6 +34,10 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const nameRef = useInputRef<InputForwardRef>();
   const statusRef = useInputRef<InputForwardRef>();
   const photoRef = useInputRef<InputForwardRef>();
+
+  const [nameValid, setNameValid] = useState(false);
+  const [statusValid, setStatusValid] = useState(false);
+  const [photoValid, setPhotoValid] = useState(false);
 
   const { changeError } = useAppContext();
   const { cardState, dispatchCard } = useCardContext();
@@ -64,11 +74,13 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   const { status: updateCardStatus, mutate: updateCard } = api.usePut(
     formCard?.id,
-    CardModel.forPut(
-      formCard?.id,
-      nameRef.current?.getValue(),
-      statusRef.current?.getValue(),
-      uploadPhotoData?.data?.id ?? formCard?.photoId
+    structuredClone(
+      CardModel.forPut(
+        formCard?.id,
+        nameRef.current?.getValue(),
+        statusRef.current?.getValue(),
+        uploadPhotoData?.data?.id ?? formCard?.photoId
+      )
     )
   );
 
@@ -79,8 +91,14 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
       nameRef.current!.setValue(card.name);
       statusRef.current!.setValue(card.status);
+
+      if (isEditing) {
+        setNameValid(true);
+        setStatusValid(true);
+        setPhotoValid(true);
+      }
     },
-    [nameRef, statusRef]
+    [nameRef, statusRef, isEditing]
   );
 
   useEffect(() => {
@@ -207,19 +225,33 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     setInputs(formCard);
   }, [setInputs, formCard]);
 
-  const handleSubmit = (event: SyntheticEvent) => {
+  const handleFormSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
 
-    handleFormSubmit();
+    handleSubmit();
   };
 
-  const handleFormSubmit = (): void => {
+  const handleSubmit = (): void => {
+    if (!isFormValid()) {
+      // TODO toast warning here
+      console.log('not valid!');
+
+      return;
+    }
+
     if (!isEditing) return uploadPhoto();
     if (imageChanged) return updatePhoto();
+    console.log(nameRef?.current?.getValue().toString());
+    console.log(statusRef?.current?.getValue().toString());
     updateCard();
   };
 
   const handlePhotoChange = (event: ChangeInputEvent) => {
+    const file = event.target.files![0];
+
+    const result = validatePhoto(file);
+    if (!result) return;
+
     dispatchCard({
       type: CardActions.SetPhotoUpload,
       payload: PhotoUpload.fromFile(event.target.files![0]),
@@ -230,23 +262,64 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     }
   };
 
+  const validateName = () => {
+    const name = nameRef.current?.getValue();
+
+    setNameValid(validateText(name, { min: 1, max: 100 }));
+  };
+
+  const validateStatus = () => {
+    const status = statusRef.current?.getValue();
+
+    setStatusValid(validateText(status, { required: false, min: 1, max: 100 }));
+  };
+
+  const validatePhoto = (photo?: File) => {
+    if (isEditing) return;
+
+    photo ??= photoUpload?.file;
+    // const photo = photoRef.current?.getValue();
+    console.log(photo?.type);
+    const result = validateImage(photo);
+
+    setPhotoValid(result);
+
+    return result;
+  };
+
+  const isFormValid = () => nameValid && statusValid && photoValid;
+
   return (
-    <FormLayout onSubmit={handleFormSubmit} title={label} submitLabel={label}>
-      <form onSubmit={handleSubmit}>
+    <FormLayout onSubmit={handleSubmit} title={label} submitLabel={label}>
+      <form onSubmit={handleFormSubmit}>
         <Input
           id="cardName"
           label="Digite um nome para o card"
           placeholder="Digite o título"
+          helperText={
+            'Nome inválido! precisa ser um valor de 1 e 100 caracteres'
+          }
           ref={nameRef}
+          onBlur={validateName}
+          isInvalid={!nameValid}
         />
         <Input
           id="cardStatus"
           label="Defina o status do card"
           placeholder="Digite o status"
+          helperText={
+            'Status inválido! precisa ser um valor de 0 e 100 caracteres'
+          }
           ref={statusRef}
+          required={false}
+          onBlur={validateStatus}
+          isInvalid={!statusValid}
         />
         <FileInput
           id="cardPhoto"
+          accept=""
+          helperText={'Arquivo inválido!'}
+          isInvalid={!photoValid}
           label={
             isEditing
               ? 'Inclua uma imagem para substituir a imagem no card'
