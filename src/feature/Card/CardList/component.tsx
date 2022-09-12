@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '../../../assets/icons';
 import { Modal, ModalData } from '../../../components';
 import { Pagination } from '../../../components/Pagination';
+import { ToastData } from '../../../components/Toast/toast-data';
+import { useAppContext } from '../../../hooks';
 import { QueryStatuses, RouteUrls } from '../../../types';
-import { sortArrayByProp } from '../../../utils';
+import { errorMessages, sortArrayByProp } from '../../../utils';
 import { CardItem } from '../CardItem';
 import { useCardContext } from '../hooks';
 import { useCardApi } from '../hooks/use-card-api';
@@ -16,6 +18,7 @@ import styles from './style.module.scss';
 const CardList = () => {
   const navigate = useNavigate();
   const api = useCardApi();
+  const { showToast } = useAppContext();
 
   const [cardToDelete, setCardToDelete] = useState<CardModel | null>(null);
 
@@ -80,8 +83,10 @@ const CardList = () => {
   }, [renderCards]);
 
   const deleteCard = () => {
-    // TODO add error toast here
-    if (cardToDelete == null) return;
+    if (cardToDelete == null) {
+      showToast(ToastData.error(errorMessages.deleteCard));
+      return;
+    }
 
     deleteRequest();
   };

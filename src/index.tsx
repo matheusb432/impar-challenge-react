@@ -12,11 +12,9 @@ const root = ReactDOM.createRoot(
 const queryClient = new QueryClient();
 
 root.render(
-  <React.StrictMode>
-    <AppContextProvider>
-      <QueryClientProvider client={queryClient}>
-        <IndexRouter />
-      </QueryClientProvider>
-    </AppContextProvider>
-  </React.StrictMode>
+  <AppContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <IndexRouter />
+    </QueryClientProvider>
+  </AppContextProvider>
 );

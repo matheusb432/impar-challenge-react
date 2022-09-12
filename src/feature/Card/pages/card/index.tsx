@@ -7,12 +7,8 @@ import {
   Layout,
   SearchInput,
 } from '../../../../components';
-import {
-  Pagination,
-  PaginationForwardRef,
-  usePagination,
-} from '../../../../components/Pagination';
-import { useAppContext, useDebounce, useElementRef } from '../../../../hooks';
+import { Pagination, usePagination } from '../../../../components/Pagination';
+import { useAppContext, useDebounce } from '../../../../hooks';
 import {
   ChangeInputEvent,
   PaginatedResult,
@@ -35,22 +31,21 @@ const Card = () => {
 
   const [searchText, setSearchText] = useState<string>('');
 
-  const [toggleSearch, setToggleSearch] = useState(false);
+  const [toggleSearch, setToggleSearch] = useState<boolean | undefined>(
+    undefined
+  );
 
-  const { cardState, dispatchCard } = useCardContext();
-  const { cards } = cardState;
+  const { dispatchCard } = useCardContext();
   const [totalCards, setTotalCards] = useState(0);
 
   const { debounceFn, clearTimer } = useDebounce(() => filterCards(), 500);
-
-  // const paginationRef = useElementRef<PaginationForwardRef>();
 
   const {
     data: getCardsData,
     status: getCardsStatus,
     mutate: getCards,
   } = api.useODataMutation<PaginatedResult<CardModel>>({
-    ...paginationQuery(currentCardsPage, 2),
+    ...paginationQuery(currentCardsPage),
     $filter: buildContains(SharedProps.Name, searchText),
   });
 
@@ -62,17 +57,17 @@ const Card = () => {
 
   useEffect(() => {
     setCurrentCardsPage(paginationProps?.currentPage);
-    // getCards();
-  }, [paginationProps?.currentPage, getCards]);
+  }, [paginationProps?.currentPage]);
 
   useEffect(() => {
     setToggleSearch((prevState) => !prevState);
   }, [currentCardsPage]);
 
   useEffect(() => {
+    if (toggleSearch === undefined) return;
+
     getCards();
   }, [getCards, toggleSearch]);
-  // }, [currentCardsPage, getCards]);
 
   useEffect(() => {
     if (getCardsStatus !== QueryStatuses.Success) return;

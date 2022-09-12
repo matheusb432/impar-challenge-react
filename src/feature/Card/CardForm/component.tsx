@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { FileInput, Input, InputForwardRef } from '../../../components';
 import { FormLayout } from '../../../components/FormLayout';
+import { ToastData } from '../../../components/Toast/toast-data';
 import { useAppContext, useElementRef } from '../../../hooks';
 import { ChangeInputEvent, QueryStatuses, RouteUrls } from '../../../types';
 import {
@@ -46,7 +47,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   const [formIsValid, setFormIsValid] = useState(false);
 
-  const { changeError } = useAppContext();
+  const { changeError, showToast } = useAppContext();
   const { cardState, dispatchCard } = useCardContext();
   const { cards, formCard, photoUpload } = cardState;
 
@@ -128,7 +129,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   const setInputs = useCallback(
     (card: CardModel) => {
-      // TODO error toast
       if (card == null) return;
 
       nameRef.current!.setValue(card.name);
@@ -146,14 +146,15 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   useEffect(() => {
     if (updateCardStatus !== QueryStatuses.Success) return;
     async function dispatchUpdatedCard(): Promise<void> {
-      //  TODO add create card success toast
+      showToast(ToastData.success('Card atualizado com sucesso!'));
+
       const name = nameRef.current!.getValue();
       const status = statusRef.current!.getValue();
       let photoBase64: string | unknown = '';
       try {
         photoBase64 = await getDispatchBase64Photo();
       } catch (ex) {
-        // TODO error toast here
+        showToast(ToastData.error(errorMessages.photoDispatchError));
       }
 
       dispatchCard({
@@ -185,14 +186,15 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   useEffect(() => {
     if (createCardStatus !== QueryStatuses.Success) return;
     async function dispatchCreatedCard(): Promise<void> {
-      //  TODO add card success toast
+      showToast(ToastData.success('Card criado com sucesso!'));
+
       const name = nameRef.current!.getValue();
       const status = statusRef.current!.getValue();
       let photoBase64: string | unknown = '';
       try {
         photoBase64 = await getDispatchBase64Photo();
       } catch (ex) {
-        // TODO error toast here
+        showToast(ToastData.error(errorMessages.photoDispatchError));
       }
       dispatchCard({
         type: CardActions.AddCard,
@@ -222,14 +224,14 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   useEffect(() => {
     if (updatePhotoStatus !== QueryStatuses.Success) return;
-    // TODO add update photo success toast
+    showToast(ToastData.success('Imagem atualizada com sucesso!'));
 
     updateCard();
   }, [updatePhotoStatus, updateCard]);
 
   useEffect(() => {
     if (uploadPhotoStatus !== QueryStatuses.Success) return;
-    // TODO add upload photo success toast
+    showToast(ToastData.success('Upload de imagem feito com sucesso!'));
 
     createCard();
   }, [uploadPhotoStatus, createCard]);
@@ -308,7 +310,9 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   const handleSubmit = (): void => {
     if (!formIsValid) {
-      // TODO toast warning here
+      showToast(
+        ToastData.warning('Formulário inválido, não é possível submeter!')
+      );
 
       return;
     }

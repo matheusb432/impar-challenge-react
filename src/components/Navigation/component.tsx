@@ -9,7 +9,6 @@ const Navigation = () => {
   return (
     <nav className={styles.nav}>
       <ul className={styles['nav-items']}>
-        <NavItem url={urls.Home}>Home</NavItem>
         <NavItem url={urls.Cards}>Cards</NavItem>
       </ul>
     </nav>

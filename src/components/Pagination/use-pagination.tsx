@@ -9,12 +9,10 @@ const usePagination = () => {
 
   const next = () => {
     setCurrentPage((prevState) => prevState + 1);
-    console.log(currentPage);
   };
 
   const previous = () => {
     setCurrentPage((prevState) => prevState - 1);
-    console.log(currentPage);
   };
 
   return { currentPage, changePage, next, previous };

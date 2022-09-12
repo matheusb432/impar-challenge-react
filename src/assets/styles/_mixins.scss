@@ -41,3 +41,8 @@
     filter: brightness($active);
   }
 }
+
+@mixin toast-theme($color, $darkness: 60%) {
+  background-color: $color;
+  border-left: 5px solid darken($color, $darkness);
+}

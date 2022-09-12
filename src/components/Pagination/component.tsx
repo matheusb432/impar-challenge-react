@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { DynamicJsx } from '../../types';
+import { defaultItemsPerPage, DynamicJsx } from '../../types';
 import { arrayFrom } from '../../utils';
 import { Button } from '../Button';
 import styles from './style.module.scss';
@@ -26,7 +26,7 @@ const Pagination = ({
 }: PaginationProps) => {
   const [renderedPageItems, setRenderedPageItems] = useState<DynamicJsx>();
   const [maxPages, setMaxPages] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(2);
+  const itemsPerPage = defaultItemsPerPage;
 
   const renderPageItems = useCallback(() => {
     return arrayFrom(maxPages, 1).map((page: number) => {

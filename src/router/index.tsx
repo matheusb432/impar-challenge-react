@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import '../assets/styles/styles.scss';
 import { Card, CardCreate, CardEdit, useCardApi } from '../feature/Card';
 import { CardContextLayout } from '../feature/Card/store/context';
@@ -19,7 +19,7 @@ const IndexRouter = () => {
     <BrowserRouter>
       <Routes>
         <Route element={<CardContextLayout />}>
-          <Route path={urls.Home} element={<Home />} />
+          <Route path="/" element={<Navigate to={urls.Cards} />} />
           <Route path={urls.Cards} element={<Card />}>
             <Route path={suffixes.Create} element={<CardCreate />} />
             <Route path={`${suffixes.Edit}/:id`} element={<CardEdit />} />

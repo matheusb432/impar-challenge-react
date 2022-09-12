@@ -1,0 +1,76 @@
+@use 'src/assets/styles/_mixins.scss' as mxs;
+
+$position: right;
+$fade-duration: 0.5s;
+$delay-duration: 4.5s;
+
+.toast {
+  @include mxs.add-shadow(#000);
+  visibility: hidden;
+  min-width: 200px;
+  max-width: 440px;
+  background-color: #333;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  padding-right: 32px;
+  position: fixed;
+  z-index: 1;
+  opacity: 0;
+  top: 30px;
+  #{$position}: 30px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background-color: #fff;
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    animation: fadein $fade-duration, fadeout $fade-duration $delay-duration;
+  }
+
+  &.success {
+    @include mxs.toast-theme(#c2ffc2);
+  }
+
+  &.warning {
+    @include mxs.toast-theme(#f1e5b5, 35%);
+  }
+
+  &.error {
+    @include mxs.toast-theme(#ffbebe, 60%);
+  }
+}
+
+@keyframes fadein {
+  from {
+    #{$position}: 0;
+    opacity: 0;
+  }
+  to {
+    #{$position}: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    #{$position}: 30px;
+    opacity: 1;
+  }
+  to {
+    #{$position}: 0;
+    opacity: 0;
+  }
+}
+
+.actions {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+
+  .close-icon {
+    @include mxs.size(16px);
+    cursor: pointer;
+  }
+}
