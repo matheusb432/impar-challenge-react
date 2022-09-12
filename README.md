@@ -33,6 +33,7 @@ servir uma experiência de usuário intuitiva e responsiva.
 ### Rodando a SPA em ambiente de desenvolvimento
 
 1. Clonar este repositório com o comando `git clone`.
-2. Rodar o comando `npm install` para instalar as dependências do projeto
-3. Rodar o comando `npm start` para inicializar uma instância em ambiente de desenvolvimento da aplicação
-4. Acessar a SPA em <http://localhost:3000> para verificar seu funcionamento.
+2. Rodar o comando `npm install` para instalar as dependências do projeto.
+3. Rodar o comando `npm start` para inicializar uma instância em ambiente de desenvolvimento da aplicação.
+4. Definir REACT_APP_API_URL em um .env local para acessar a API no ambiente de sua escolha.
+5. Acessar a SPA em <http://localhost:3000> para verificar seu funcionamento.

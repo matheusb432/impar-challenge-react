@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { Mapper } from 'mapper-ts/lib-esm';
 import {
   createContext,
@@ -5,7 +6,9 @@ import {
   ReactNode,
   useEffect,
   useReducer,
+  useState,
 } from 'react';
+import { UseMutateFunction } from 'react-query';
 import { Outlet } from 'react-router-dom';
 import { PaginatedResult, paginationQuery } from '../../../types';
 import { useCardApi } from '../hooks/use-card-api';
@@ -16,6 +19,9 @@ import { CardAction, CardActions, CardState } from './types';
 interface CardContextProps {
   cardState: CardState;
   dispatchCard: Dispatch<CardAction>;
+  currentCardsPage: number;
+  changeCurrentCardsPage: (currentCardsPage: number) => void;
+  resetCardsPage: () => void;
 }
 
 interface CardContextProviderProps {
@@ -31,18 +37,26 @@ interface CardContextProviderProps {
 const CardContext = createContext<CardContextProps>({
   cardState: {} as CardState,
   dispatchCard: () => {},
+  currentCardsPage: 1,
+  changeCurrentCardsPage: () => {},
+  resetCardsPage: () => {},
 });
 
 const CardContextProvider = ({ children }: CardContextProviderProps) => {
   const [cardState, dispatchCard] = useReducer(cardReducer, initialCardState());
+  const [currentCardsPage, setCurrentCardsPage] = useState(1);
 
-  const { data, status, mutate } = useCardApi().useODataMutation<
-    PaginatedResult<CardModel>
-  >(paginationQuery());
+  const {
+    data,
+    status,
+    mutate: mutateCards,
+  } = useCardApi().useODataMutation<PaginatedResult<CardModel>>(
+    paginationQuery(currentCardsPage)
+  );
 
   useEffect(() => {
-    mutate();
-  }, [mutate]);
+    mutateCards();
+  }, [mutateCards]);
 
   const result = data?.data;
 
@@ -55,8 +69,27 @@ const CardContextProvider = ({ children }: CardContextProviderProps) => {
     });
   }, [status, result]);
 
+  const changeCurrentCardsPage = (page: number) => {
+    setCurrentCardsPage(page);
+  };
+
+  const resetCardsPage = () => {
+    console.log(currentCardsPage);
+    if (currentCardsPage === 1) return mutateCards();
+
+    changeCurrentCardsPage(1);
+  };
+
   return (
-    <CardContext.Provider value={{ cardState, dispatchCard }}>
+    <CardContext.Provider
+      value={{
+        cardState,
+        dispatchCard,
+        currentCardsPage,
+        changeCurrentCardsPage,
+        resetCardsPage,
+      }}
+    >
       {children}
     </CardContext.Provider>
   );

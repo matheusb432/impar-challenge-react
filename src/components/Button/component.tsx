@@ -30,7 +30,7 @@ const Button = ({
   return (
     <button
       type={type}
-      disabled={disabled}
+      disabled={disabled || isLoading}
       title={disabled ? disabledReason : ''}
       style={{
         color: colorTheme ?? '',

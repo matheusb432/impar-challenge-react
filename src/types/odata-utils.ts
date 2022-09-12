@@ -1,6 +1,6 @@
 import { ODataParams } from './odata-params';
 
-export const defaultItemsPerPage = 5;
+export const defaultItemsPerPage = 20;
 
 const paginationQuery = (
   page = 1,

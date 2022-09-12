@@ -12,6 +12,7 @@ interface ModalProps {
   show: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isLoadingConfirm?: boolean;
 }
 
 const Modal = ({
@@ -19,6 +20,7 @@ const Modal = ({
   modalData,
   show,
   onClose,
+  isLoadingConfirm = false,
   onConfirm,
 }: ModalProps) => {
   const { iconFn: icon, title, colorTheme, confirmText } = modalData;
@@ -48,6 +50,7 @@ const Modal = ({
               backgroundColor: colorTheme ?? '',
               marginRight: '16px',
             }}
+            isLoading={isLoadingConfirm}
           >
             {confirmText}
           </Button>

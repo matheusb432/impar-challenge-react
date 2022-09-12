@@ -22,25 +22,31 @@ const CardList = () => {
 
   const [cardToDelete, setCardToDelete] = useState<CardModel | null>(null);
 
-  const { status: deleteStatus, mutate: deleteRequest } = api.useDelete(
-    cardToDelete?.id
-  );
+  const {
+    isLoading: isLoadingDelete,
+    status: deleteStatus,
+    mutate: deleteRequest,
+  } = api.useDelete(cardToDelete?.id);
 
   const [showModal, setShowModal] = useState(false);
   const [renderedCards, setRenderedCards] = useState<JSX.Element[]>([]);
 
-  const { cardState, dispatchCard } = useCardContext();
+  const { cardState, dispatchCard, resetCardsPage } = useCardContext();
 
   const { cards } = cardState;
 
   useEffect(() => {
+    if (isLoadingDelete) return;
+
+    resetCardsPage();
+  }, [isLoadingDelete]);
+
+  useEffect(() => {
     if (deleteStatus !== QueryStatuses.Success) return;
 
-    dispatchCard({
-      type: CardActions.RemoveCard,
-      payload: cardToDelete!,
-    });
-  }, [deleteStatus, cardToDelete, dispatchCard, navigate]);
+    showToast(ToastData.success('Card excluído com sucesso!'));
+    setShowModal(false);
+  }, [deleteStatus, dispatchCard]);
 
   const modalData: ModalData = {
     title: 'Excluir',
@@ -85,6 +91,7 @@ const CardList = () => {
   const deleteCard = () => {
     if (cardToDelete == null) {
       showToast(ToastData.error(errorMessages.deleteCard));
+
       return;
     }
 
@@ -97,7 +104,6 @@ const CardList = () => {
   };
 
   const handleConfirm = () => {
-    setShowModal(false);
     deleteCard();
   };
 
@@ -109,6 +115,7 @@ const CardList = () => {
         show={showModal}
         onClose={handleClose}
         onConfirm={handleConfirm}
+        isLoadingConfirm={isLoadingDelete}
       >
         Certeza que deseja excluir?
       </Modal>

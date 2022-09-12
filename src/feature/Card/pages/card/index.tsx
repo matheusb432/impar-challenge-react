@@ -27,7 +27,6 @@ const Card = () => {
   const api = useCardApi();
   const { changeError } = useAppContext();
   const paginationProps = usePagination();
-  const [currentCardsPage, setCurrentCardsPage] = useState(1);
 
   const [searchText, setSearchText] = useState<string>('');
 
@@ -35,7 +34,8 @@ const Card = () => {
     undefined
   );
 
-  const { dispatchCard } = useCardContext();
+  const { dispatchCard, currentCardsPage, changeCurrentCardsPage } =
+    useCardContext();
   const [totalCards, setTotalCards] = useState(0);
 
   const { debounceFn, clearTimer } = useDebounce(() => filterCards(), 500);
@@ -52,12 +52,12 @@ const Card = () => {
   const filterCards = useCallback(() => {
     clearTimer();
     getCards();
-    setCurrentCardsPage(1);
-  }, [clearTimer, getCards]);
+    changeCurrentCardsPage(1);
+  }, [clearTimer, getCards, changeCurrentCardsPage]);
 
   useEffect(() => {
-    setCurrentCardsPage(paginationProps?.currentPage);
-  }, [paginationProps?.currentPage]);
+    changeCurrentCardsPage(paginationProps?.currentPage);
+  }, [paginationProps?.currentPage, changeCurrentCardsPage]);
 
   useEffect(() => {
     setToggleSearch((prevState) => !prevState);

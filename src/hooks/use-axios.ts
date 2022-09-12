@@ -5,7 +5,8 @@ import { getEnvValue } from '../utils';
 import { EnvKeys } from './../types/env-keys.enum';
 import useAppContext from './use-app-context';
 
-axios.defaults.baseURL = getEnvValue(EnvKeys.ApiUrl);
+axios.defaults.baseURL =
+  getEnvValue(EnvKeys.ApiUrl) || 'http://localhost:5000/api';
 
 /**
  * Hook para abstrair o uso de Axios com react-query e controlar globalmente erros derivados
