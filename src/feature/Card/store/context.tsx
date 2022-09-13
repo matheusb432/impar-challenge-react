@@ -74,7 +74,6 @@ const CardContextProvider = ({ children }: CardContextProviderProps) => {
   };
 
   const resetCardsPage = () => {
-    console.log(currentCardsPage);
     if (currentCardsPage === 1) return mutateCards();
 
     changeCurrentCardsPage(1);
