@@ -1,14 +1,13 @@
-import { AxiosResponse } from 'axios';
 import { Mapper } from 'mapper-ts/lib-esm';
 import {
   createContext,
   Dispatch,
   ReactNode,
+  useCallback,
   useEffect,
   useReducer,
   useState,
 } from 'react';
-import { UseMutateFunction } from 'react-query';
 import { Outlet } from 'react-router-dom';
 import { PaginatedResult, paginationQuery } from '../../../types';
 import { useCardApi } from '../hooks/use-card-api';
@@ -73,11 +72,16 @@ const CardContextProvider = ({ children }: CardContextProviderProps) => {
     setCurrentCardsPage(page);
   };
 
-  const resetCardsPage = () => {
+  // const resetCardsPage = () => {
+  //   if (currentCardsPage === 1) return mutateCards();
+
+  //   changeCurrentCardsPage(1);
+  // };
+  const resetCardsPage = useCallback(() => {
     if (currentCardsPage === 1) return mutateCards();
 
     changeCurrentCardsPage(1);
-  };
+  }, [currentCardsPage, mutateCards]);
 
   return (
     <CardContext.Provider

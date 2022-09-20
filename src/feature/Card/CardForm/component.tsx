@@ -38,7 +38,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const photoRef = useElementRef<InputForwardRef>();
 
   const [nameValid, setNameValid] = useState(false);
-  const [statusValid, setStatusValid] = useState(false);
+  const [statusValid, setStatusValid] = useState(true);
   const [photoValid, setPhotoValid] = useState(false);
 
   const [toggleUpdateCard, setToggleUpdateCard] = useState<boolean | undefined>(
@@ -181,6 +181,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     photoUpload.file,
     formCard?.photoId,
     getDispatchBase64Photo,
+    showToast,
   ]);
 
   useEffect(() => {
@@ -218,6 +219,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     createCardStatus,
     navigate,
     photoUpload.file,
+    showToast,
     uploadPhotoData?.data?.id,
     getDispatchBase64Photo,
   ]);
@@ -227,14 +229,14 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     showToast(ToastData.success('Imagem atualizada com sucesso!'));
 
     updateCard();
-  }, [updatePhotoStatus, updateCard]);
+  }, [updatePhotoStatus, updateCard, showToast]);
 
   useEffect(() => {
     if (uploadPhotoStatus !== QueryStatuses.Success) return;
     showToast(ToastData.success('Upload de imagem feito com sucesso!'));
 
     createCard();
-  }, [uploadPhotoStatus, createCard]);
+  }, [uploadPhotoStatus, createCard, showToast]);
 
   const returnToList = useCallback(() => {
     changeError(errorMessages.invalidCardId);
@@ -310,11 +312,9 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   const handleSubmit = (): void => {
     if (!formIsValid) {
-      showToast(
+      return showToast(
         ToastData.warning('Formulário inválido, não é possível submeter!')
       );
-
-      return;
     }
 
     if (!isEditing) return uploadPhoto();

@@ -37,3 +37,9 @@ servir uma experiência de usuário intuitiva e responsiva.
 3. Rodar o comando `npm start` para inicializar uma instância em ambiente de desenvolvimento da aplicação.
 4. Definir REACT_APP_API_URL em um .env local para acessar a API no ambiente de sua escolha.
 5. Acessar a SPA em <http://localhost:3000> para verificar seu funcionamento.
+
+## Linter
+
+Para rodar o ESLint no projeto que verificará instâncias de code smells, use o comando na raiz do projeto:
+
+`npx eslint --ext .ts --ext .tsx src/`

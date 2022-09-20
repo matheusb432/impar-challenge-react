@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '../../../assets/icons';
 import { Modal, ModalData } from '../../../components';
-import { Pagination } from '../../../components/Pagination';
 import { ToastData } from '../../../components/Toast/toast-data';
 import { useAppContext } from '../../../hooks';
 import { QueryStatuses, RouteUrls } from '../../../types';
@@ -10,7 +9,6 @@ import { errorMessages, sortArrayByProp } from '../../../utils';
 import { CardItem } from '../CardItem';
 import { useCardContext } from '../hooks';
 import { useCardApi } from '../hooks/use-card-api';
-import { CardActions } from '../store';
 import { CardModel } from '../types';
 import { SharedProps } from '../types/shared-props.enum';
 import styles from './style.module.scss';
@@ -39,14 +37,14 @@ const CardList = () => {
     if (isLoadingDelete) return;
 
     resetCardsPage();
-  }, [isLoadingDelete]);
+  }, [isLoadingDelete, resetCardsPage]);
 
   useEffect(() => {
     if (deleteStatus !== QueryStatuses.Success) return;
 
     showToast(ToastData.success('Card excluído com sucesso!'));
     setShowModal(false);
-  }, [deleteStatus, dispatchCard]);
+  }, [deleteStatus, dispatchCard, showToast]);
 
   const modalData: ModalData = {
     title: 'Excluir',

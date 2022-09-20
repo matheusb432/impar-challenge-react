@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { RouteUrls } from '../../types';
 import { NavItem } from '../NavItem';
 import styles from './style.module.scss';

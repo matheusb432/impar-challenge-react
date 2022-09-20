@@ -1,9 +1,15 @@
 import { AxiosError } from 'axios';
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Toast } from '../components/Toast';
 import { ToastData } from '../components/Toast/toast-data';
 import { ToastType } from '../components/Toast/toast-type.enum';
-import { deepClone, errorCodeToKey, errorMessages } from '../utils';
+import { errorCodeToKey, errorMessages } from '../utils';
 
 type ErrorType = Error | null | string;
 
@@ -27,7 +33,10 @@ interface AppContextProviderProps {
  * Contexto de dados para gerenciar estados globais da aplicação
  *
  * @param error Estado mais recente de erro na aplicação.
- * @param changeError função para atualizar error.
+ * @param changeError Função para atualizar error.
+ * @param toasts Lista de toasts na fila a serem exibidos em <Toast />.
+ * @param showToast Função para adicionar um novo toast na fila.
+ * @param nextToast Função para remover o primeiro toast da fila.
  */
 const AppContext = createContext<AppContextProps>({
   error: null,
@@ -44,6 +53,21 @@ const AppContext = createContext<AppContextProps>({
 const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const [error, setError] = useState<ErrorType>(null);
   const [toasts, setToasts] = useState<ToastData[]>([]);
+
+  const changeError = useCallback((value: ErrorType) => {
+    setError(value);
+  }, []);
+
+  const showToast = useCallback(
+    (text: string | ToastData, type?: ToastType, duration?: number) => {
+      const data =
+        text instanceof ToastData ? text : new ToastData(text, type, duration);
+
+      setToasts((prevState) => [...prevState, data]);
+    },
+    []
+  );
+
   useEffect(() => {
     if (error === null) return;
 
@@ -54,28 +78,11 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
       errorMessages[key as keyof object] || errorMessages.default;
 
     showToast(ToastData.error(errorMessage));
-  }, [error]);
+  }, [error, showToast]);
 
-  const changeError = (value: ErrorType) => {
-    setError(value);
-  };
-
-  const showToast = (
-    text: string | ToastData,
-    type?: ToastType,
-    duration?: number
-  ) => {
-    const data =
-      text instanceof ToastData ? text : new ToastData(text, type, duration);
-
-    setToasts((prevState) => [...prevState, data]);
-  };
-
-  const nextToast = () => {
-    if (toasts.length === 0) return;
-
+  const nextToast = useCallback(() => {
     setToasts((prevState) => prevState.slice(1));
-  };
+  }, []);
 
   return (
     <AppContext.Provider

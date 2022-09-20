@@ -32,7 +32,7 @@ const Toast = () => {
     if (toastTimeout !== null) return;
 
     nextToast();
-  }, [toastTimeout]);
+  }, [nextToast, toastTimeout]);
 
   useEffect(() => {
     if (!toast || toastTimeout !== null) return;
