@@ -27,7 +27,6 @@ interface InputProps {
   accept?: string;
   required?: boolean;
   showHelperIfValid?: boolean;
-  blurOnChange?: boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
   onKeyDown?: ((e: React.KeyboardEvent<HTMLInputElement>) => void) | null;
@@ -52,7 +51,6 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       onChange,
       onBlur,
       onKeyDown,
-      blurOnChange = false,
       helperText,
       showHelperIfValid = false,
       required = true,
@@ -102,16 +100,10 @@ const Input = forwardRef<InputForwardRef, InputProps>(
     const getValue = () => inputRef.current!.value;
 
     const handleBlur = () => {
-      // TODO add on hook?
-      // if (!blurOnChange) setTouched(true);
-
       onBlur?.();
     };
 
     const handleChange = (event: ChangeInputEvent) => {
-      // TODO add on hook?
-      // if (blurOnChange) setTouched(true);
-
       onChange?.(event);
     };
 

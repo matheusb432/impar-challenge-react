@@ -3,13 +3,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import {
   BackgroundImage,
-  Button,
   Container,
   Layout,
   SearchInput,
 } from '../../../../components';
 import { Pagination, usePagination } from '../../../../components/Pagination';
-import { ToastData } from '../../../../components/Toast/toast-data';
 import { useAppContext, useDebounce } from '../../../../hooks';
 import {
   ChangeInputEvent,
@@ -27,7 +25,7 @@ import { SharedProps } from '../../types/shared-props.enum';
 
 const Card = () => {
   const api = useCardApi();
-  const { changeError, showToast } = useAppContext();
+  const { changeError } = useAppContext();
   const paginationProps = usePagination();
 
   const [searchText, setSearchText] = useState<string>('');
@@ -105,9 +103,6 @@ const Card = () => {
         />
       </BackgroundImage>
       <Container>
-        <Button onClick={() => showToast(ToastData.error('aa'))}>aa</Button>
-        <Button onClick={() => showToast(ToastData.success('aa'))}>aa</Button>
-        <Button onClick={() => showToast(ToastData.warning('aa'))}>aa</Button>
         <CardHeader />
         <CardList />
         <Pagination {...paginationProps} totalItems={totalCards ?? 0} />

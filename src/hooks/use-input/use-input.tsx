@@ -8,12 +8,12 @@ import { initialState, InputActions, inputReducer } from './reducer';
  * @param validateValue Função de validação do valor do input
  */
 export function useInput<TElement extends InputElement = HTMLInputElement>(
-  validateValue: (value: string) => boolean
+  validateValue?: (value: string) => boolean
 ) {
   const [state, dispatch] = useReducer(inputReducer, initialState);
   const { value, touched } = state;
 
-  const isValid = validateValue(value);
+  const isValid = validateValue?.(value) ?? true;
   const hasError = !isValid && touched;
 
   const changeHandler = (event: ChangeEvent<TElement>) => {
@@ -40,6 +40,7 @@ export function useInput<TElement extends InputElement = HTMLInputElement>(
     value,
     isValid,
     hasError,
+    touched,
     changeHandler,
     setValue,
     blurHandler,

@@ -2,10 +2,10 @@ import { Mapper } from 'mapper-ts/lib-esm';
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { FileInput, Input, InputForwardRef } from '../../../components';
+import { FileInput, Input } from '../../../components';
 import { FormLayout } from '../../../components/FormLayout';
 import { ToastData } from '../../../components/Toast/toast-data';
-import { useAppContext, useElementRef, useInput } from '../../../hooks';
+import { useAppContext, useInput } from '../../../hooks';
 import { ChangeInputEvent, QueryStatuses, RouteUrls } from '../../../types';
 import {
   buildEqId,
@@ -59,6 +59,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     changeHandler: statusChangeHandler,
     blurHandler: statusBlurHandler,
   } = useInput(validateStatus);
+  const { blurHandler: photoBlurHandler, touched: photoTouched } = useInput();
 
   const [photoValid, setPhotoValid] = useState(false);
 
@@ -326,6 +327,8 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   };
 
   const handlePhotoChange = (event: ChangeInputEvent) => {
+    photoBlurHandler();
+
     const file = event.target.files![0];
 
     const result = validatePhoto(file);
@@ -390,14 +393,13 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           id="cardPhoto"
           accept=""
           helperText={'Arquivo inválido!'}
-          isInvalid={!photoValid}
-          blurOnChange={true}
           label={
             isEditing
               ? 'Inclua uma imagem para substituir a imagem no card'
               : 'Inclua uma imagem para aparecer no card'
           }
           onChange={handlePhotoChange}
+          hasError={!photoValid && photoTouched}
         />
       </form>
     </FormLayout>
