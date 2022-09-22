@@ -12,9 +12,13 @@ const Toast = () => {
   const [toastTimeout, setToastTimeout] = useState<NodeJS.Timeout | null>(null);
   const [toastStyles, setToastStyles] = useState<string>('');
 
-  const getToastStyles = useCallback(() => `${styles.toast} ${toast ? styles[toast.type] : ''} ${
-    toast != null && toastTimeout != null ? styles.show : ''
-  }`, [toast, toastTimeout]);
+  const getToastStyles = useCallback(
+    () =>
+      `${styles.toast} ${toast ? styles[toast.type] : ''} ${
+        toast != null && toastTimeout != null ? styles.show : ''
+      }`,
+    [toast, toastTimeout],
+  );
 
   const activateNextToast = useCallback(() => {
     clearTimeout(toastTimeout!);
@@ -58,14 +62,11 @@ const Toast = () => {
     <div ref={toastRef} className={toastStyles}>
       {toast?.text ?? ''}
       <div className={styles.actions}>
-        <CloseIcon
-          className={styles['close-icon']}
-          onClick={handleCloseClick}
-        />
+        <CloseIcon className={styles['close-icon']} onClick={handleCloseClick} />
       </div>
     </div>,
     document.getElementById('overlay-root')!,
   );
 };
 
-export default Toast;
+export { Toast };

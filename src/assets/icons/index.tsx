@@ -5,7 +5,7 @@ export interface IconProps {
   onClick?: () => void;
 }
 
-function PencilIcon({ className }: IconProps) {
+function PencilIcon({ className, onClick }: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,6 +13,7 @@ function PencilIcon({ className }: IconProps) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
+      onClick={onClick}
       className={`${styles.icon}${className ? ` ${className}` : ''}`}
     >
       <path
@@ -24,7 +25,7 @@ function PencilIcon({ className }: IconProps) {
   );
 }
 
-function TrashIcon({ className }: IconProps) {
+function TrashIcon({ className, onClick }: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -32,6 +33,7 @@ function TrashIcon({ className }: IconProps) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
+      onClick={onClick}
       className={`${styles.icon}${className ? ` ${className}` : ''}`}
     >
       <path
@@ -81,6 +83,14 @@ function CloseIcon({ className, onClick }: IconProps) {
   );
 }
 
-export {
-  PencilIcon, TrashIcon, SearchIcon, CloseIcon,
+const iconDefaultProps = {
+  className: '',
+  onClick: () => {},
 };
+
+PencilIcon.defaultProps = iconDefaultProps;
+TrashIcon.defaultProps = iconDefaultProps;
+SearchIcon.defaultProps = iconDefaultProps;
+CloseIcon.defaultProps = iconDefaultProps;
+
+export { PencilIcon, TrashIcon, SearchIcon, CloseIcon };

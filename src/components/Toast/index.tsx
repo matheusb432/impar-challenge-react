@@ -1,3 +1,1 @@
-import Toast from './component';
-
-export { Toast };
+export * from './component';

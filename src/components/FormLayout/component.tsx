@@ -54,4 +54,10 @@ function FormLayout({
   );
 }
 
+FormLayout.defaultProps = {
+  canSubmit: true,
+  isLoadingSubmit: false,
+  onCancel: undefined,
+};
+
 export default FormLayout;

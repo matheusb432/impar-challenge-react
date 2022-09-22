@@ -13,7 +13,6 @@ interface FileInputProps {
   helperText?: string;
   placeholder?: string;
   className?: string;
-  blurOnChange?: boolean;
   hasError?: boolean;
   onChange?: (event: ChangeInputEvent) => void;
   onBlur?: () => void;
@@ -25,33 +24,21 @@ export interface FileInputForwardRef {
 }
 
 const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
-  (props: FileInputProps, ref) => {
-    const {
+  (
+    {
       id,
       label,
       accept,
       helperText,
-      blurOnChange = false,
-      required = true,
-      hasError = false,
-      placeholder = 'Nenhum arquivo selecionado',
+      required,
+      hasError,
+      placeholder,
       className,
       onChange,
       onBlur,
-    } = props;
-    const sharedProps = {
-      id,
-      label,
-      required,
-      blurOnChange,
-      accept,
-      helperText,
-      placeholder,
-      hasError,
-      onChange,
-      onBlur,
-    };
-
+    }: FileInputProps,
+    ref,
+  ) => {
     const fileInputRef = useElementRef<InputForwardRef>();
 
     const selectFile = () => {
@@ -67,7 +54,15 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
 
     return (
       <Input
-        {...sharedProps}
+        id={id}
+        label={label}
+        required={required}
+        accept={accept}
+        helperText={helperText}
+        placeholder={placeholder}
+        hasError={hasError}
+        onChange={onChange}
+        onBlur={onBlur}
         type="file"
         className={`${styles['file-input']} ${className ?? ''}`}
         ref={fileInputRef}
@@ -79,5 +74,15 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
     );
   },
 );
+
+FileInput.defaultProps = {
+  className: '',
+  helperText: '',
+  placeholder: 'Nenhum arquivo selecionado',
+  required: true,
+  hasError: false,
+  onChange: () => {},
+  onBlur: () => {},
+};
 
 export default FileInput;

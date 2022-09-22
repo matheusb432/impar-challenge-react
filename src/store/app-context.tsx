@@ -1,12 +1,5 @@
 import { AxiosError } from 'axios';
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import { Toast } from '../components/Toast';
+import { createContext, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { ToastData } from '../components/Toast/toast-data';
 import { ToastType } from '../components/Toast/toast-type.enum';
 import { errorCodeToKey, errorMessages } from '../utils';
@@ -17,11 +10,7 @@ export interface AppContextProps {
   error: ErrorType;
   changeError: (error: ErrorType) => void;
   toasts: ToastData[];
-  showToast: (
-    text: string | ToastData,
-    type?: ToastType,
-    duration?: number
-  ) => void;
+  showToast: (text: string | ToastData, type?: ToastType, duration?: number) => void;
   nextToast: () => void;
 }
 
@@ -40,13 +29,9 @@ interface AppContextProviderProps {
  */
 const AppContext = createContext<AppContextProps>({
   error: null,
-  changeError: (error: ErrorType) => {},
+  changeError: () => {},
   toasts: [],
-  showToast: (
-    text: string | ToastData,
-    type?: ToastType,
-    duration?: number,
-  ) => {},
+  showToast: () => {},
   nextToast: () => {},
 });
 
@@ -58,14 +43,11 @@ function AppContextProvider({ children }: AppContextProviderProps) {
     setError(value);
   }, []);
 
-  const showToast = useCallback(
-    (text: string | ToastData, type?: ToastType, duration?: number) => {
-      const data = text instanceof ToastData ? text : new ToastData(text, type, duration);
+  const showToast = useCallback((text: string | ToastData, type?: ToastType, duration?: number) => {
+    const data = text instanceof ToastData ? text : new ToastData(text, type, duration);
 
-      setToasts((prevState) => [...prevState, data]);
-    },
-    [],
-  );
+    setToasts((prevState) => [...prevState, data]);
+  }, []);
 
   useEffect(() => {
     if (error === null) return;
@@ -81,17 +63,18 @@ function AppContextProvider({ children }: AppContextProviderProps) {
     setToasts((prevState) => prevState.slice(1));
   }, []);
 
-  return (
-    <AppContext.Provider
-      value={{
-        error, changeError, toasts, showToast, nextToast,
-      }}
-    >
-      {children}
-      <Toast />
-    </AppContext.Provider>
+  const providerValue = useMemo(
+    () => ({
+      error,
+      changeError,
+      toasts,
+      showToast,
+      nextToast,
+    }),
+    [error, toasts, changeError, showToast, nextToast],
   );
+
+  return <AppContext.Provider value={providerValue}>{children}</AppContext.Provider>;
 }
 
-export default AppContext;
-export { AppContextProvider };
+export { AppContext, AppContextProvider };

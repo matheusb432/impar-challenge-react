@@ -6,9 +6,7 @@ interface ImageProps {
   circular?: boolean;
 }
 
-function Image({
-  src, alt, width, height, circular = false,
-}: ImageProps) {
+function Image({ src, alt, width, height, circular = false }: ImageProps) {
   return (
     <img
       src={src}
@@ -19,5 +17,11 @@ function Image({
     />
   );
 }
+
+Image.defaultProps = {
+  width: '',
+  height: '',
+  circular: false,
+};
 
 export default Image;

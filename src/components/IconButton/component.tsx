@@ -10,17 +10,12 @@ interface IconButtonProps {
   theme?: string;
 }
 
-function IconButton({
-  icon,
-  onClick,
-  disabled = false,
-  label = '',
-  theme = '',
-}: IconButtonProps) {
+function IconButton({ icon, onClick, disabled, label, theme }: IconButtonProps) {
   const { hovering, onMouseEnter, onMouseLeave } = useHovering();
 
   return (
     <button
+      type="button"
       className={styles['icon-button']}
       onClick={onClick}
       disabled={disabled}
@@ -33,5 +28,11 @@ function IconButton({
     </button>
   );
 }
+
+IconButton.defaultProps = {
+  disabled: false,
+  label: '',
+  theme: '',
+};
 
 export default IconButton;

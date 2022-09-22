@@ -35,12 +35,17 @@ function SearchInput({
       onBlur={onBlur}
       onKeyDown={(e) => onEnterPress<HTMLInputElement>(e, onEnter)}
     >
-      <SearchIcon
-        onClick={() => onIconClick()}
-        className={`${styles['search-icon']}`}
-      />
+      <SearchIcon onClick={() => onIconClick()} className={`${styles['search-icon']}`} />
     </Input>
   );
 }
+
+SearchInput.defaultProps = {
+  className: '',
+  value: '',
+  onChange: () => {},
+  onBlur: () => {},
+  onEnter: () => {},
+};
 
 export default SearchInput;

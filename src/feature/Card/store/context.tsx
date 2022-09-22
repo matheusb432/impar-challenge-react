@@ -5,6 +5,7 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useReducer,
   useState,
 } from 'react';
@@ -49,9 +50,7 @@ function CardContextProvider({ children }: CardContextProviderProps) {
     data,
     status,
     mutate: mutateCards,
-  } = useCardApi().useODataMutation<PaginatedResult<CardModel>>(
-    paginationQuery(currentCardsPage),
-  );
+  } = useCardApi().useODataMutation<PaginatedResult<CardModel>>(paginationQuery(currentCardsPage));
 
   useEffect(() => {
     mutateCards();
@@ -72,30 +71,24 @@ function CardContextProvider({ children }: CardContextProviderProps) {
     setCurrentCardsPage(page);
   };
 
-  // const resetCardsPage = () => {
-  //   if (currentCardsPage === 1) return mutateCards();
-
-  //   changeCurrentCardsPage(1);
-  // };
-  const resetCardsPage = useCallback(() => {
+  const resetCardsPage = useCallback((): void => {
     if (currentCardsPage === 1) return mutateCards();
 
-    changeCurrentCardsPage(1);
+    return changeCurrentCardsPage(1);
   }, [currentCardsPage, mutateCards]);
 
-  return (
-    <CardContext.Provider
-      value={{
-        cardState,
-        dispatchCard,
-        currentCardsPage,
-        changeCurrentCardsPage,
-        resetCardsPage,
-      }}
-    >
-      {children}
-    </CardContext.Provider>
+  const cardValue = useMemo(
+    () => ({
+      cardState,
+      dispatchCard,
+      currentCardsPage,
+      changeCurrentCardsPage,
+      resetCardsPage,
+    }),
+    [cardState, dispatchCard, currentCardsPage, changeCurrentCardsPage, resetCardsPage],
   );
+
+  return <CardContext.Provider value={cardValue}>{children}</CardContext.Provider>;
 }
 
 function CardContextLayout() {

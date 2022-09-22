@@ -2,9 +2,7 @@ import { PhotoUpload } from '../types/photo-upload';
 import { CardModel } from '../types/card-model';
 import { CardAction, CardActions, CardState } from './types';
 
-const {
-  AddCard, EditCard, RemoveCard, SetFormCard, SetCards, SetPhotoUpload,
-} = CardActions;
+const { AddCard, EditCard, RemoveCard, SetFormCard, SetCards, SetPhotoUpload } = CardActions;
 
 const initialCardState = (): CardState => ({
   cards: [],
@@ -15,7 +13,8 @@ const initialCardState = (): CardState => ({
 /**
  * Reducer para manipular o estado do domínio de Cards.
  *
- * @param state O estado atual de valores relacionados a este domínio, implícito na chamada de useReducer
+ * @param state O estado atual de valores relacionados a este domínio, implícito
+ * na chamada de useReducer
  * @param action Objeto com ação e payload da atualização do estado.
  * @returns Novo estado atualizado.
  */
@@ -27,14 +26,12 @@ const cardReducer = (state: CardState, action: CardAction): CardState => {
     case AddCard:
       return { ...state, cards: [...cards, payload as CardModel] };
 
-    case EditCard:
+    case EditCard: {
       const editedCard = payload as CardModel;
-      const newCards = [
-        ...cards.filter((c) => c.id !== editedCard.id),
-        editedCard,
-      ];
+      const newCards = [...cards.filter((c) => c.id !== editedCard.id), editedCard];
 
       return { ...state, cards: newCards };
+    }
 
     case RemoveCard:
       return {

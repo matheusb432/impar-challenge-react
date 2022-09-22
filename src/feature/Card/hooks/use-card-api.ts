@@ -7,7 +7,8 @@ const url = '/cards';
 const photosUrl = '/photos';
 
 /**
- * Hook contendo todas as possíveis requisições para endpoints da API relacionados ao domínio de Cards.
+ * Hook contendo todas as possíveis requisições para endpoints da API relacionadas
+ * ao domínio de Cards.
  *
  * @returns Objeto com referências às funções de requisições.
  */
@@ -21,34 +22,39 @@ const useCardApi = () => ({
   usePutPhoto,
 });
 
-const useOData = <TReturn>(odataParams: ODataParams) => useAxios<TReturn>({
-  method: HttpMethods.Get,
-  url: `${url}/odata`,
-  params: odataParams,
-});
+const useOData = <TReturn>(odataParams: ODataParams) =>
+  useAxios<TReturn>({
+    method: HttpMethods.Get,
+    url: `${url}/odata`,
+    params: odataParams,
+  });
 
-const useODataMutation = <TReturn>(odataParams: ODataParams) => useAxiosMutation<TReturn>({
-  method: HttpMethods.Get,
-  url: `${url}/odata`,
-  params: odataParams,
-});
+const useODataMutation = <TReturn>(odataParams: ODataParams) =>
+  useAxiosMutation<TReturn>({
+    method: HttpMethods.Get,
+    url: `${url}/odata`,
+    params: odataParams,
+  });
 
-const usePost = (entity: CardModel) => useAxiosMutation<PostReturn>({
-  method: HttpMethods.Post,
-  url,
-  data: entity,
-});
+const usePost = (entity: CardModel) =>
+  useAxiosMutation<PostReturn>({
+    method: HttpMethods.Post,
+    url,
+    data: entity,
+  });
 
-const usePut = (id?: number, entity?: CardModel) => useAxiosMutation<void>({
-  method: HttpMethods.Put,
-  url: `${url}/${id}`,
-  data: entity,
-});
+const usePut = (id?: number, entity?: CardModel) =>
+  useAxiosMutation<void>({
+    method: HttpMethods.Put,
+    url: `${url}/${id}`,
+    data: entity,
+  });
 
-const useDelete = (id?: number) => useAxiosMutation<void>({
-  method: HttpMethods.Delete,
-  url: `${url}/${id}`,
-});
+const useDelete = (id?: number) =>
+  useAxiosMutation<void>({
+    method: HttpMethods.Delete,
+    url: `${url}/${id}`,
+  });
 
 const usePostPhoto = (file?: File) => {
   const formData = new FormData();

@@ -10,18 +10,13 @@ interface CardWrapperProps {
   actions?: ReactNode;
 }
 
-function CardWrapper({
-  children,
-  base64,
-  fallbackImageSrc = '/images/fist-icon.svg',
-  actions,
-}: CardWrapperProps) {
+function CardWrapper({ children, base64, fallbackImageSrc, actions }: CardWrapperProps) {
   return (
     <>
       <article className={styles.card}>
         <div className={styles.image}>
           <Image
-            src={base64 ? base64Format(base64) : fallbackImageSrc}
+            src={base64 ? base64Format(base64) : fallbackImageSrc!}
             alt={base64 ? '' : 'Fist icon'}
             width={96}
             height={96}
@@ -35,5 +30,11 @@ function CardWrapper({
     </>
   );
 }
+
+CardWrapper.defaultProps = {
+  base64: '',
+  fallbackImageSrc: '/images/fist-icon.svg',
+  actions: undefined,
+};
 
 export default CardWrapper;

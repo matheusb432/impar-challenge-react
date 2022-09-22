@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '../../../assets/icons';
 import { Modal, ModalData } from '../../../components';
@@ -27,7 +27,7 @@ function CardList() {
   } = api.useDelete(cardToDelete?.id);
 
   const [showModal, setShowModal] = useState(false);
-  const [renderedCards, setRenderedCards] = useState<JSX.Element[]>([]);
+  const [renderedCards, setRenderedCards] = useState<ReactNode[]>([]);
 
   const { cardState, dispatchCard, resetCardsPage } = useCardContext();
 
@@ -73,12 +73,7 @@ function CardList() {
     sortArrayByProp(cards, SharedProps.Id);
 
     return cards.map((c) => (
-      <CardItem
-        key={c.id ?? Math.random()}
-        card={c}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <CardItem key={c.id ?? Math.random()} card={c} onEdit={handleEdit} onDelete={handleDelete} />
     ));
   }, [cards, handleEdit, handleDelete]);
 
@@ -104,6 +99,8 @@ function CardList() {
   const handleConfirm = () => {
     deleteCard();
   };
+
+  console.log(cards);
 
   return (
     <>

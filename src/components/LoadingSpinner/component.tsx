@@ -13,4 +13,8 @@ function LoadingSpinner({ style }: LoadingSpinnerProps) {
   );
 }
 
+LoadingSpinner.defaultProps = {
+  style: {},
+};
+
 export default LoadingSpinner;

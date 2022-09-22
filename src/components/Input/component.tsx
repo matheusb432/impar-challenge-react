@@ -62,23 +62,23 @@ const Input = forwardRef<InputForwardRef, InputProps>(
     const [renderedLabel, setRenderedLabel] = useState<DynamicJsx>();
     const inputRef = useElementRef();
 
-    const renderHelper = useCallback(() => (
-      (showHelperIfValid || hasError)
-        && validateText(helperText) && (
-          <span className={styles.helper}>{helperText}</span>
-      )
-    ), [hasError, helperText, showHelperIfValid]);
+    const renderHelper = useCallback(
+      () =>
+        (showHelperIfValid || hasError) &&
+        validateText(helperText) && <span className={styles.helper}>{helperText}</span>,
+      [hasError, helperText, showHelperIfValid],
+    );
 
-    const renderLabel = useCallback(() => (
-      validateText(label) && (
-      <label htmlFor={id}>
-        <span className={styles.label}>{label}</span>
-        {!required ? (
-          <span className={styles['label-helper']}> - opcional</span>
-        ) : null}
-      </label>
-      )
-    ), [id, label, required]);
+    const renderLabel = useCallback(
+      () =>
+        validateText(label) && (
+          <label htmlFor={id}>
+            <span className={styles.label}>{label}</span>
+            {!required ? <span className={styles['label-helper']}> - opcional</span> : null}
+          </label>
+        ),
+      [id, label, required],
+    );
 
     useEffect(() => {
       setRenderedHelper(renderHelper());
@@ -103,7 +103,8 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       onChange?.(event);
     };
 
-    const controlCssClasses = () => `${styles.control} ${hasError ? styles.invalid : ''} ${className ?? ''}`;
+    const controlCssClasses = () =>
+      `${styles.control} ${hasError ? styles.invalid : ''} ${className ?? ''}`;
 
     useImperativeHandle(ref, () => ({
       clickInput,
@@ -130,5 +131,22 @@ const Input = forwardRef<InputForwardRef, InputProps>(
     );
   },
 );
+
+Input.defaultProps = {
+  children: null,
+  className: '',
+  value: '',
+  onChange: () => {},
+  onBlur: () => {},
+  onKeyDown: null,
+  type: 'text',
+  label: '',
+  placeholder: '',
+  helperText: '',
+  accept: '',
+  required: true,
+  showHelperIfValid: false,
+  hasError: false,
+};
 
 export default Input;

@@ -14,21 +14,25 @@ axios.defaults.baseURL = getEnvValue(EnvKeys.ApiUrl) || 'http://localhost:5000/a
  * @param config Os paramêtros da requisição
  * @returns Uma consulta
  */
-const useAxios = <T>(config: AxiosRequestConfig) => useQuery<AxiosResponse<T>, AxiosError<T>>(
-  queryKey(config),
-  queryFn<T>(config),
-  queryOptions(useAppContext()),
-);
+const useAxios = <T>(config: AxiosRequestConfig) =>
+  useQuery<AxiosResponse<T>, AxiosError<T>>(
+    queryKey(config),
+    queryFn<T>(config),
+    queryOptions(useAppContext()),
+  );
 
-const useAxiosMutation = <T>(config: AxiosRequestConfig) => useMutation<AxiosResponse<T>, AxiosError<T>>(
-  queryKey(config),
-  queryFn<T>(config),
-  queryOptions(useAppContext()),
-);
+const useAxiosMutation = <T>(config: AxiosRequestConfig) =>
+  useMutation<AxiosResponse<T>, AxiosError<T>>(
+    queryKey(config),
+    queryFn<T>(config),
+    queryOptions(useAppContext()),
+  );
 
 const queryKey = (config: AxiosRequestConfig) => [config.url, config.params].filter((x) => !!x);
 
-const queryFn = <T>(config: AxiosRequestConfig) => () => axios.request<T>(config);
+function queryFn<T>(config: AxiosRequestConfig) {
+  return () => axios.request<T>(config);
+}
 
 const queryOptions = (context: AppContextProps) => ({
   onError: (error: AxiosError) => {

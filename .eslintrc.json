@@ -13,6 +13,12 @@
   "plugins": ["react"],
   "rules": {
     "import/prefer-default-export": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "react/react-in-jsx-scope": "off",
+    "implicit-arrow-linebreak": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "operator-linebreak": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react/jsx-no-constructed-context-values": "off"
   }
 }

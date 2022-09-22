@@ -8,21 +8,18 @@ interface BackdropProps {
   onClick?: () => void;
 }
 
-const Backdrop = ({
-  bgColor,
-  show = true,
-  animationMs = 500,
-  onClick,
-}: BackdropProps) => createPortal(
-  <div
-    className={`${styles.backdrop} ${show ? styles.show : ''}`}
-    style={{
-      backgroundColor: bgColor ?? '',
-      transitionDuration: `${animationMs / 1000}s`,
-    }}
-    onClick={onClick}
-  />,
-  document.getElementById('backdrop-root')!,
-);
+const Backdrop = ({ bgColor, show = true, animationMs = 500, onClick }: BackdropProps) =>
+  createPortal(
+    <div
+      className={`${styles.backdrop} ${show ? styles.show : ''}`}
+      style={{
+        backgroundColor: bgColor ?? '',
+        transitionDuration: `${animationMs / 1000}s`,
+      }}
+      onClick={onClick}
+      aria-hidden="true"
+    />,
+    document.getElementById('backdrop-root')!,
+  );
 
 export default Backdrop;

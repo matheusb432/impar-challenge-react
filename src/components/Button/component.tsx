@@ -21,15 +21,15 @@ function Button({
   className,
   style,
   colorTheme,
-  isLoading = false,
-  disabledReason = '',
-  outlineStyle = false,
-  disabled = false,
-  type = 'button',
+  isLoading,
+  disabledReason,
+  outlineStyle,
+  disabled,
+  type,
 }: ButtonProps) {
   return (
     <button
-      type={type}
+      type={type === 'submit' ? 'submit' : 'button'}
       disabled={disabled || isLoading}
       title={disabled ? disabledReason : ''}
       style={{
@@ -37,21 +37,29 @@ function Button({
         border: colorTheme ? `1px solid ${colorTheme}` : '',
         ...style,
       }}
-      className={`${styles.button} ${className ?? ''} ${
-        outlineStyle ? styles.outline : ''
-      }`}
+      className={`${styles.button} ${className ?? ''} ${outlineStyle ? styles.outline : ''}`}
       onClick={onClick}
     >
       <div className={styles.children}>
         {isLoading ? (
-          <LoadingSpinner
-            style={{ ...buildSpinnerSize(24), marginRight: '12px' }}
-          />
+          <LoadingSpinner style={{ ...buildSpinnerSize(24), marginRight: '12px' }} />
         ) : null}
         {children}
       </div>
     </button>
   );
 }
+
+Button.defaultProps = {
+  type: 'button',
+  className: '',
+  style: {},
+  disabled: false,
+  isLoading: false,
+  outlineStyle: false,
+  disabledReason: '',
+  colorTheme: '',
+  onClick: undefined,
+};
 
 export default Button;

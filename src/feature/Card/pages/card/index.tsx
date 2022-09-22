@@ -1,12 +1,7 @@
 import { Mapper } from 'mapper-ts/lib-esm';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import {
-  BackgroundImage,
-  Container,
-  Layout,
-  SearchInput,
-} from '../../../../components';
+import { BackgroundImage, Container, Layout, SearchInput } from '../../../../components';
 import { Pagination, usePagination } from '../../../../components/Pagination';
 import { useAppContext, useDebounce } from '../../../../hooks';
 import {
@@ -26,13 +21,11 @@ import { SharedProps } from '../../types/shared-props.enum';
 function Card() {
   const api = useCardApi();
   const { changeError } = useAppContext();
-  const paginationProps = usePagination();
+  const { currentPage, changePage, next, previous } = usePagination();
 
   const [searchText, setSearchText] = useState<string>('');
 
-  const [toggleSearch, setToggleSearch] = useState<boolean | undefined>(
-    undefined,
-  );
+  const [toggleSearch, setToggleSearch] = useState<boolean | undefined>(undefined);
 
   const { dispatchCard, currentCardsPage, changeCurrentCardsPage } = useCardContext();
   const [totalCards, setTotalCards] = useState(0);
@@ -55,8 +48,8 @@ function Card() {
   }, [clearTimer, getCards, changeCurrentCardsPage]);
 
   useEffect(() => {
-    changeCurrentCardsPage(paginationProps?.currentPage);
-  }, [paginationProps?.currentPage, changeCurrentCardsPage]);
+    changeCurrentCardsPage(currentPage);
+  }, [currentPage, changeCurrentCardsPage]);
 
   useEffect(() => {
     setToggleSearch((prevState) => !prevState);
@@ -69,13 +62,16 @@ function Card() {
   }, [getCards, toggleSearch]);
 
   useEffect(() => {
-    if (getCardsStatus !== QueryStatuses.Success) return;
+    if (getCardsStatus !== QueryStatuses.Success || getCardsData == null) return;
 
-    const { items, total } = getCardsData?.data;
+    const { items, total } = getCardsData.data;
     const fetchedCards = items;
     setTotalCards(total);
 
-    if (fetchedCards == null) return changeError(errorMessages.cardsError);
+    if (fetchedCards == null) {
+      changeError(errorMessages.cardsError);
+      return;
+    }
 
     dispatchCard({
       type: CardActions.SetCards,
@@ -85,8 +81,8 @@ function Card() {
 
   const handleFilter = (withDebouce = false, event?: ChangeInputEvent) => {
     if (event != null) setSearchText(event.target.value);
-
-    withDebouce ? debounceFn()() : filterCards();
+    if (withDebouce) return debounceFn();
+    return filterCards();
   };
 
   return (
@@ -104,7 +100,13 @@ function Card() {
       <Container>
         <CardHeader />
         <CardList />
-        <Pagination {...paginationProps} totalItems={totalCards ?? 0} />
+        <Pagination
+          currentPage={currentPage}
+          next={next}
+          previous={previous}
+          changePage={changePage}
+          totalItems={totalCards ?? 0}
+        />
       </Container>
       <Outlet />
     </Layout>

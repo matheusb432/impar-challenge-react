@@ -14,4 +14,8 @@ function Title({ text, style }: TitleProps) {
   );
 }
 
+Title.defaultProps = {
+  style: {},
+};
+
 export default Title;

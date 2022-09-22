@@ -9,23 +9,23 @@ interface SideContainerProps {
   onClose: () => void;
 }
 
-function SideContainer({
-  children,
-  onClose,
-  animationMs = 500,
-  show = true,
-}: SideContainerProps) {
+function SideContainer({ children, onClose, animationMs, show }: SideContainerProps) {
   return (
     <>
       <Backdrop animationMs={animationMs} onClick={onClose} show={show} />
       <section
         className={`${styles['side-container']} ${show ? styles.visible : ''}`}
-        style={{ transitionDuration: `${animationMs / 1000}s` }}
+        style={{ transitionDuration: `${animationMs! / 1000}s` }}
       >
         {children}
       </section>
     </>
   );
 }
+
+SideContainer.defaultProps = {
+  show: true,
+  animationMs: 500,
+};
 
 export default SideContainer;
