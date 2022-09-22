@@ -1,4 +1,4 @@
-import { ChangeEvent, useReducer } from 'react';
+import { ChangeEvent, useCallback, useReducer } from 'react';
 import { InputElement } from '../../types';
 import { initialState, InputActions, inputReducer } from './reducer';
 
@@ -20,6 +20,10 @@ export function useInput<TElement extends InputElement = HTMLInputElement>(
     dispatch({ type: InputActions.InputChange, payload: event.target.value });
   };
 
+  const setValue = useCallback((value: string) => {
+    dispatch({ type: InputActions.InputChange, payload: value });
+  }, []);
+
   const blurHandler = () => {
     dispatch({ type: InputActions.InputBlur });
   };
@@ -37,6 +41,7 @@ export function useInput<TElement extends InputElement = HTMLInputElement>(
     isValid,
     hasError,
     changeHandler,
+    setValue,
     blurHandler,
     touch,
     reset,

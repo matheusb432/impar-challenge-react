@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FileInput, Input, InputForwardRef } from '../../../components';
 import { FormLayout } from '../../../components/FormLayout';
 import { ToastData } from '../../../components/Toast/toast-data';
-import { useAppContext, useElementRef } from '../../../hooks';
+import { useAppContext, useElementRef, useInput } from '../../../hooks';
 import { ChangeInputEvent, QueryStatuses, RouteUrls } from '../../../types';
 import {
   buildEqId,
@@ -33,19 +33,40 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const [label, setLabel] = useState<string>('');
   const [imageChanged, setImageChanged] = useState(false);
 
-  const nameRef = useElementRef<InputForwardRef>();
-  const statusRef = useElementRef<InputForwardRef>();
-  const photoRef = useElementRef<InputForwardRef>();
+  const validateName = useCallback(
+    (name: string) => validateText(name, { min: 1, max: 100 }),
+    []
+  );
+  const validateStatus = useCallback(
+    (status: string) =>
+      validateText(status, { required: false, min: 1, max: 100 }),
+    []
+  );
 
-  const [nameValid, setNameValid] = useState(false);
-  const [statusValid, setStatusValid] = useState(true);
+  const {
+    value: name,
+    isValid: nameIsValid,
+    hasError: nameHasError,
+    changeHandler: nameChangeHandler,
+    blurHandler: nameBlurHandler,
+    setValue: setName,
+  } = useInput(validateName);
+  const {
+    value: status,
+    isValid: statusIsValid,
+    hasError: statusHasError,
+    setValue: setStatus,
+    changeHandler: statusChangeHandler,
+    blurHandler: statusBlurHandler,
+  } = useInput(validateStatus);
+
   const [photoValid, setPhotoValid] = useState(false);
+
+  const formIsValid = nameIsValid && statusIsValid && photoValid;
 
   const [toggleUpdateCard, setToggleUpdateCard] = useState<boolean | undefined>(
     undefined
   );
-
-  const [formIsValid, setFormIsValid] = useState(false);
 
   const { changeError, showToast } = useAppContext();
   const { cardState, dispatchCard } = useCardContext();
@@ -77,13 +98,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     data: createdCardData,
     status: createCardStatus,
     mutate: createCard,
-  } = api.usePost(
-    CardModel.forPost(
-      nameRef.current?.getValue(),
-      statusRef.current?.getValue(),
-      uploadPhotoData?.data?.id
-    )
-  );
+  } = api.usePost(CardModel.forPost(name, status, uploadPhotoData?.data?.id));
 
   const {
     isLoading: isLoadingUpdateCard,
@@ -93,8 +108,8 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     formCard?.id,
     CardModel.forPut(
       formCard?.id,
-      nameRef.current?.getValue(),
-      statusRef.current?.getValue(),
+      name,
+      status,
       uploadPhotoData?.data?.id ?? formCard?.photoId
     )
   );
@@ -131,16 +146,13 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     (card: CardModel) => {
       if (card == null) return;
 
-      nameRef.current!.setValue(card.name);
-      statusRef.current!.setValue(card.status);
+      setName(card.name!);
 
-      if (isEditing) {
-        setNameValid(true);
-        setStatusValid(true);
-        setPhotoValid(true);
-      }
+      setStatus(card.status!);
+
+      if (isEditing) setPhotoValid(true);
     },
-    [nameRef, statusRef, isEditing]
+    [isEditing, setName, setStatus]
   );
 
   useEffect(() => {
@@ -148,8 +160,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     async function dispatchUpdatedCard(): Promise<void> {
       showToast(ToastData.success('Card atualizado com sucesso!'));
 
-      const name = nameRef.current!.getValue();
-      const status = statusRef.current!.getValue();
       let photoBase64: string | unknown = '';
       try {
         photoBase64 = await getDispatchBase64Photo();
@@ -172,16 +182,15 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     }
     dispatchUpdatedCard();
   }, [
-    nameRef,
-    statusRef,
-    formCard?.id,
-    navigate,
     dispatchCard,
-    updateCardStatus,
-    photoUpload.file,
+    formCard?.id,
     formCard?.photoId,
     getDispatchBase64Photo,
+    name,
+    navigate,
     showToast,
+    status,
+    updateCardStatus,
   ]);
 
   useEffect(() => {
@@ -189,8 +198,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     async function dispatchCreatedCard(): Promise<void> {
       showToast(ToastData.success('Card criado com sucesso!'));
 
-      const name = nameRef.current!.getValue();
-      const status = statusRef.current!.getValue();
       let photoBase64: string | unknown = '';
       try {
         photoBase64 = await getDispatchBase64Photo();
@@ -213,8 +220,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     dispatchCreatedCard();
   }, [
     createdCardData?.data.id,
-    nameRef,
-    statusRef,
     dispatchCard,
     createCardStatus,
     navigate,
@@ -222,6 +227,8 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     showToast,
     uploadPhotoData?.data?.id,
     getDispatchBase64Photo,
+    name,
+    status,
   ]);
 
   useEffect(() => {
@@ -300,10 +307,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     setInputs(formCard);
   }, [setInputs, formCard]);
 
-  useEffect(() => {
-    setFormIsValid(nameValid && statusValid && photoValid);
-  }, [nameValid, photoValid, statusValid]);
-
   const handleFormSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
 
@@ -339,18 +342,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
     }
   };
 
-  const validateName = () => {
-    const name = nameRef.current?.getValue();
-
-    setNameValid(validateText(name, { min: 1, max: 100 }));
-  };
-
-  const validateStatus = () => {
-    const status = statusRef.current?.getValue();
-
-    setStatusValid(validateText(status, { required: false, min: 1, max: 100 }));
-  };
-
   const validatePhoto = (photo?: File) => {
     photo ??= photoUpload?.file;
 
@@ -377,9 +368,10 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           helperText={
             'Nome inválido! precisa ser um valor de 1 e 100 caracteres'
           }
-          ref={nameRef}
-          onBlur={validateName}
-          isInvalid={!nameValid}
+          value={name}
+          onChange={nameChangeHandler}
+          hasError={nameHasError}
+          onBlur={nameBlurHandler}
         />
         <Input
           id="cardStatus"
@@ -388,10 +380,11 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           helperText={
             'Status inválido! precisa ser um valor de 0 e 100 caracteres'
           }
-          ref={statusRef}
           required={false}
-          onBlur={validateStatus}
-          isInvalid={!statusValid}
+          value={status}
+          onChange={statusChangeHandler}
+          hasError={statusHasError}
+          onBlur={statusBlurHandler}
         />
         <FileInput
           id="cardPhoto"
@@ -405,7 +398,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
               : 'Inclua uma imagem para aparecer no card'
           }
           onChange={handlePhotoChange}
-          ref={photoRef}
         />
       </form>
     </FormLayout>

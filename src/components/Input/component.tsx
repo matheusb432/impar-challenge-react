@@ -21,7 +21,7 @@ interface InputProps {
   placeholder?: string;
   className?: string;
   type?: HTMLInputTypeAttribute;
-  isInvalid?: boolean;
+  hasError?: boolean;
   value?: string;
   helperText?: string;
   accept?: string;
@@ -36,7 +36,6 @@ interface InputProps {
 export interface InputForwardRef {
   clickInput: () => void;
   getValue: () => string;
-  setValue: (value?: string) => void;
 }
 
 const Input = forwardRef<InputForwardRef, InputProps>(
@@ -57,28 +56,26 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       helperText,
       showHelperIfValid = false,
       required = true,
-      isInvalid = false,
+      hasError = false,
     }: InputProps,
     ref
   ) => {
-    const [touched, setTouched] = useState(false);
     const [renderedHelper, setRenderedHelper] = useState<DynamicJsx>();
     const [renderedLabel, setRenderedLabel] = useState<DynamicJsx>();
     const inputRef = useElementRef();
 
     const renderHelper = useCallback(() => {
       return (
-        touched &&
-        validateText(helperText) &&
-        (showHelperIfValid || isInvalid) && (
+        (showHelperIfValid || hasError) &&
+        validateText(helperText) && (
           <span className={styles.helper}>{helperText}</span>
         )
       );
-    }, [touched, showHelperIfValid, isInvalid, helperText]);
+    }, [hasError, helperText, showHelperIfValid]);
 
     const renderLabel = useCallback(() => {
       return (
-        !!label?.trim() && (
+        validateText(label) && (
           <label htmlFor={id}>
             <span className={styles.label}>{label}</span>
             {!required ? (
@@ -104,31 +101,26 @@ const Input = forwardRef<InputForwardRef, InputProps>(
 
     const getValue = () => inputRef.current!.value;
 
-    const setValue = (value?: string) => {
-      inputRef.current!.value = value ?? '';
-    };
-
     const handleBlur = () => {
-      if (!blurOnChange) setTouched(true);
+      // TODO add on hook?
+      // if (!blurOnChange) setTouched(true);
 
       onBlur?.();
     };
 
     const handleChange = (event: ChangeInputEvent) => {
-      if (blurOnChange) setTouched(true);
+      // TODO add on hook?
+      // if (blurOnChange) setTouched(true);
 
       onChange?.(event);
     };
 
     const controlCssClasses = () =>
-      `${styles.control} ${touched && isInvalid ? styles.invalid : ''} ${
-        className ?? ''
-      }`;
+      `${styles.control} ${hasError ? styles.invalid : ''} ${className ?? ''}`;
 
     useImperativeHandle(ref, () => {
       return {
         clickInput: clickInput,
-        setValue: setValue,
         getValue: getValue,
       };
     });
