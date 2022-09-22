@@ -29,6 +29,7 @@ servir uma experiência de usuário intuitiva e responsiva.
 
 - [Node.js® 16 LTS](https://nodejs.org/en/)
 - [Visual Studio Code ou outra IDE](https://code.visualstudio.com/)
+- [Typescript AirBNBN ESLint Config](https://github.com/typescript-eslint/typescript-eslint)
 
 ### Rodando a SPA em ambiente de desenvolvimento
 
@@ -42,4 +43,4 @@ servir uma experiência de usuário intuitiva e responsiva.
 
 Para rodar o ESLint no projeto que verificará instâncias de code smells, use o comando na raiz do projeto:
 
-`npx eslint --ext .ts --ext .tsx src/`
+`npx eslint src/ --ext .js,.jsx,.ts,.tsx`

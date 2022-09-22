@@ -6,12 +6,12 @@ interface BackgroundImageProps {
   children: ReactNode;
 }
 
-const BackgroundImage = ({ children }: BackgroundImageProps) => {
+function BackgroundImage({ children }: BackgroundImageProps) {
   return (
     <div className={styles['background-image']}>
       <Container>{children}</Container>
     </div>
   );
-};
+}
 
 export default BackgroundImage;

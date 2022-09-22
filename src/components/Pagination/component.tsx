@@ -17,36 +17,32 @@ export interface PaginationForwardRef {
   itemsPerPage: number;
 }
 
-const Pagination = ({
+function Pagination({
   currentPage,
   changePage,
   next,
   previous,
   totalItems = 1,
-}: PaginationProps) => {
+}: PaginationProps) {
   const [renderedPageItems, setRenderedPageItems] = useState<DynamicJsx>();
   const [maxPages, setMaxPages] = useState<number>(1);
   const itemsPerPage = defaultItemsPerPage;
 
-  const renderPageItems = useCallback(() => {
-    return arrayFrom(maxPages, 1).map((page: number) => {
-      return (
-        <button
-          key={page}
-          className={`${styles['page-item']} ${
-            page === currentPage ? styles.active : ''
-          }`}
-          onClick={() => changePage(page)}
-        >
-          {page}
-        </button>
-      );
-    });
-  }, [changePage, currentPage, maxPages]);
+  const renderPageItems = useCallback(() => arrayFrom(maxPages, 1).map((page: number) => (
+    <button
+      key={page}
+      className={`${styles['page-item']} ${
+        page === currentPage ? styles.active : ''
+      }`}
+      onClick={() => changePage(page)}
+    >
+      {page}
+    </button>
+  )), [changePage, currentPage, maxPages]);
 
   useEffect(() => {
     setMaxPages(
-      Math.min(Math.max(Math.ceil(totalItems / itemsPerPage), 1), 10)
+      Math.min(Math.max(Math.ceil(totalItems / itemsPerPage), 1), 10),
     );
   }, [itemsPerPage, totalItems]);
 
@@ -58,7 +54,7 @@ const Pagination = ({
     <section className={styles.pagination}>
       <Button
         onClick={previous}
-        outlineStyle={true}
+        outlineStyle
         disabled={currentPage === 1}
       >
         Anterior
@@ -68,17 +64,23 @@ const Pagination = ({
       <div className={styles.next}>
         <Button
           onClick={next}
-          outlineStyle={true}
+          outlineStyle
           disabled={currentPage === maxPages}
         >
           Próximo
         </Button>
         <p>
-          Página {currentPage} de {maxPages}
+          Página
+          {' '}
+          {currentPage}
+          {' '}
+          de
+          {' '}
+          {maxPages}
         </p>
       </div>
     </section>
   );
-};
+}
 
 export default Pagination;

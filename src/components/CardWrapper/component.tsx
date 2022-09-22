@@ -10,12 +10,12 @@ interface CardWrapperProps {
   actions?: ReactNode;
 }
 
-const CardWrapper = ({
+function CardWrapper({
   children,
   base64,
   fallbackImageSrc = '/images/fist-icon.svg',
   actions,
-}: CardWrapperProps) => {
+}: CardWrapperProps) {
   return (
     <>
       <article className={styles.card}>
@@ -25,15 +25,15 @@ const CardWrapper = ({
             alt={base64 ? '' : 'Fist icon'}
             width={96}
             height={96}
-            circular={true}
+            circular
           />
         </div>
-        <div className={styles['vertical-dash']}></div>
+        <div className={styles['vertical-dash']} />
         {children}
       </article>
       {actions && <div className={styles.actions}>{actions}</div>}
     </>
   );
-};
+}
 
 export default CardWrapper;

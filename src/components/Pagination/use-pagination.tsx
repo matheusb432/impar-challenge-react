@@ -15,7 +15,9 @@ const usePagination = () => {
     setCurrentPage((prevState) => prevState - 1);
   };
 
-  return { currentPage, changePage, next, previous };
+  return {
+    currentPage, changePage, next, previous,
+  };
 };
 
 export default usePagination;

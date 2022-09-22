@@ -14,7 +14,7 @@ interface FormLayoutProps {
   onCancel?: () => void;
 }
 
-const FormLayout = ({
+function FormLayout({
   title,
   children,
   submitLabel,
@@ -22,17 +22,17 @@ const FormLayout = ({
   canSubmit = true,
   isLoadingSubmit = false,
   onCancel,
-}: FormLayoutProps) => {
+}: FormLayoutProps) {
   return (
     <section className={styles['form-layout']}>
       <header>
-        <Image src={'/images/create-icon.svg'} alt="Create icon" />
+        <Image src="/images/create-icon.svg" alt="Create icon" />
         <Title text={title} style={{ fontWeight: 'bold' }} />
       </header>
       {children}
       <footer>
         {onCancel ? (
-          <Button type="button" onClick={onCancel} outlineStyle={true}>
+          <Button type="button" onClick={onCancel} outlineStyle>
             Cancelar
           </Button>
         ) : null}
@@ -52,6 +52,6 @@ const FormLayout = ({
       </footer>
     </section>
   );
-};
+}
 
 export default FormLayout;

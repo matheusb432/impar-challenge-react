@@ -23,9 +23,11 @@ const Modal = ({
   isLoadingConfirm = false,
   onConfirm,
 }: ModalProps) => {
-  const { iconFn: icon, title, colorTheme, confirmText } = modalData;
+  const {
+    iconFn: icon, title, colorTheme, confirmText,
+  } = modalData;
 
-  let iconProps = modalData.iconProps ?? { className: '' };
+  const iconProps = modalData.iconProps ?? { className: '' };
   iconProps.className += ` ${styles.icon}`;
 
   return createPortal(
@@ -54,13 +56,13 @@ const Modal = ({
           >
             {confirmText}
           </Button>
-          <Button onClick={onClose} colorTheme={colorTheme} outlineStyle={true}>
+          <Button onClick={onClose} colorTheme={colorTheme} outlineStyle>
             Cancelar
           </Button>
         </footer>
       </div>
     </>,
-    document.getElementById('overlay-root')!
+    document.getElementById('overlay-root')!,
   );
 };
 

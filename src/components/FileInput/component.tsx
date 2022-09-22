@@ -62,9 +62,7 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
       clickInput: () => {
         fileInputRef.current?.clickInput();
       },
-      getValue: () => {
-        return fileInputRef.current?.getValue()!;
-      },
+      getValue: () => fileInputRef.current?.getValue()!,
     }));
 
     return (
@@ -74,12 +72,12 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
         className={`${styles['file-input']} ${className ?? ''}`}
         ref={fileInputRef}
       >
-        <Button onClick={selectFile} outlineStyle={true}>
+        <Button onClick={selectFile} outlineStyle>
           Escolher arquivo
         </Button>
       </Input>
     );
-  }
+  },
 );
 
 export default FileInput;

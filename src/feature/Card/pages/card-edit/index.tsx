@@ -1,7 +1,7 @@
 import { CardFormLayout } from '../../CardFormLayout';
 
-const CardEdit = () => {
-  return <CardFormLayout isEdit={true} />;
-};
+function CardEdit() {
+  return <CardFormLayout isEdit />;
+}
 
 export default CardEdit;

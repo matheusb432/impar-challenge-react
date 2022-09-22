@@ -9,12 +9,12 @@ interface SideContainerProps {
   onClose: () => void;
 }
 
-const SideContainer = ({
+function SideContainer({
   children,
   onClose,
   animationMs = 500,
   show = true,
-}: SideContainerProps) => {
+}: SideContainerProps) {
   return (
     <>
       <Backdrop animationMs={animationMs} onClick={onClose} show={show} />
@@ -26,6 +26,6 @@ const SideContainer = ({
       </section>
     </>
   );
-};
+}
 
 export default SideContainer;

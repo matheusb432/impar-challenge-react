@@ -15,7 +15,7 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-const Button = ({
+function Button({
   children,
   onClick,
   className,
@@ -26,7 +26,7 @@ const Button = ({
   outlineStyle = false,
   disabled = false,
   type = 'button',
-}: ButtonProps) => {
+}: ButtonProps) {
   return (
     <button
       type={type}
@@ -52,6 +52,6 @@ const Button = ({
       </div>
     </button>
   );
-};
+}
 
 export default Button;

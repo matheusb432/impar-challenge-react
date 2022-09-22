@@ -9,33 +9,33 @@ interface CardItemProps {
   onDelete: (card: CardModel) => void;
 }
 
-const CardItem = ({ card, onEdit, onDelete }: CardItemProps) => {
+function CardItem({ card, onEdit, onDelete }: CardItemProps) {
   return (
     <li>
       <CardWrapper
-        actions={
+        actions={(
           <>
             <IconButton
-              icon={<TrashIcon className={'ui__remove-icon'} />}
+              icon={<TrashIcon className="ui__remove-icon" />}
               onClick={() => onDelete(card)}
               label="Excluir"
               theme="#db2525"
             />
-            <div className={styles.dash}></div>
+            <div className={styles.dash} />
             <IconButton
-              icon={<PencilIcon className={'ui__edit-icon'} />}
+              icon={<PencilIcon className="ui__edit-icon" />}
               onClick={() => onEdit(card)}
               label="Editar"
               theme="#e76316"
             />
           </>
-        }
+        )}
         base64={card.base64}
       >
         {card.name}
       </CardWrapper>
     </li>
   );
-};
+}
 
 export default CardItem;

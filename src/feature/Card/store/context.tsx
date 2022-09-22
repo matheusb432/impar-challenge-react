@@ -41,7 +41,7 @@ const CardContext = createContext<CardContextProps>({
   resetCardsPage: () => {},
 });
 
-const CardContextProvider = ({ children }: CardContextProviderProps) => {
+function CardContextProvider({ children }: CardContextProviderProps) {
   const [cardState, dispatchCard] = useReducer(cardReducer, initialCardState());
   const [currentCardsPage, setCurrentCardsPage] = useState(1);
 
@@ -50,7 +50,7 @@ const CardContextProvider = ({ children }: CardContextProviderProps) => {
     status,
     mutate: mutateCards,
   } = useCardApi().useODataMutation<PaginatedResult<CardModel>>(
-    paginationQuery(currentCardsPage)
+    paginationQuery(currentCardsPage),
   );
 
   useEffect(() => {
@@ -96,13 +96,15 @@ const CardContextProvider = ({ children }: CardContextProviderProps) => {
       {children}
     </CardContext.Provider>
   );
-};
+}
 
-const CardContextLayout = () => (
-  <CardContextProvider>
-    <Outlet />
-  </CardContextProvider>
-);
+function CardContextLayout() {
+  return (
+    <CardContextProvider>
+      <Outlet />
+    </CardContextProvider>
+  );
+}
 
 export default CardContext;
 export { CardContextProvider, CardContextLayout };

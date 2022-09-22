@@ -4,7 +4,7 @@ import styles from './style.module.scss';
 
 const urls = RouteUrls;
 
-const Navigation = () => {
+function Navigation() {
   return (
     <nav className={styles.nav}>
       <ul className={styles['nav-items']}>
@@ -12,6 +12,6 @@ const Navigation = () => {
       </ul>
     </nav>
   );
-};
+}
 
 export default Navigation;

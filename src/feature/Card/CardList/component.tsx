@@ -13,7 +13,7 @@ import { CardModel } from '../types';
 import { SharedProps } from '../types/shared-props.enum';
 import styles from './style.module.scss';
 
-const CardList = () => {
+function CardList() {
   const navigate = useNavigate();
   const api = useCardApi();
   const { showToast } = useAppContext();
@@ -60,7 +60,7 @@ const CardList = () => {
 
       navigate(`${RouteUrls.CardsEdit}/${id}`);
     },
-    [navigate]
+    [navigate],
   );
 
   const handleDelete = useCallback((card: CardModel) => {
@@ -119,6 +119,6 @@ const CardList = () => {
       </Modal>
     </>
   );
-};
+}
 
 export default CardList;

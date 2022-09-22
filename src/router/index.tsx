@@ -1,4 +1,6 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import {
+  BrowserRouter, Navigate, Route, Routes,
+} from 'react-router-dom';
 import '../assets/styles/styles.scss';
 import { Card, CardCreate, CardEdit } from '../feature/Card';
 import { CardContextLayout } from '../feature/Card/store/context';
@@ -7,7 +9,7 @@ import { RouteSuffixes, RouteUrls } from '../types';
 const urls = { ...RouteUrls };
 const suffixes = { ...RouteSuffixes };
 
-const IndexRouter = () => {
+function IndexRouter() {
   return (
     <BrowserRouter>
       <Routes>
@@ -21,6 +23,6 @@ const IndexRouter = () => {
       </Routes>
     </BrowserRouter>
   );
-};
+}
 
 export default IndexRouter;

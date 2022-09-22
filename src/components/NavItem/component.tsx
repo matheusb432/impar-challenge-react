@@ -8,7 +8,7 @@ interface NavItemProps {
   url: RouteUrls;
 }
 
-const NavItem = ({ children, url }: NavItemProps) => {
+function NavItem({ children, url }: NavItemProps) {
   return (
     <li className={styles['nav-item']}>
       <NavLink
@@ -19,6 +19,6 @@ const NavItem = ({ children, url }: NavItemProps) => {
       </NavLink>
     </li>
   );
-};
+}
 
 export default NavItem;

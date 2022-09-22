@@ -12,11 +12,9 @@ const Toast = () => {
   const [toastTimeout, setToastTimeout] = useState<NodeJS.Timeout | null>(null);
   const [toastStyles, setToastStyles] = useState<string>('');
 
-  const getToastStyles = useCallback(() => {
-    return `${styles.toast} ${toast ? styles[toast.type] : ''} ${
-      toast != null && toastTimeout != null ? styles.show : ''
-    }`;
-  }, [toast, toastTimeout]);
+  const getToastStyles = useCallback(() => `${styles.toast} ${toast ? styles[toast.type] : ''} ${
+    toast != null && toastTimeout != null ? styles.show : ''
+  }`, [toast, toastTimeout]);
 
   const activateNextToast = useCallback(() => {
     clearTimeout(toastTimeout!);
@@ -42,7 +40,7 @@ const Toast = () => {
     setToastTimeout(
       setTimeout(() => {
         activateNextToast();
-      }, durationMs)
+      }, durationMs),
     );
   }, [activateNextToast, toast, toastTimeout]);
 
@@ -66,7 +64,7 @@ const Toast = () => {
         />
       </div>
     </div>,
-    document.getElementById('overlay-root')!
+    document.getElementById('overlay-root')!,
   );
 };
 

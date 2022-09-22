@@ -1,11 +1,11 @@
 import { Container, Layout } from '../../../components';
 
-const Home = () => {
+function Home() {
   return (
     <Layout>
       <Container>Home!</Container>
     </Layout>
   );
-};
+}
 
 export default Home;

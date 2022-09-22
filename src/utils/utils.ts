@@ -1,22 +1,25 @@
-import { SharedErrorKeys } from './../types/shared-error-keys.enum';
+import { SharedErrorKeys } from '../types/shared-error-keys.enum';
 import { EnvKeys } from '../types';
 
-const sleep = async (ms: number): Promise<any> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+async function sleep(ms: number): Promise<any> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 const sortArrayByProp = <T>(arr: T[], prop: keyof T): void => {
   arr.sort((a, b) => (a[prop] > b[prop] ? 1 : -1));
 };
 
-const base64Format = (base64: string, extension = 'png') =>
-  base64.startsWith('data:image/') && base64.includes(';base64,')
-    ? base64
-    : `data:image/${extension};base64,${base64}`;
+function base64Format(base64: string, extension = 'png') {
+  if (base64.startsWith('data:image/') && base64.includes(';base64,')) return base64;
 
-const onEnterPress = <T>(
-  event: React.KeyboardEvent<T>,
-  callback?: () => void
-) => (event.key === 'Enter' ? callback?.() : null);
+  return `data:image/${extension};base64,${base64}`;
+}
+
+function onEnterPress<T>(event: React.KeyboardEvent<T>, callback?: () => void) {
+  return event.key === 'Enter' ? callback?.() : null;
+}
 
 const getEnvValue = (key: EnvKeys) => process.env[key];
 
@@ -33,18 +36,19 @@ const errorCodeToKey = (code?: string) => {
 
 const deepClone = (value: any) => structuredClone(value);
 
-const toBase64 = (file: File): Promise<string | unknown> =>
-  new Promise((resolve, reject) => {
+function toBase64(file: File): Promise<string | unknown> {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
+}
 
-const arrayFrom = (items: number, increment = 0) => {
+function arrayFrom(items: number, increment = 0) {
   return Array.from(Array(items).keys()).map((i) => i + increment);
-};
+}
 
 export {
   sleep,

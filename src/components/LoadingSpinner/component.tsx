@@ -5,12 +5,12 @@ interface LoadingSpinnerProps {
   style?: CSSProperties;
 }
 
-const LoadingSpinner = ({ style }: LoadingSpinnerProps) => {
+function LoadingSpinner({ style }: LoadingSpinnerProps) {
   return (
     <div className={styles['spinner-container']}>
-      <div className={styles['loading-spinner']} style={style}></div>
+      <div className={styles['loading-spinner']} style={style} />
     </div>
   );
-};
+}
 
 export default LoadingSpinner;

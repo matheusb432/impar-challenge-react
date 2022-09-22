@@ -3,9 +3,13 @@ import { SharedProps } from './shared-props.enum';
 
 export class CardModel {
   [SharedProps.Id]?: number;
+
   [SharedProps.PhotoId]?: number;
+
   [SharedProps.Name]?: string;
+
   [SharedProps.Status]?: string;
+
   [SharedProps.Photo]?: PhotoModel;
 
   get base64(): string {
@@ -26,7 +30,7 @@ export class CardModel {
     name: string,
     status: string,
     photoBase64: string,
-    photoId: number
+    photoId: number,
   ): CardModel {
     const card = this.fromInputs(name, status, photoBase64);
 
@@ -39,7 +43,7 @@ export class CardModel {
   static fromInputs(
     name: string,
     status: string | undefined,
-    photoBase64: string
+    photoBase64: string,
   ): CardModel {
     const card = new CardModel();
 
@@ -53,7 +57,7 @@ export class CardModel {
   static forPost(
     name: string | undefined,
     status: string | undefined,
-    photoId: number | undefined
+    photoId: number | undefined,
   ): CardModel {
     const card = new CardModel();
 
@@ -68,7 +72,7 @@ export class CardModel {
     id: number | undefined,
     name: string | undefined,
     status: string | undefined,
-    photoId: number | undefined
+    photoId: number | undefined,
   ): CardModel {
     const card = new CardModel();
 

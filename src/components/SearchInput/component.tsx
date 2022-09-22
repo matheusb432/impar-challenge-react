@@ -15,7 +15,7 @@ interface SearchInputProps {
   onIconClick: () => void;
 }
 
-const SearchInput = ({
+function SearchInput({
   id,
   placeholder,
   value,
@@ -24,7 +24,7 @@ const SearchInput = ({
   onBlur,
   onIconClick,
   onEnter,
-}: SearchInputProps) => {
+}: SearchInputProps) {
   return (
     <Input
       className={`${styles['search-input']} ${className ?? ''}`}
@@ -41,6 +41,6 @@ const SearchInput = ({
       />
     </Input>
   );
-};
+}
 
 export default SearchInput;

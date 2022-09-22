@@ -2,7 +2,7 @@ import { Image } from '../Image';
 import { Navigation } from '../Navigation';
 import classes from './style.module.scss';
 
-const MainHeader = () => {
+function MainHeader() {
   return (
     <header className={classes.header}>
       <figure>
@@ -11,6 +11,6 @@ const MainHeader = () => {
       <Navigation />
     </header>
   );
-};
+}
 
 export default MainHeader;

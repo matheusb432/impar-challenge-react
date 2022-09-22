@@ -11,7 +11,7 @@ interface CardFormLayoutProps {
 
 const animationMs = 500;
 
-const CardFormLayout = ({ isEdit }: CardFormLayoutProps) => {
+function CardFormLayout({ isEdit }: CardFormLayoutProps) {
   const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
 
@@ -36,6 +36,6 @@ const CardFormLayout = ({ isEdit }: CardFormLayoutProps) => {
       <CardForm isEditing={isEdit} />
     </SideContainer>
   );
-};
+}
 
 export default CardFormLayout;

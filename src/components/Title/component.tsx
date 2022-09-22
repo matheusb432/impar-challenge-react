@@ -6,12 +6,12 @@ interface TitleProps {
   style?: CSSProperties;
 }
 
-const Title = ({ text, style }: TitleProps) => {
+function Title({ text, style }: TitleProps) {
   return (
     <h2 className={styles.title} style={style}>
       {text}
     </h2>
   );
-};
+}
 
 export default Title;

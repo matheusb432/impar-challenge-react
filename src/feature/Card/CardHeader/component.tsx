@@ -4,7 +4,7 @@ import { Title } from '../../../components/Title';
 import { RouteUrls } from '../../../types';
 import styles from './style.module.scss';
 
-const CardHeader = () => {
+function CardHeader() {
   const navigate = useNavigate();
 
   const handleNewCardClick = () => {
@@ -19,6 +19,6 @@ const CardHeader = () => {
       </Button>
     </header>
   );
-};
+}
 
 export default CardHeader;

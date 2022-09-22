@@ -6,7 +6,9 @@ interface ImageProps {
   circular?: boolean;
 }
 
-const Image = ({ src, alt, width, height, circular = false }: ImageProps) => {
+function Image({
+  src, alt, width, height, circular = false,
+}: ImageProps) {
   return (
     <img
       src={src}
@@ -14,8 +16,8 @@ const Image = ({ src, alt, width, height, circular = false }: ImageProps) => {
       width={width}
       height={height}
       style={{ borderRadius: circular ? '100%' : '' }}
-    ></img>
+    />
   );
-};
+}
 
 export default Image;

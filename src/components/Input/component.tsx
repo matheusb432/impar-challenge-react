@@ -56,33 +56,29 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       required = true,
       hasError = false,
     }: InputProps,
-    ref
+    ref,
   ) => {
     const [renderedHelper, setRenderedHelper] = useState<DynamicJsx>();
     const [renderedLabel, setRenderedLabel] = useState<DynamicJsx>();
     const inputRef = useElementRef();
 
-    const renderHelper = useCallback(() => {
-      return (
-        (showHelperIfValid || hasError) &&
-        validateText(helperText) && (
+    const renderHelper = useCallback(() => (
+      (showHelperIfValid || hasError)
+        && validateText(helperText) && (
           <span className={styles.helper}>{helperText}</span>
-        )
-      );
-    }, [hasError, helperText, showHelperIfValid]);
+      )
+    ), [hasError, helperText, showHelperIfValid]);
 
-    const renderLabel = useCallback(() => {
-      return (
-        validateText(label) && (
-          <label htmlFor={id}>
-            <span className={styles.label}>{label}</span>
-            {!required ? (
-              <span className={styles['label-helper']}> - opcional</span>
-            ) : null}
-          </label>
-        )
-      );
-    }, [id, label, required]);
+    const renderLabel = useCallback(() => (
+      validateText(label) && (
+      <label htmlFor={id}>
+        <span className={styles.label}>{label}</span>
+        {!required ? (
+          <span className={styles['label-helper']}> - opcional</span>
+        ) : null}
+      </label>
+      )
+    ), [id, label, required]);
 
     useEffect(() => {
       setRenderedHelper(renderHelper());
@@ -107,15 +103,12 @@ const Input = forwardRef<InputForwardRef, InputProps>(
       onChange?.(event);
     };
 
-    const controlCssClasses = () =>
-      `${styles.control} ${hasError ? styles.invalid : ''} ${className ?? ''}`;
+    const controlCssClasses = () => `${styles.control} ${hasError ? styles.invalid : ''} ${className ?? ''}`;
 
-    useImperativeHandle(ref, () => {
-      return {
-        clickInput: clickInput,
-        getValue: getValue,
-      };
-    });
+    useImperativeHandle(ref, () => ({
+      clickInput,
+      getValue,
+    }));
 
     return (
       <div className={controlCssClasses()}>
@@ -130,12 +123,12 @@ const Input = forwardRef<InputForwardRef, InputProps>(
           value={value}
           placeholder={placeholder ?? ''}
           onKeyDown={(e) => onKeyDown?.(e)}
-        ></input>
+        />
         {renderedHelper}
         {children}
       </div>
     );
-  }
+  },
 );
 
 export default Input;

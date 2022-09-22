@@ -3,12 +3,10 @@ import { useState } from 'react';
 const useDebounce = (filterFn: (...args: any[]) => void, timeoutMs = 500) => {
   const [timer, setTimer] = useState<NodeJS.Timeout>();
 
-  const debounceFn = () => {
-    return (...args: any[]) => {
-      clearTimer();
+  const debounceFn = () => (...args: any[]) => {
+    clearTimer();
 
-      setTimer(setTimeout(() => filterFn(args), timeoutMs));
-    };
+    setTimer(setTimeout(() => filterFn(args), timeoutMs));
   };
 
   const clearTimer = () => {

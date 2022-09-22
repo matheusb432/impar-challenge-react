@@ -4,8 +4,11 @@ const defaultDuration = 4800;
 
 export class ToastData {
   type: ToastType;
+
   visible: boolean;
+
   durationMs: number;
+
   text: string;
 
   constructor(text: string, type?: ToastType, durationMs?: number) {

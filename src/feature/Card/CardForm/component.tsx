@@ -1,5 +1,7 @@
 import { Mapper } from 'mapper-ts/lib-esm';
-import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
+import {
+  SyntheticEvent, useCallback, useEffect, useState,
+} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { FileInput, Input } from '../../../components';
@@ -25,7 +27,7 @@ interface CardFormProps {
   isEditing: boolean;
 }
 
-const CardForm = ({ isEditing }: CardFormProps) => {
+function CardForm({ isEditing }: CardFormProps) {
   const navigate = useNavigate();
   const { id } = useParams();
   const api = useCardApi();
@@ -35,12 +37,11 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   const validateName = useCallback(
     (name: string) => validateText(name, { min: 1, max: 100 }),
-    []
+    [],
   );
   const validateStatus = useCallback(
-    (status: string) =>
-      validateText(status, { required: false, min: 1, max: 100 }),
-    []
+    (status: string) => validateText(status, { required: false, min: 1, max: 100 }),
+    [],
   );
 
   const {
@@ -66,7 +67,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const formIsValid = nameIsValid && statusIsValid && photoValid;
 
   const [toggleUpdateCard, setToggleUpdateCard] = useState<boolean | undefined>(
-    undefined
+    undefined,
   );
 
   const { changeError, showToast } = useAppContext();
@@ -111,12 +112,12 @@ const CardForm = ({ isEditing }: CardFormProps) => {
       formCard?.id,
       name,
       status,
-      uploadPhotoData?.data?.id ?? formCard?.photoId
-    )
+      uploadPhotoData?.data?.id ?? formCard?.photoId,
+    ),
   );
 
   const getDispatchBase64Photo = useCallback(async (): Promise<
-    string | unknown
+  string | unknown
   > => {
     const file = photoUpload?.file;
 
@@ -125,10 +126,10 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
   useEffect(() => {
     setIsLoadingSubmit(
-      isLoadingCreateCard ||
-        isLoadingUpdateCard ||
-        isLoadingPhotoUpload ||
-        isLoadingUpdatePhoto
+      isLoadingCreateCard
+        || isLoadingUpdateCard
+        || isLoadingPhotoUpload
+        || isLoadingUpdatePhoto,
     );
   }, [
     isLoadingCreateCard,
@@ -153,7 +154,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
 
       if (isEditing) setPhotoValid(true);
     },
-    [isEditing, setName, setStatus]
+    [isEditing, setName, setStatus],
   );
 
   useEffect(() => {
@@ -175,7 +176,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           name,
           status,
           photoBase64 as string,
-          formCard?.photoId!
+          formCard?.photoId!,
         ),
       });
 
@@ -212,7 +213,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           name,
           status,
           photoBase64 as string,
-          uploadPhotoData?.data?.id!
+          uploadPhotoData?.data?.id!,
         ),
       });
 
@@ -317,7 +318,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
   const handleSubmit = (): void => {
     if (!formIsValid) {
       return showToast(
-        ToastData.warning('Formulário inválido, não é possível submeter!')
+        ToastData.warning('Formulário inválido, não é possível submeter!'),
       );
     }
 
@@ -368,9 +369,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           id="cardName"
           label="Digite um nome para o card"
           placeholder="Digite o título"
-          helperText={
-            'Nome inválido! precisa ser um valor de 1 e 100 caracteres'
-          }
+          helperText="Nome inválido! precisa ser um valor de 1 e 100 caracteres"
           value={name}
           onChange={nameChangeHandler}
           hasError={nameHasError}
@@ -380,9 +379,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
           id="cardStatus"
           label="Defina o status do card"
           placeholder="Digite o status"
-          helperText={
-            'Status inválido! precisa ser um valor de 0 e 100 caracteres'
-          }
+          helperText="Status inválido! precisa ser um valor de 0 e 100 caracteres"
           required={false}
           value={status}
           onChange={statusChangeHandler}
@@ -392,7 +389,7 @@ const CardForm = ({ isEditing }: CardFormProps) => {
         <FileInput
           id="cardPhoto"
           accept=""
-          helperText={'Arquivo inválido!'}
+          helperText="Arquivo inválido!"
           label={
             isEditing
               ? 'Inclua uma imagem para substituir a imagem no card'
@@ -404,6 +401,6 @@ const CardForm = ({ isEditing }: CardFormProps) => {
       </form>
     </FormLayout>
   );
-};
+}
 
 export default CardForm;

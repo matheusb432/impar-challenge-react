@@ -23,7 +23,7 @@ import { CardActions } from '../../store';
 import { CardModel } from '../../types';
 import { SharedProps } from '../../types/shared-props.enum';
 
-const Card = () => {
+function Card() {
   const api = useCardApi();
   const { changeError } = useAppContext();
   const paginationProps = usePagination();
@@ -31,11 +31,10 @@ const Card = () => {
   const [searchText, setSearchText] = useState<string>('');
 
   const [toggleSearch, setToggleSearch] = useState<boolean | undefined>(
-    undefined
+    undefined,
   );
 
-  const { dispatchCard, currentCardsPage, changeCurrentCardsPage } =
-    useCardContext();
+  const { dispatchCard, currentCardsPage, changeCurrentCardsPage } = useCardContext();
   const [totalCards, setTotalCards] = useState(0);
 
   const { debounceFn, clearTimer } = useDebounce(() => filterCards(), 500);
@@ -110,6 +109,6 @@ const Card = () => {
       <Outlet />
     </Layout>
   );
-};
+}
 
 export default Card;

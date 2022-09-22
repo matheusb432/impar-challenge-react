@@ -10,13 +10,13 @@ interface IconButtonProps {
   theme?: string;
 }
 
-const IconButton = ({
+function IconButton({
   icon,
   onClick,
   disabled = false,
   label = '',
   theme = '',
-}: IconButtonProps) => {
+}: IconButtonProps) {
   const { hovering, onMouseEnter, onMouseLeave } = useHovering();
 
   return (
@@ -32,6 +32,6 @@ const IconButton = ({
       <div>{label}</div>
     </button>
   );
-};
+}
 
 export default IconButton;

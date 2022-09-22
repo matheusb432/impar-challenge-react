@@ -1,4 +1,5 @@
-import { SharedErrorKeys } from './../types/shared-error-keys.enum';
+import { SharedErrorKeys } from '../types/shared-error-keys.enum';
+
 export const errorMessages = Object.freeze({
   [SharedErrorKeys.NetworkError]:
     'Houve algum erro ao tentar se conectar ao servidor!',

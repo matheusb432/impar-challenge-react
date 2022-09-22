@@ -8,7 +8,7 @@ import { initialState, InputActions, inputReducer } from './reducer';
  * @param validateValue Função de validação do valor do input
  */
 export function useInput<TElement extends InputElement = HTMLInputElement>(
-  validateValue?: (value: string) => boolean
+  validateValue?: (value: string) => boolean,
 ) {
   const [state, dispatch] = useReducer(inputReducer, initialState);
   const { value, touched } = state;
@@ -20,16 +20,16 @@ export function useInput<TElement extends InputElement = HTMLInputElement>(
     dispatch({ type: InputActions.InputChange, payload: event.target.value });
   };
 
-  const setValue = useCallback((value: string) => {
-    dispatch({ type: InputActions.InputChange, payload: value });
+  const setValue = useCallback((val: string) => {
+    dispatch({ type: InputActions.InputChange, payload: val });
   }, []);
 
   const blurHandler = () => {
     dispatch({ type: InputActions.InputBlur });
   };
 
-  const touch = (touch = true) => {
-    dispatch({ type: InputActions.InputTouch, payload: touch });
+  const touch = (val = true) => {
+    dispatch({ type: InputActions.InputTouch, payload: val });
   };
 
   const reset = () => {

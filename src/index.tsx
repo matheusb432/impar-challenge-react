@@ -6,7 +6,7 @@ import IndexRouter from './router';
 import { AppContextProvider } from './store';
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById('root') as HTMLElement,
 );
 
 const queryClient = new QueryClient();
@@ -16,5 +16,5 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <IndexRouter />
     </QueryClientProvider>
-  </AppContextProvider>
+  </AppContextProvider>,
 );

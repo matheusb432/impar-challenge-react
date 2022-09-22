@@ -45,12 +45,12 @@ const AppContext = createContext<AppContextProps>({
   showToast: (
     text: string | ToastData,
     type?: ToastType,
-    duration?: number
+    duration?: number,
   ) => {},
   nextToast: () => {},
 });
 
-const AppContextProvider = ({ children }: AppContextProviderProps) => {
+function AppContextProvider({ children }: AppContextProviderProps) {
   const [error, setError] = useState<ErrorType>(null);
   const [toasts, setToasts] = useState<ToastData[]>([]);
 
@@ -60,22 +60,19 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
 
   const showToast = useCallback(
     (text: string | ToastData, type?: ToastType, duration?: number) => {
-      const data =
-        text instanceof ToastData ? text : new ToastData(text, type, duration);
+      const data = text instanceof ToastData ? text : new ToastData(text, type, duration);
 
       setToasts((prevState) => [...prevState, data]);
     },
-    []
+    [],
   );
 
   useEffect(() => {
     if (error === null) return;
 
-    const key =
-      (error instanceof AxiosError ? errorCodeToKey(error.code) : error) ?? '';
+    const key = (error instanceof AxiosError ? errorCodeToKey(error.code) : error) ?? '';
 
-    const errorMessage =
-      errorMessages[key as keyof object] || errorMessages.default;
+    const errorMessage = errorMessages[key as keyof object] || errorMessages.default;
 
     showToast(ToastData.error(errorMessage));
   }, [error, showToast]);
@@ -86,13 +83,15 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
 
   return (
     <AppContext.Provider
-      value={{ error, changeError, toasts, showToast, nextToast }}
+      value={{
+        error, changeError, toasts, showToast, nextToast,
+      }}
     >
       {children}
       <Toast />
     </AppContext.Provider>
   );
-};
+}
 
 export default AppContext;
 export { AppContextProvider };

@@ -1,9 +1,10 @@
 import { PhotoUpload } from '../types/photo-upload';
-import { CardModel } from './../types/card-model';
+import { CardModel } from '../types/card-model';
 import { CardAction, CardActions, CardState } from './types';
 
-const { AddCard, EditCard, RemoveCard, SetFormCard, SetCards, SetPhotoUpload } =
-  CardActions;
+const {
+  AddCard, EditCard, RemoveCard, SetFormCard, SetCards, SetPhotoUpload,
+} = CardActions;
 
 const initialCardState = (): CardState => ({
   cards: [],
