@@ -31,7 +31,7 @@
   padding-#{$position}: $padding;
 }
 
-@mixin btn-effects($hover: 0.85, $active: 0.7) {
+@mixin btn-effects($hover: 0.95, $active: 0.85) {
   &:hover:not(:disabled),
   &:active:not(:disabled) {
     filter: brightness($hover);

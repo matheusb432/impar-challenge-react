@@ -5,9 +5,12 @@
     display: none;
   }
 
+  input {
+    opacity: 0;
+  }
+
   button {
     position: absolute;
-    right: 8px;
     bottom: 12px;
   }
 }

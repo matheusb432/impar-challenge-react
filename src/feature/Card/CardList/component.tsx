@@ -100,8 +100,6 @@ function CardList() {
     deleteCard();
   };
 
-  console.log(cards);
-
   return (
     <>
       <ul className={styles['card-list']}>{renderedCards}</ul>

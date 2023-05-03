@@ -379,6 +379,7 @@ function CardForm({ isEditing }: CardFormProps) {
               : 'Inclua uma imagem para aparecer no card'
           }
           onChange={handlePhotoChange}
+          fileName={photoUpload?.file?.name ?? ''}
           hasError={!photoValid && photoTouched}
         />
       </form>

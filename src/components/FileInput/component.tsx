@@ -14,6 +14,7 @@ interface FileInputProps {
   placeholder?: string;
   className?: string;
   hasError?: boolean;
+  fileName?: string;
   onChange?: (event: ChangeInputEvent) => void;
   onBlur?: () => void;
 }
@@ -36,6 +37,7 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
       className,
       onChange,
       onBlur,
+      fileName,
     }: FileInputProps,
     ref,
   ) => {
@@ -67,8 +69,8 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
         className={`${styles['file-input']} ${className ?? ''}`}
         ref={fileInputRef}
       >
-        <Button onClick={selectFile} outlineStyle>
-          Escolher arquivo
+        <Button onClick={selectFile} outlineStyle style={{ width: '100%' }}>
+          {fileName || 'Escolher arquivo'}
         </Button>
       </Input>
     );
@@ -83,6 +85,7 @@ FileInput.defaultProps = {
   hasError: false,
   onChange: () => {},
   onBlur: () => {},
+  fileName: undefined,
 };
 
 export default FileInput;
