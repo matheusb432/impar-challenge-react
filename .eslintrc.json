@@ -19,6 +19,18 @@
     "@typescript-eslint/no-use-before-define": "off",
     "operator-linebreak": "off",
     "react/jsx-one-expression-per-line": "off",
-    "react/jsx-no-constructed-context-values": "off"
+    "react/jsx-no-constructed-context-values": "off",
+    "linebreak-style": "off",
+    "indent": "off",
+    "@typescript-eslint/indent": "off",
+    "react/jsx-indent": "off",
+    "react/jsx-indent-props": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/require-default-props": "off",
+    "max-len": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "comma-dangle": "off",
+    "@typescript-eslint/comma-dangle": "off"
   }
 }
