@@ -37,6 +37,7 @@ function useAxios<TResponse = unknown, TBody = void>(options: UseAxiosOptions<TR
 
   return useQuery<TResponse, AxiosError<TResponse>>(queryKey(config), queryFn<TResponse>(config), {
     ...defaultOptions(useAppContext()),
+    staleTime: 1000 * 60 * 5,
     ...queryOptions,
   });
 }

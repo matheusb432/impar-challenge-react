@@ -45,37 +45,28 @@ const CardContext = createContext<CardContextProps>({
 function CardContextProvider({ children }: CardContextProviderProps) {
   const [cardState, dispatchCard] = useReducer(cardReducer, initialCardState());
   const [currentCardsPage, setCurrentCardsPage] = useState(1);
+  const api = useCardApi();
 
-  const {
-    data,
-    status,
-    mutate: mutateCards,
-  } = useCardApi().useODataMutation<PaginatedResult<CardModel>>(paginationQuery(currentCardsPage));
-
-  useEffect(() => {
-    mutateCards();
-  }, [mutateCards]);
-
-  const result = data;
+  const { data, status } = api.useOData<PaginatedResult<CardModel>>(
+    paginationQuery(currentCardsPage),
+  );
 
   useEffect(() => {
-    if (result == null) return;
+    if (data == null) return;
 
     dispatchCard({
       type: CardActions.SetCards,
-      payload: new Mapper(CardModel).map(result.items) as CardModel[],
+      payload: new Mapper(CardModel).map(data.items) as CardModel[],
     });
-  }, [status, result]);
+  }, [status, data]);
 
   const changeCurrentCardsPage = (page: number) => {
     setCurrentCardsPage(page);
   };
 
   const resetCardsPage = useCallback((): void => {
-    if (currentCardsPage === 1) return mutateCards();
-
-    return changeCurrentCardsPage(1);
-  }, [currentCardsPage, mutateCards]);
+    changeCurrentCardsPage(1);
+  }, [currentCardsPage]);
 
   const cardValue = useMemo(
     () => ({
