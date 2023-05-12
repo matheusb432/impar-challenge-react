@@ -36,8 +36,7 @@ function useAxios<TResponse = unknown, TBody = void>(options: UseAxiosOptions<TR
   const { config, queryOptions = {} } = options;
 
   return useQuery<TResponse, AxiosError<TResponse>>(queryKey(config), queryFn<TResponse>(config), {
-    ...defaultOptions(useAppContext()),
-    staleTime: 1000 * 60 * 5,
+    ...onErrorOptions(useAppContext()),
     ...queryOptions,
   });
 }
@@ -50,12 +49,17 @@ function useAxiosMutation<TResponse = unknown, TBody = void>(
   return useMutation<TResponse, AxiosError<TResponse>>(
     queryKey(config),
     queryFn<TResponse>(config),
-    { ...defaultOptions(useAppContext()), ...queryOptions },
+    { ...onErrorOptions(useAppContext()), ...queryOptions },
   );
 }
 
 function queryKey(config: AxiosRequestConfig) {
-  return [config.url, config.params].filter((x) => !!x);
+  const { url, params } = config;
+  return [...buildUniqueKeyFromUrl(url), params].filter((x) => !!x);
+}
+
+function buildUniqueKeyFromUrl(url: string | undefined): string[] {
+  return url?.split('/')?.filter((x) => !!x) || [];
 }
 
 /**
@@ -72,12 +76,12 @@ function queryFn<TResponse>(config: AxiosRequestConfig): () => Promise<TResponse
   };
 }
 
-const defaultOptions = (context: AppContextProps) => ({
+const onErrorOptions = (context: AppContextProps) => ({
   onError: (error: AxiosError) => {
     context.changeError(error);
   },
 });
 
-export { useAxios, useAxiosMutation };
+export { useAxios, useAxiosMutation, buildUniqueKeyFromUrl };
 
 export type { MutationOpts, QueryOpts, UseAxiosMutationOptions, UseAxiosOptions };

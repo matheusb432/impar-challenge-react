@@ -63,8 +63,6 @@ function CardForm({ isEditing }: CardFormProps) {
 
   const formIsValid = nameIsValid && statusIsValid && photoValid;
 
-  const [toggleUpdateCard, setToggleUpdateCard] = useState<boolean | undefined>(undefined);
-
   const { changeError, showToast } = useAppContext();
   const { cardState, dispatchCard } = useCardContext();
   const { cards, formCard, photoUpload } = cardState;
@@ -117,13 +115,6 @@ function CardForm({ isEditing }: CardFormProps) {
       isLoadingCreateCard || isLoadingUpdateCard || isLoadingPhotoUpload || isLoadingUpdatePhoto,
     );
   }, [isLoadingCreateCard, isLoadingPhotoUpload, isLoadingUpdateCard, isLoadingUpdatePhoto]);
-
-  // TODO remove toggle logic?
-  useEffect(() => {
-    if (toggleUpdateCard === undefined) return;
-
-    updateCard();
-  }, [toggleUpdateCard, updateCard]);
 
   const setInputs = useCallback(
     (card: CardModel) => {
@@ -312,9 +303,7 @@ function CardForm({ isEditing }: CardFormProps) {
 
     if (!isEditing) return uploadPhoto();
     if (imageChanged) return updatePhoto();
-    // TODO refactor to remove toggle?
-    // updateCard();
-    return setToggleUpdateCard((prevState) => !prevState);
+    return updateCard();
   };
 
   const handlePhotoChange = (event: ChangeInputEvent) => {

@@ -7,7 +7,15 @@ import { AppContextProvider } from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
-const queryClient = new QueryClient();
+const FIVE_MINUTES = 1000 * 60 * 5;
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: FIVE_MINUTES,
+    },
+  },
+});
 
 root.render(
   <AppContextProvider>

@@ -1,5 +1,12 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { HttpMethods, ODataParams, PostReturn } from '../types';
-import { MutationOpts, QueryOpts, useAxios, useAxiosMutation } from './use-axios';
+import {
+  MutationOpts,
+  QueryOpts,
+  buildUniqueKeyFromUrl,
+  useAxios,
+  useAxiosMutation,
+} from './use-axios';
 
 /**
  * Hook criador de todas as possíveis requisições para endpoints da API
@@ -7,6 +14,9 @@ import { MutationOpts, QueryOpts, useAxios, useAxiosMutation } from './use-axios
  * @returns Objeto com referências às funções de requisições.
  */
 export function useApi<TEntity>(featureUrl: string) {
+  const client = useQueryClient();
+  const baseQueryKey = buildUniqueKeyFromUrl(featureUrl);
+
   function useOData<TResponse = TEntity[]>(
     params: ODataParams,
     queryOptions?: QueryOpts<TResponse>,
@@ -20,6 +30,7 @@ export function useApi<TEntity>(featureUrl: string) {
     });
   }
 
+  // TODO refactor to remove?
   function useODataMutation<TResponse = TEntity[]>(
     params: ODataParams,
     mutationOptions?: MutationOpts<TResponse>,
@@ -54,7 +65,10 @@ export function useApi<TEntity>(featureUrl: string) {
         method: HttpMethods.Post,
         data: body,
       },
-      queryOptions,
+      queryOptions: {
+        onSettled: invalidateFeatureQueries,
+        ...queryOptions,
+      },
     });
 
   const usePut = (body: TEntity, queryOptions?: MutationOpts<void>) =>
@@ -64,7 +78,10 @@ export function useApi<TEntity>(featureUrl: string) {
         method: HttpMethods.Put,
         data: body,
       },
-      queryOptions,
+      queryOptions: {
+        onSettled: invalidateFeatureQueries,
+        ...queryOptions,
+      },
     });
 
   const usePutId = (id: number, body: TEntity, queryOptions?: MutationOpts<void>) =>
@@ -74,7 +91,10 @@ export function useApi<TEntity>(featureUrl: string) {
         method: HttpMethods.Put,
         data: body,
       },
-      queryOptions,
+      queryOptions: {
+        onSettled: invalidateFeatureQueries,
+        ...queryOptions,
+      },
     });
 
   const useRemove = (id: number, queryOptions?: MutationOpts<void>) =>
@@ -83,8 +103,15 @@ export function useApi<TEntity>(featureUrl: string) {
         url: `${featureUrl}/${id}`,
         method: HttpMethods.Delete,
       },
-      queryOptions,
+      queryOptions: {
+        onSettled: invalidateFeatureQueries,
+        ...queryOptions,
+      },
     });
+
+  function invalidateFeatureQueries(): Promise<void> {
+    return client.invalidateQueries(baseQueryKey);
+  }
 
   return {
     useOData,
