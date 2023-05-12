@@ -24,7 +24,7 @@ function CardList() {
     isLoading: isLoadingDelete,
     status: deleteStatus,
     mutate: deleteRequest,
-  } = api.useDelete(cardToDelete?.id);
+  } = api.useRemove(cardToDelete?.id ?? 0);
 
   const [showModal, setShowModal] = useState(false);
   const [renderedCards, setRenderedCards] = useState<ReactNode[]>([]);

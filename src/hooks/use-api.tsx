@@ -57,7 +57,6 @@ export function useApi<TEntity>(featureUrl: string) {
       queryOptions,
     });
 
-  // TODO refactor to request data object?
   const usePut = (body: TEntity, queryOptions?: MutationOpts<void>) =>
     useAxiosMutation<void, TEntity>({
       config: {

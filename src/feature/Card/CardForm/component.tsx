@@ -20,6 +20,7 @@ import { useCardApi } from '../hooks/use-card-api';
 import { CardActions } from '../store';
 import { CardModel } from '../types';
 import { PhotoUpload } from '../types/photo-upload';
+import { usePhotoApi } from '../hooks/use-photo-api';
 
 interface CardFormProps {
   isEditing: boolean;
@@ -28,7 +29,8 @@ interface CardFormProps {
 function CardForm({ isEditing }: CardFormProps) {
   const navigate = useNavigate();
   const { id } = useParams();
-  const api = useCardApi();
+  const cardApi = useCardApi();
+  const photoApi = usePhotoApi();
 
   const [label, setLabel] = useState<string>('');
   const [imageChanged, setImageChanged] = useState(false);
@@ -73,34 +75,34 @@ function CardForm({ isEditing }: CardFormProps) {
     data: getData,
     status: getStatus,
     mutate: getCard,
-  } = api.useODataMutation<CardModel[]>({ $filter: buildEqId(id) });
+  } = cardApi.useODataMutation<CardModel[]>({ $filter: buildEqId(id) });
 
   const {
     isLoading: isLoadingPhotoUpload,
     data: uploadPhotoData,
     status: uploadPhotoStatus,
     mutate: uploadPhoto,
-  } = api.usePostPhoto(photoUpload?.file);
+  } = photoApi.usePost(photoUpload?.file);
 
   const {
     isLoading: isLoadingUpdatePhoto,
     status: updatePhotoStatus,
     mutate: updatePhoto,
-  } = api.usePutPhoto(formCard?.photoId, photoUpload?.file);
+  } = photoApi.usePut(formCard?.photoId, photoUpload?.file);
 
   const {
     isLoading: isLoadingCreateCard,
     data: createdCardData,
     status: createCardStatus,
     mutate: createCard,
-  } = api.usePost(CardModel.forPost(name, status, uploadPhotoData?.data?.id));
+  } = cardApi.usePost(CardModel.forPost(name, status, uploadPhotoData?.data?.id));
 
   const {
     isLoading: isLoadingUpdateCard,
     status: updateCardStatus,
     mutate: updateCard,
-  } = api.usePut(
-    formCard?.id,
+  } = cardApi.usePutId(
+    formCard?.id ?? 0,
     CardModel.forPut(formCard?.id, name, status, uploadPhotoData?.data?.id ?? formCard?.photoId),
   );
 
