@@ -3,3 +3,4 @@ export * from './odata-utils';
 export * from './utils';
 export * from './validation-data';
 export * from './validations';
+export * from './query-utils';

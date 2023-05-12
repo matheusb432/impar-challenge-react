@@ -1,37 +1,13 @@
+import { MutationFunction, useMutation, useQuery } from '@tanstack/react-query';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from '@tanstack/react-query';
 import { AppContextProps } from '../store';
 import { EnvKeys } from '../types/env-keys.enum';
+import { MutationRes, UseAxiosMutationOptions, UseAxiosOptions } from '../types/query-types';
 import { getEnvValue } from '../utils';
 import useAppContext from './use-app-context';
 
 axios.defaults.baseURL = getEnvValue(EnvKeys.ApiUrl) || 'http://localhost:5000/api';
-type QueryOpts<TResponse> = Omit<
-  UseQueryOptions<TResponse, AxiosError<TResponse>>,
-  'queryKey' | 'queryFn'
->;
-type MutationOpts<TResponse> = Omit<
-  UseMutationOptions<TResponse, AxiosError<TResponse>>,
-  'mutationKey' | 'mutationFn'
->;
 
-interface UseAxiosOptions<TResponse = unknown, TBody = void> {
-  config: AxiosRequestConfig<TBody>;
-  queryOptions?: QueryOpts<TResponse>;
-}
-
-interface UseAxiosMutationOptions<TResponse = unknown, TBody = void> {
-  config: AxiosRequestConfig<TBody>;
-  queryOptions?: MutationOpts<TResponse>;
-}
-
-/**
- * Hook para abstrair o uso de Axios com react-query e controlar globalmente erros derivados
- * de consultas para a API.
- *
- * @param config Os paramêtros da requisição
- * @returns Uma consulta
- */
 function useAxios<TResponse = unknown, TBody = void>(options: UseAxiosOptions<TResponse, TBody>) {
   const { config, queryOptions = {} } = options;
 
@@ -41,16 +17,19 @@ function useAxios<TResponse = unknown, TBody = void>(options: UseAxiosOptions<TR
   });
 }
 
-function useAxiosMutation<TResponse = unknown, TBody = void>(
-  options: UseAxiosMutationOptions<TResponse, TBody>,
-) {
+function useAxiosMutation<
+  TResponse = unknown,
+  TBody = unknown,
+  TVariables = AxiosRequestConfig<unknown>,
+>(
+  options: UseAxiosMutationOptions<TResponse, TBody, TVariables>,
+): MutationRes<TResponse, TVariables> {
   const { config, queryOptions = {} } = options;
 
-  return useMutation<TResponse, AxiosError<TResponse>>(
-    queryKey(config),
-    queryFn<TResponse>(config),
-    { ...onErrorOptions(useAppContext()), ...queryOptions },
-  );
+  return useMutation(queryKey(config), mutationFn<TResponse, TBody, TVariables>(config), {
+    ...onErrorOptions<TResponse, TBody>(useAppContext()),
+    ...queryOptions,
+  });
 }
 
 function queryKey(config: AxiosRequestConfig) {
@@ -76,12 +55,22 @@ function queryFn<TResponse>(config: AxiosRequestConfig): () => Promise<TResponse
   };
 }
 
-const onErrorOptions = (context: AppContextProps) => ({
-  onError: (error: AxiosError) => {
-    context.changeError(error);
-  },
-});
+function mutationFn<TResponse, TBody, TVariables>(
+  baseConfig: AxiosRequestConfig<TBody>,
+): MutationFunction<TResponse, TVariables> {
+  return async (requestConfig: TVariables) => {
+    const res = await axios.request<TResponse>({ ...baseConfig, ...requestConfig });
 
-export { useAxios, useAxiosMutation, buildUniqueKeyFromUrl };
+    return res.data;
+  };
+}
 
-export type { MutationOpts, QueryOpts, UseAxiosMutationOptions, UseAxiosOptions };
+function onErrorOptions<TResponse, TBody>(context: AppContextProps) {
+  return {
+    onError: (error: AxiosError<TResponse, TBody>) => {
+      context.changeError(error);
+    },
+  };
+}
+
+export { buildUniqueKeyFromUrl, useAxios, useAxiosMutation };
