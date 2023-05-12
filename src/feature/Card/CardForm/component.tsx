@@ -95,7 +95,7 @@ function CardForm({ isEditing }: CardFormProps) {
     data: createdCardData,
     status: createCardStatus,
     mutate: createCard,
-  } = cardApi.usePost(CardModel.forPost(name, status, uploadPhotoData?.data?.id));
+  } = cardApi.usePost(CardModel.forPost(name, status, uploadPhotoData?.id));
 
   const {
     isLoading: isLoadingUpdateCard,
@@ -103,7 +103,7 @@ function CardForm({ isEditing }: CardFormProps) {
     mutate: updateCard,
   } = cardApi.usePutId(
     formCard?.id ?? 0,
-    CardModel.forPut(formCard?.id, name, status, uploadPhotoData?.data?.id ?? formCard?.photoId),
+    CardModel.forPut(formCard?.id, name, status, uploadPhotoData?.id ?? formCard?.photoId),
   );
 
   const getDispatchBase64Photo = useCallback(async (): Promise<string | unknown> => {
@@ -189,11 +189,11 @@ function CardForm({ isEditing }: CardFormProps) {
       dispatchCard({
         type: CardActions.AddCard,
         payload: CardModel.fromApiUpdate(
-          createdCardData?.data.id!,
+          createdCardData?.id!,
           name,
           status,
           photoBase64 as string,
-          uploadPhotoData?.data?.id!,
+          uploadPhotoData?.id!,
         ),
       });
 
@@ -201,13 +201,13 @@ function CardForm({ isEditing }: CardFormProps) {
     }
     dispatchCreatedCard();
   }, [
-    createdCardData?.data.id,
+    createdCardData?.id,
     dispatchCard,
     createCardStatus,
     navigate,
     photoUpload.file,
     showToast,
-    uploadPhotoData?.data?.id,
+    uploadPhotoData?.id,
     getDispatchBase64Photo,
     name,
     status,
@@ -252,7 +252,7 @@ function CardForm({ isEditing }: CardFormProps) {
   useEffect(() => {
     if (getStatus !== QueryStatuses.Success) return;
 
-    const cardFromApi = getData?.data?.[0];
+    const cardFromApi = getData?.[0];
 
     if (cardFromApi == null) {
       returnToList();

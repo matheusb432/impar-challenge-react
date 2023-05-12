@@ -56,7 +56,7 @@ function CardContextProvider({ children }: CardContextProviderProps) {
     mutateCards();
   }, [mutateCards]);
 
-  const result = data?.data;
+  const result = data;
 
   useEffect(() => {
     if (result == null) return;

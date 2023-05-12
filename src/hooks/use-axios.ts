@@ -1,18 +1,17 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from '@tanstack/react-query';
 import { AppContextProps } from '../store';
-import { getEnvValue } from '../utils';
 import { EnvKeys } from '../types/env-keys.enum';
+import { getEnvValue } from '../utils';
 import useAppContext from './use-app-context';
 
 axios.defaults.baseURL = getEnvValue(EnvKeys.ApiUrl) || 'http://localhost:5000/api';
-
 type QueryOpts<TResponse> = Omit<
-  UseQueryOptions<AxiosResponse<TResponse>, AxiosError<TResponse>>,
+  UseQueryOptions<TResponse, AxiosError<TResponse>>,
   'queryKey' | 'queryFn'
 >;
 type MutationOpts<TResponse> = Omit<
-  UseMutationOptions<AxiosResponse<TResponse>, AxiosError<TResponse>>,
+  UseMutationOptions<TResponse, AxiosError<TResponse>>,
   'mutationKey' | 'mutationFn'
 >;
 
@@ -36,11 +35,10 @@ interface UseAxiosMutationOptions<TResponse = unknown, TBody = void> {
 function useAxios<TResponse = unknown, TBody = void>(options: UseAxiosOptions<TResponse, TBody>) {
   const { config, queryOptions = {} } = options;
 
-  return useQuery<AxiosResponse<TResponse>, AxiosError<TResponse>>(
-    queryKey(config),
-    queryFn<TResponse, TBody>(config),
-    { ...defaultOptions(useAppContext()), ...queryOptions },
-  );
+  return useQuery<TResponse, AxiosError<TResponse>>(queryKey(config), queryFn<TResponse>(config), {
+    ...defaultOptions(useAppContext()),
+    ...queryOptions,
+  });
 }
 
 function useAxiosMutation<TResponse = unknown, TBody = void>(
@@ -48,48 +46,29 @@ function useAxiosMutation<TResponse = unknown, TBody = void>(
 ) {
   const { config, queryOptions = {} } = options;
 
-  return useMutation<AxiosResponse<TResponse>, AxiosError<TResponse>>(
+  return useMutation<TResponse, AxiosError<TResponse>>(
     queryKey(config),
-    queryFn<TResponse, TBody>(config),
+    queryFn<TResponse>(config),
     { ...defaultOptions(useAppContext()), ...queryOptions },
   );
 }
 
-// function useAxiosGet<TResponse>(config: AxiosRequestConfig<void>) {
-//   return useAxios<TResponse, void>({
-//     ...config,
-//     method: 'GET',
-//   });
-// }
-
-// function useAxiosPost<TResponse, TBody>(config: AxiosRequestConfig<TBody>) {
-//   return useAxiosMutation<TResponse, TBody>({
-//     ...config,
-//     method: 'POST',
-//   });
-// }
-
-// function useAxiosPut<TBody>(config: AxiosRequestConfig<TBody>) {
-//   return useAxiosMutation<void, TBody>({
-//     ...config,
-//     method: 'PUT',
-//   });
-// }
-
-// function useAxiosDelete(config: AxiosRequestConfig<void>) {
-//   return useAxiosMutation<void, void>({
-//     ...config,
-//     method: 'DELETE',
-//   });
-// }
-
 function queryKey(config: AxiosRequestConfig) {
   return [config.url, config.params].filter((x) => !!x);
 }
-function queryFn<TResponse, TBody>(
-  config: AxiosRequestConfig,
-): () => Promise<AxiosResponse<TResponse, TBody>> {
-  return () => axios.request<TResponse>(config);
+
+/**
+ * Função que retorna uma função que faz uma requisição mapeada para a API.
+ *
+ * @param config Os paramêtros da requisição
+ * @returns Uma função que faz a requisição para a API
+ */
+function queryFn<TResponse>(config: AxiosRequestConfig): () => Promise<TResponse> {
+  return async () => {
+    const res = await axios.request<TResponse>(config);
+
+    return res.data;
+  };
 }
 
 const defaultOptions = (context: AppContextProps) => ({
@@ -98,10 +77,6 @@ const defaultOptions = (context: AppContextProps) => ({
   },
 });
 
-export {
-  useAxios,
-  useAxiosMutation,
-  // useAxiosGet, useAxiosPost, useAxiosPut, useAxiosDelete
-};
+export { useAxios, useAxiosMutation };
 
-export type { QueryOpts, MutationOpts, UseAxiosOptions, UseAxiosMutationOptions };
+export type { MutationOpts, QueryOpts, UseAxiosMutationOptions, UseAxiosOptions };

@@ -64,7 +64,7 @@ function Card() {
   useEffect(() => {
     if (getCardsStatus !== QueryStatuses.Success || getCardsData == null) return;
 
-    const { items, total } = getCardsData.data;
+    const { items, total } = getCardsData;
     const fetchedCards = items;
     setTotalCards(total);
 
@@ -77,7 +77,7 @@ function Card() {
       type: CardActions.SetCards,
       payload: new Mapper(CardModel).map(fetchedCards),
     });
-  }, [getCardsStatus, dispatchCard, changeError, getCardsData?.data]);
+  }, [getCardsStatus, dispatchCard, changeError, getCardsData]);
 
   const handleFilter = (withDebouce = false, event?: ChangeInputEvent) => {
     if (event != null) setSearchText(event.target.value);
