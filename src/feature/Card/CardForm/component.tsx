@@ -118,6 +118,7 @@ function CardForm({ isEditing }: CardFormProps) {
     );
   }, [isLoadingCreateCard, isLoadingPhotoUpload, isLoadingUpdateCard, isLoadingUpdatePhoto]);
 
+  // TODO remove toggle logic?
   useEffect(() => {
     if (toggleUpdateCard === undefined) return;
 
@@ -311,6 +312,8 @@ function CardForm({ isEditing }: CardFormProps) {
 
     if (!isEditing) return uploadPhoto();
     if (imageChanged) return updatePhoto();
+    // TODO refactor to remove toggle?
+    // updateCard();
     return setToggleUpdateCard((prevState) => !prevState);
   };
 

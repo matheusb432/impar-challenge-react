@@ -1,23 +1,17 @@
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const useDebounce = (filterFn: (...args: any[]) => void, timeoutMs = 500) => {
-  const [timer, setTimer] = useState<NodeJS.Timeout>();
+export function useDebounce<T>(value: T, delay = 500): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
-  const clearTimer = useCallback(() => {
-    clearTimeout(timer);
-  }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
 
-  const debounceFn = useCallback(
-    () =>
-      (...args: any[]) => {
-        clearTimer();
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
 
-        setTimer(setTimeout(() => filterFn(args), timeoutMs));
-      },
-    [],
-  );
-
-  return { debounceFn, clearTimer };
-};
-
-export default useDebounce;
+  return debouncedValue;
+}

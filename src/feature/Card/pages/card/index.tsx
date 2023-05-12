@@ -7,8 +7,8 @@ import { useAppContext, useDebounce } from '../../../../hooks';
 import {
   ChangeInputEvent,
   PaginatedResult,
-  paginationQuery,
   QueryStatuses,
+  paginationQuery,
 } from '../../../../types';
 import { buildContains, errorMessages } from '../../../../utils';
 import { CardHeader } from '../../CardHeader';
@@ -25,13 +25,12 @@ function Card() {
 
   const [searchText, setSearchText] = useState<string>('');
 
-  const [toggleSearch, setToggleSearch] = useState<boolean | undefined>(undefined);
-
   const { dispatchCard, currentCardsPage, changeCurrentCardsPage } = useCardContext();
   const [totalCards, setTotalCards] = useState(0);
 
-  const { debounceFn, clearTimer } = useDebounce(() => filterCards(), 500);
+  const debouncedValue = useDebounce<string>(searchText, 500);
 
+  // TODO Add cache
   const {
     data: getCardsData,
     status: getCardsStatus,
@@ -42,24 +41,23 @@ function Card() {
   });
 
   const filterCards = useCallback(() => {
-    clearTimer();
     getCards();
     changeCurrentCardsPage(1);
-  }, [clearTimer, getCards, changeCurrentCardsPage]);
+  }, [getCards, changeCurrentCardsPage]);
 
   useEffect(() => {
     changeCurrentCardsPage(currentPage);
   }, [currentPage, changeCurrentCardsPage]);
 
   useEffect(() => {
-    setToggleSearch((prevState) => !prevState);
-  }, [currentCardsPage]);
+    if (debouncedValue === undefined) return;
+
+    filterCards();
+  }, [debouncedValue]);
 
   useEffect(() => {
-    if (toggleSearch === undefined) return;
-
     getCards();
-  }, [getCards, toggleSearch]);
+  }, [currentCardsPage]);
 
   useEffect(() => {
     if (getCardsStatus !== QueryStatuses.Success || getCardsData == null) return;
@@ -81,8 +79,8 @@ function Card() {
 
   const handleFilter = (withDebouce = false, event?: ChangeInputEvent) => {
     if (event != null) setSearchText(event.target.value);
-    if (withDebouce) return debounceFn();
-    return filterCards();
+    if (withDebouce) return;
+    filterCards();
   };
 
   return (

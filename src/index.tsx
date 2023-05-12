@@ -1,6 +1,5 @@
-import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ReactDOM from 'react-dom/client';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { Toast } from './components/Toast';
 
 import IndexRouter from './router';
