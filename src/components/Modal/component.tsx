@@ -6,7 +6,7 @@ import { Button } from '../Button';
 import styles from './style.module.scss';
 import { ModalData } from './types';
 
-interface ModalProps {
+export interface ModalProps {
   children: ReactNode;
   modalData: ModalData;
   show: boolean;
@@ -15,7 +15,9 @@ interface ModalProps {
   isLoadingConfirm?: boolean;
 }
 
-const Modal = ({
+export type BaseModalProps = Omit<ModalProps, 'modalData' | 'children'>;
+
+export const Modal = ({
   children,
   modalData,
   show,
@@ -23,9 +25,7 @@ const Modal = ({
   isLoadingConfirm = false,
   onConfirm,
 }: ModalProps) => {
-  const {
-    iconFn: icon, title, colorTheme, confirmText,
-  } = modalData;
+  const { iconFn: icon, title, colorTheme, confirmText } = modalData;
 
   const iconProps = modalData.iconProps ?? { className: '' };
   iconProps.className += ` ${styles.icon}`;
@@ -65,5 +65,3 @@ const Modal = ({
     document.getElementById('overlay-root')!,
   );
 };
-
-export default Modal;

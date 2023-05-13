@@ -1,5 +1,2 @@
-import Modal from './component';
-import { ModalData } from './types';
-
-export { Modal };
-export type { ModalData };
+export * from './component';
+export * from './types';

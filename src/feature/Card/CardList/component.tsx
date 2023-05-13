@@ -1,10 +1,9 @@
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrashIcon } from '../../../assets/icons';
-import { Modal, ModalData } from '../../../components';
+import { DeleteModal } from '../../../components/Modals';
 import { ToastData } from '../../../components/Toast/toast-data';
 import { useAppContext } from '../../../hooks';
-import { QueryStatuses, RouteUrls } from '../../../types';
+import { RouteUrls } from '../../../types';
 import { errorMessages, sortArrayByProp } from '../../../utils';
 import { CardItem } from '../CardItem';
 import { useCardContext } from '../hooks';
@@ -18,57 +17,51 @@ function CardList() {
   const api = useCardApi();
   const { showToast } = useAppContext();
 
-  const [cardToDelete, setCardToDelete] = useState<CardModel | null>(null);
+  // TODO to reducer?
+  const [modalState, setModalState] = useState<{ id: number | null; show: boolean }>({
+    id: null,
+    show: false,
+  });
+  const { id, show } = modalState;
 
-  const {
-    isLoading: isLoadingDelete,
-    status: deleteStatus,
-    mutate: deleteRequest,
-  } = api.useRemove();
-  // TODO refactor
-  const deleteRequestPayload = cardToDelete?.id ?? 0;
+  const { isLoading: isLoadingDelete, mutate: deleteRequest } = api.useRemove({
+    onSuccess: () => {
+      showToast(ToastData.success('Card excluído com sucesso!'));
+      changeModalStateById(null);
+      resetCardsPage();
+    },
+  });
 
-  const [showModal, setShowModal] = useState(false);
   const [renderedCards, setRenderedCards] = useState<ReactNode[]>([]);
 
-  const { cardState, dispatchCard, resetCardsPage } = useCardContext();
+  const { cardState, resetCardsPage } = useCardContext();
 
   const { cards } = cardState;
 
-  useEffect(() => {
-    if (isLoadingDelete) return;
-
-    resetCardsPage();
-  }, [isLoadingDelete, resetCardsPage]);
-
-  useEffect(() => {
-    if (deleteStatus !== QueryStatuses.Success) return;
-
-    showToast(ToastData.success('Card excluído com sucesso!'));
-    setShowModal(false);
-  }, [deleteStatus, dispatchCard, showToast]);
-
-  const modalData: ModalData = {
-    title: 'Excluir',
-    confirmText: 'Excluir',
-    iconFn: TrashIcon,
-    iconProps: { className: 'ui__remove-icon' },
-    colorTheme: '#db2525',
-  };
+  const changeModalStateById = useCallback((newId: number | null) => {
+    setModalState((prevState) => ({
+      ...prevState,
+      id: newId,
+      show: newId != null,
+    }));
+  }, []);
 
   const handleEdit = useCallback(
     (card: CardModel) => {
-      const id = card?.id;
-
-      navigate(`${RouteUrls.CardsEdit}/${id}`);
+      navigate(`${RouteUrls.CardsEdit}/${card?.id}`);
     },
     [navigate],
   );
 
   const handleDelete = useCallback((card: CardModel) => {
-    setCardToDelete(card);
+    const { id: newId } = card;
+    if (newId == null) {
+      showToast(ToastData.error(errorMessages.invalidCardModalId));
 
-    setShowModal(true);
+      return;
+    }
+
+    changeModalStateById(newId);
   }, []);
 
   const renderCards = useCallback(() => {
@@ -84,36 +77,23 @@ function CardList() {
   }, [renderCards]);
 
   const deleteCard = () => {
-    if (cardToDelete == null) {
-      showToast(ToastData.error(errorMessages.deleteCard));
+    if (id == null) return showToast(ToastData.error(errorMessages.deleteCard));
 
-      return;
-    }
-
-    deleteRequest(deleteRequestPayload);
+    return deleteRequest(id);
   };
 
-  const handleClose = () => {
-    setShowModal(false);
-    setCardToDelete(null);
-  };
-
-  const handleConfirm = () => {
-    deleteCard();
-  };
+  const handleClose = () => changeModalStateById(null);
+  const handleConfirm = () => deleteCard();
 
   return (
     <>
       <ul className={styles['card-list']}>{renderedCards}</ul>
-      <Modal
-        modalData={modalData}
-        show={showModal}
+      <DeleteModal
+        show={show}
         onClose={handleClose}
         onConfirm={handleConfirm}
         isLoadingConfirm={isLoadingDelete}
-      >
-        Certeza que deseja excluir?
-      </Modal>
+      />
     </>
   );
 }
