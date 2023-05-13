@@ -2,8 +2,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { AxiosRequestConfig } from 'axios';
 import { HttpMethods, ODataParams, PostReturn } from '../types';
 import { buildUniqueKeyFromUrl, useAxios, useAxiosMutation } from './use-axios';
-import { transformMutateFns } from '../utils';
 import { MutationOpts, MutationRes, QueryOpts, QueryRes } from '../types/query-types';
+import { transformMutateFns } from '../utils';
 
 /**
  * Hook criador de todas as possíveis requisições para endpoints da API
@@ -53,7 +53,7 @@ export function useApi<TEntity>(featureUrl: string) {
       },
     });
 
-    return returnMutation(mutation, 'body');
+    return returnBodyMutation(mutation);
   }
 
   function usePut<TResponse = void, TVariables = TEntity>(
@@ -70,7 +70,7 @@ export function useApi<TEntity>(featureUrl: string) {
       },
     });
 
-    return returnMutation(mutation, 'body');
+    return returnBodyMutation(mutation);
   }
 
   function usePutId<TResponse = void, TVariables = PostEntity>(
@@ -87,7 +87,7 @@ export function useApi<TEntity>(featureUrl: string) {
       },
     });
 
-    return returnMutation(mutation, 'id-body');
+    return returnIdBodyMutation(mutation);
   }
 
   function useRemove<TResponse = void, TVariables = number>(
@@ -104,23 +104,33 @@ export function useApi<TEntity>(featureUrl: string) {
       },
     });
 
-    return returnMutation(mutation, 'id');
+    return returnIdMutation(mutation);
   }
 
   function invalidateFeatureQueries(): Promise<void> {
     return client.invalidateQueries(baseQueryKey);
   }
 
-  function returnMutation(
-    mutation: MutationRes<unknown, AxiosRequestConfig<any>>,
-    varTypes: 'id' | 'body' | 'id-body',
-  ) {
+  function returnIdMutation(mutation: MutationRes<unknown, AxiosRequestConfig<any>>) {
     return {
       ...mutation,
-      ...transformMutateFns(mutation, featureUrl, varTypes),
-    };
+      ...transformMutateFns.id(mutation, featureUrl),
+    } as any;
   }
 
+  function returnBodyMutation(mutation: MutationRes<unknown, AxiosRequestConfig<any>>) {
+    return {
+      ...mutation,
+      ...transformMutateFns.body(mutation, featureUrl),
+    } as any;
+  }
+
+  function returnIdBodyMutation(mutation: MutationRes<unknown, AxiosRequestConfig<any>>) {
+    return {
+      ...mutation,
+      ...transformMutateFns.idBody(mutation, featureUrl),
+    } as any;
+  }
   return {
     useGet,
     useOData,

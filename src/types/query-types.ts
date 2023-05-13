@@ -15,9 +15,9 @@ type MutationOpts<TResponse, TBody, TVariables = AxiosRequestConfig<TBody>> = Om
   'mutationKey' | 'mutationFn'
 >;
 
-type QueryRes<TResponse = unknown> = UseQueryResult<TResponse, AxiosError<TResponse>>;
+type QueryRes<TResponse = any> = UseQueryResult<TResponse, AxiosError<TResponse>>;
 
-type MutationRes<TResponse = unknown, TVariables = unknown> = UseMutationResult<
+type MutationRes<TResponse = any, TVariables = any> = UseMutationResult<
   TResponse,
   AxiosError<TResponse>,
   TVariables
