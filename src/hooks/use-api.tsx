@@ -1,8 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { AxiosRequestConfig } from 'axios';
 import { HttpMethods, ODataParams, PostReturn } from '../types';
 import { buildUniqueKeyFromUrl, useAxios, useAxiosMutation } from './use-axios';
 import { transformMutateFns } from '../utils';
-import { MutationOpts, MutationRes, QueryOpts } from '../types/query-types';
+import { MutationOpts, MutationRes, QueryOpts, QueryRes } from '../types/query-types';
 
 /**
  * Hook criador de todas as possíveis requisições para endpoints da API
@@ -16,39 +17,12 @@ export function useApi<TEntity>(featureUrl: string) {
 
   type PostEntity = Omit<TEntity, 'id'>;
 
-  function useOData<TResponse = TEntity[]>(
-    params: ODataParams,
-    queryOptions?: QueryOpts<TResponse>,
-  ) {
-    return useAxios<TResponse>({
-      config: {
-        url: `${featureUrl}/odata`,
-        params,
-      },
-      queryOptions,
-    });
-  }
-
-  // TODO refactor to remove?
-  function useODataMutation<TResponse = TEntity[]>(
-    params: ODataParams,
-    mutationOptions?: MutationOpts<TResponse, void, void>,
-  ): MutationRes<TResponse, void> {
-    return useAxiosMutation({
-      config: {
-        url: `${featureUrl}/odata`,
-        params,
-      },
-      queryOptions: mutationOptions,
-    });
-  }
-
-  function useGet(
+  function useGet<TResponse = TEntity>(
     urlSuffix = '',
-    params: Record<string, unknown> = {},
-    queryOptions?: QueryOpts<TEntity>,
-  ) {
-    return useAxios<TEntity>({
+    params: Record<string, any> = {},
+    queryOptions?: QueryOpts<TResponse>,
+  ): QueryRes<TResponse> {
+    return useAxios<TResponse>({
       config: {
         url: `${featureUrl}${urlSuffix}`,
         method: HttpMethods.Get,
@@ -56,6 +30,13 @@ export function useApi<TEntity>(featureUrl: string) {
       },
       queryOptions,
     });
+  }
+
+  function useOData<TResponse = TEntity[]>(
+    params: ODataParams,
+    queryOptions?: QueryOpts<TResponse>,
+  ): QueryRes<TResponse> {
+    return useGet('/odata', params, queryOptions);
   }
 
   function usePost<TResponse = PostReturn, TVariables = PostEntity>(
@@ -72,10 +53,7 @@ export function useApi<TEntity>(featureUrl: string) {
       },
     });
 
-    return {
-      ...mutation,
-      ...transformMutateFns(mutation, featureUrl, 'body'),
-    };
+    return returnMutation(mutation, 'body');
   }
 
   function usePut<TResponse = void, TVariables = TEntity>(
@@ -92,7 +70,7 @@ export function useApi<TEntity>(featureUrl: string) {
       },
     });
 
-    return { ...mutation, ...transformMutateFns(mutation, featureUrl, 'body') };
+    return returnMutation(mutation, 'body');
   }
 
   function usePutId<TResponse = void, TVariables = PostEntity>(
@@ -109,17 +87,16 @@ export function useApi<TEntity>(featureUrl: string) {
       },
     });
 
-    return { ...mutation, ...transformMutateFns(mutation, featureUrl, 'id-body') };
+    return returnMutation(mutation, 'id-body');
   }
 
-  // TODO useApiMutation<TR, TV>?
   function useRemove<TResponse = void, TVariables = number>(
     queryOptions?: MutationOpts<TResponse, TVariables>,
   ): MutationRes<TResponse, TVariables> {
     const mutation = useAxiosMutation({
       config: {
         url: featureUrl,
-        method: HttpMethods.Post,
+        method: HttpMethods.Delete,
       },
       queryOptions: {
         onSettled: invalidateFeatureQueries,
@@ -127,21 +104,26 @@ export function useApi<TEntity>(featureUrl: string) {
       },
     });
 
-    return {
-      ...mutation,
-      // TODO implement currying?
-      ...transformMutateFns(mutation, featureUrl, 'id'),
-    };
+    return returnMutation(mutation, 'id');
   }
 
   function invalidateFeatureQueries(): Promise<void> {
     return client.invalidateQueries(baseQueryKey);
   }
 
+  function returnMutation(
+    mutation: MutationRes<unknown, AxiosRequestConfig<any>>,
+    varTypes: 'id' | 'body' | 'id-body',
+  ) {
+    return {
+      ...mutation,
+      ...transformMutateFns(mutation, featureUrl, varTypes),
+    };
+  }
+
   return {
-    useOData,
-    useODataMutation,
     useGet,
+    useOData,
     usePost,
     usePut,
     usePutId,

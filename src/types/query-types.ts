@@ -1,4 +1,9 @@
-import { UseMutationOptions, UseMutationResult, UseQueryOptions } from '@tanstack/react-query';
+import {
+  UseMutationOptions,
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+} from '@tanstack/react-query';
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
 type QueryOpts<TResponse> = Omit<
@@ -10,7 +15,9 @@ type MutationOpts<TResponse, TBody, TVariables = AxiosRequestConfig<TBody>> = Om
   'mutationKey' | 'mutationFn'
 >;
 
-type MutationRes<TResponse, TVariables> = UseMutationResult<
+type QueryRes<TResponse = unknown> = UseQueryResult<TResponse, AxiosError<TResponse>>;
+
+type MutationRes<TResponse = unknown, TVariables = unknown> = UseMutationResult<
   TResponse,
   AxiosError<TResponse>,
   TVariables
@@ -26,4 +33,11 @@ interface UseAxiosMutationOptions<TResponse = unknown, TBody = void, TVariables 
   queryOptions?: MutationOpts<TResponse, TBody, TVariables>;
 }
 
-export type { QueryOpts, MutationOpts, MutationRes, UseAxiosOptions, UseAxiosMutationOptions };
+export type {
+  QueryOpts,
+  MutationOpts,
+  QueryRes,
+  MutationRes,
+  UseAxiosOptions,
+  UseAxiosMutationOptions,
+};
