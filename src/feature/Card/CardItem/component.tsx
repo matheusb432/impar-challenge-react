@@ -13,7 +13,7 @@ function CardItem({ card, onEdit, onDelete }: CardItemProps) {
   return (
     <li>
       <CardWrapper
-        actions={(
+        actions={
           <>
             <IconButton
               icon={<TrashIcon className="ui__remove-icon" />}
@@ -29,8 +29,8 @@ function CardItem({ card, onEdit, onDelete }: CardItemProps) {
               theme="#e76316"
             />
           </>
-        )}
-        base64={card.base64}
+        }
+        base64={card.photo?.base64 ?? ''}
       >
         {card.name}
       </CardWrapper>

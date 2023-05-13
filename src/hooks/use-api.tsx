@@ -10,7 +10,7 @@ import { MutationOpts, MutationRes, QueryOpts } from '../types/query-types';
  * @returns Objeto com referências às funções de requisições.
  */
 
-export function useApi<TEntity extends { id?: number }>(featureUrl: string) {
+export function useApi<TEntity>(featureUrl: string) {
   const client = useQueryClient();
   const baseQueryKey = buildUniqueKeyFromUrl(featureUrl);
 
@@ -32,8 +32,8 @@ export function useApi<TEntity extends { id?: number }>(featureUrl: string) {
   // TODO refactor to remove?
   function useODataMutation<TResponse = TEntity[]>(
     params: ODataParams,
-    mutationOptions?: MutationOpts<TResponse, void>,
-  ) {
+    mutationOptions?: MutationOpts<TResponse, void, void>,
+  ): MutationRes<TResponse, void> {
     return useAxiosMutation({
       config: {
         url: `${featureUrl}/odata`,

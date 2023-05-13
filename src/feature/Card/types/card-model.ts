@@ -12,9 +12,9 @@ export class CardModel {
 
   [SharedProps.Photo]?: PhotoModel;
 
-  get base64(): string {
-    return this.photo?.base64 ?? '';
-  }
+  // get base64(): string {
+  //   return this.photo?.base64 ?? '';
+  // }
 
   static empty(): CardModel {
     const card = new CardModel();
@@ -40,11 +40,7 @@ export class CardModel {
     return card;
   }
 
-  static fromInputs(
-    name: string,
-    status: string | undefined,
-    photoBase64: string,
-  ): CardModel {
+  static fromInputs(name: string, status: string | undefined, photoBase64: string): CardModel {
     const card = new CardModel();
 
     card.name = name;

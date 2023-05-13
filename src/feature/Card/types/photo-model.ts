@@ -12,4 +12,11 @@ export class PhotoModel {
 
     return photo;
   }
+
+  static createPhotoFormData(file?: File): FormData {
+    const formData = new FormData();
+
+    if (file != null) formData.append('photo', file);
+    return formData;
+  }
 }

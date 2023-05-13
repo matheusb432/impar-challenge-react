@@ -24,7 +24,9 @@ function CardList() {
     isLoading: isLoadingDelete,
     status: deleteStatus,
     mutate: deleteRequest,
-  } = api.useRemove(cardToDelete?.id ?? 0);
+  } = api.useRemove();
+  // TODO refactor
+  const deleteRequestPayload = cardToDelete?.id ?? 0;
 
   const [showModal, setShowModal] = useState(false);
   const [renderedCards, setRenderedCards] = useState<ReactNode[]>([]);
@@ -88,7 +90,7 @@ function CardList() {
       return;
     }
 
-    deleteRequest();
+    deleteRequest(deleteRequestPayload);
   };
 
   const handleClose = () => {
