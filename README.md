@@ -43,4 +43,4 @@ servir uma experiência de usuário intuitiva e responsiva.
 
 Para rodar o ESLint no projeto que verificará instâncias de code smells, use o comando na raiz do projeto:
 
-`npx eslint src/ --ext .js,.jsx,.ts,.tsx`
+`npm run lint`

@@ -11,7 +11,9 @@ axios.defaults.baseURL = getEnvValue(EnvKeys.ApiUrl) || 'http://localhost:5000/a
 function useAxios<TResponse = unknown, TBody = void>(options: UseAxiosOptions<TResponse, TBody>) {
   const { config, queryOptions = {} } = options;
 
-  return useQuery<TResponse, AxiosError<TResponse>>(queryKey(config), queryFn<TResponse>(config), {
+  return useQuery<TResponse, AxiosError<TResponse>>({
+    queryKey: queryKey(config),
+    queryFn: queryFn<TResponse>(config),
     ...onErrorOptions(useAppContext()),
     ...queryOptions,
   });
@@ -26,7 +28,9 @@ function useAxiosMutation<
 ): MutationRes<TResponse, TVariables> {
   const { config, queryOptions = {} } = options;
 
-  return useMutation(queryKey(config), mutationFn<TResponse, TBody, TVariables>(config), {
+  return useMutation({
+    mutationKey: queryKey(config),
+    mutationFn: mutationFn<TResponse, TBody, TVariables>(config),
     ...onErrorOptions<TResponse, TBody>(useAppContext()),
     ...queryOptions,
   });
