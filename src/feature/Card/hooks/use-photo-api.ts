@@ -12,7 +12,7 @@ export const usePhotoApi = () => {
     return usePost(queryOptions);
   }
 
-  function usePhotoPut(queryOptions?: MutationOpts<void, FormData>) {
+  function usePhotoPut(queryOptions?: MutationOpts<void, { id: number; body: FormData }>) {
     // const formData = createPhotoFormData(file);
 
     // if (id == null) return usePut(formData);

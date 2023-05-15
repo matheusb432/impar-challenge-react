@@ -39,9 +39,25 @@ export function useApi<TEntity>(featureUrl: string) {
     return useGet('/odata', params, queryOptions);
   }
 
-  function usePost<TResponse = PostReturn, TVariables = PostEntity>(
-    queryOptions?: MutationOpts<TResponse, TVariables>,
-  ): MutationRes<TResponse, TVariables> {
+  function useApiMutation<TResponse = void, TBody = unknown>(
+    config: AxiosRequestConfig,
+    queryOptions?: MutationOpts<TResponse, TBody>,
+  ): MutationRes<TResponse, AxiosRequestConfig<TBody>> {
+    return useAxiosMutation({
+      config: {
+        url: featureUrl,
+        ...config,
+      },
+      queryOptions: {
+        onSettled: invalidateFeatureQueries,
+        ...queryOptions,
+      },
+    });
+  }
+
+  function usePost<TResponse = PostReturn>(
+    queryOptions?: MutationOpts<TResponse, PostEntity>,
+  ): MutationRes<TResponse, PostEntity> {
     const mutation = useAxiosMutation({
       config: {
         url: featureUrl,
@@ -56,9 +72,9 @@ export function useApi<TEntity>(featureUrl: string) {
     return returnBodyMutation(mutation);
   }
 
-  function usePut<TResponse = void, TVariables = TEntity>(
-    queryOptions?: MutationOpts<TResponse, TVariables>,
-  ): MutationRes<TResponse, TVariables> {
+  function usePut<TResponse = void>(
+    queryOptions?: MutationOpts<TResponse, TEntity>,
+  ): MutationRes<TResponse, TEntity> {
     const mutation = useAxiosMutation({
       config: {
         url: featureUrl,
@@ -73,9 +89,9 @@ export function useApi<TEntity>(featureUrl: string) {
     return returnBodyMutation(mutation);
   }
 
-  function usePutId<TResponse = void, TVariables = PostEntity>(
-    queryOptions?: MutationOpts<TResponse, TVariables>,
-  ): MutationRes<TResponse, { id: number; body: TVariables }> {
+  function usePutId<TResponse = void>(
+    queryOptions?: MutationOpts<TResponse, { id: number; body: PostEntity }>,
+  ): MutationRes<TResponse, { id: number; body: PostEntity }> {
     const mutation = useAxiosMutation({
       config: {
         url: featureUrl,
@@ -90,9 +106,9 @@ export function useApi<TEntity>(featureUrl: string) {
     return returnIdBodyMutation(mutation);
   }
 
-  function useRemove<TResponse = void, TVariables = number>(
-    queryOptions?: MutationOpts<TResponse, TVariables>,
-  ): MutationRes<TResponse, TVariables> {
+  function useRemove<TResponse = void>(
+    queryOptions?: MutationOpts<TResponse, number>,
+  ): MutationRes<TResponse, number> {
     const mutation = useAxiosMutation({
       config: {
         url: featureUrl,
@@ -111,29 +127,33 @@ export function useApi<TEntity>(featureUrl: string) {
     return client.invalidateQueries(baseQueryKey);
   }
 
-  function returnIdMutation(mutation: MutationRes<unknown, AxiosRequestConfig<any>>) {
+  function returnIdMutation<TResponse>(mutation: MutationRes<unknown, AxiosRequestConfig>) {
     return {
       ...mutation,
       ...transformMutateFns.id(mutation, featureUrl),
-    } as any;
+    } as MutationRes<TResponse, number>;
   }
 
-  function returnBodyMutation(mutation: MutationRes<unknown, AxiosRequestConfig<any>>) {
+  function returnBodyMutation<TResponse, TVariables>(
+    mutation: MutationRes<unknown, AxiosRequestConfig>,
+  ) {
     return {
       ...mutation,
       ...transformMutateFns.body(mutation, featureUrl),
-    } as any;
+    } as MutationRes<TResponse, TVariables>;
   }
 
-  function returnIdBodyMutation(mutation: MutationRes<unknown, AxiosRequestConfig<any>>) {
+  function returnIdBodyMutation<TResponse>(mutation: MutationRes<unknown, AxiosRequestConfig>) {
     return {
       ...mutation,
       ...transformMutateFns.idBody(mutation, featureUrl),
-    } as any;
+    } as unknown as MutationRes<TResponse, { id: number; body: PostEntity }>;
   }
+
   return {
     useGet,
     useOData,
+    useApiMutation,
     usePost,
     usePut,
     usePutId,
