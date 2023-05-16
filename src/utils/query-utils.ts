@@ -15,16 +15,17 @@ function createMutationConfig<TEntity>(
   return config;
 }
 
-// TODO tests
 function transformMutateFnsIdBody<TEntity, TResponse = void>(
   mutation: MutationRes<TResponse>,
   featureUrl: string,
 ) {
   return {
-    mutate: (id: number, body: Omit<TEntity, 'id'>) =>
-      mutation.mutate(createMutationConfig(featureUrl, id, body)) as unknown as TResponse,
-    mutateAsync: (id: number, body: Omit<TEntity, 'id'>) =>
-      mutation.mutateAsync(createMutationConfig(featureUrl, id, body)) as Promise<TResponse>,
+    mutate: (data: { id: number; body: Omit<TEntity, 'id'> }) =>
+      mutation.mutate(createMutationConfig(featureUrl, data.id, data.body)) as unknown as TResponse,
+    mutateAsync: (data: { id: number; body: Omit<TEntity, 'id'> }) =>
+      mutation.mutateAsync(
+        createMutationConfig(featureUrl, data.id, data.body),
+      ) as Promise<TResponse>,
   };
 }
 

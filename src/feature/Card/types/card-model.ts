@@ -12,10 +12,6 @@ export class CardModel {
 
   [SharedProps.Photo]?: PhotoModel;
 
-  // get base64(): string {
-  //   return this.photo?.base64 ?? '';
-  // }
-
   static empty(): CardModel {
     const card = new CardModel();
 

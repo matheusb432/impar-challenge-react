@@ -1,4 +1,3 @@
-import { Mapper } from 'mapper-ts/lib-esm';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { BackgroundImage, Container, Layout, SearchInput } from '../../../../components';
@@ -62,7 +61,7 @@ function Card() {
 
     dispatchCard({
       type: CardActions.SetCards,
-      payload: new Mapper(CardModel).map(fetchedCards),
+      payload: fetchedCards,
     });
   }, [dispatchCard, changeError, getCardsData]);
 

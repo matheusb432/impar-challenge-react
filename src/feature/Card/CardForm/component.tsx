@@ -1,4 +1,3 @@
-import { Mapper } from 'mapper-ts/lib-esm';
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -160,11 +159,9 @@ function CardForm({ isEditing }: CardFormProps) {
       return;
     }
 
-    const mappedCard = new Mapper(CardModel).map(cardFromApi);
-
     dispatchCard({
       type: CardActions.SetFormCard,
-      payload: mappedCard,
+      payload: cardFromApi,
     });
   }, [getStatus, getData, returnToList, dispatchCard]);
 

@@ -10,11 +10,11 @@
   opacity: 0;
   overflow-y: auto;
 
-  transition: all 0.5s ease-in-out;
+  // transition: all 0.5s ease-in-out;
 
   &.visible {
     visibility: visible;
-    z-index: 999;
+    z-index: 200;
     right: 0;
     opacity: 1;
   }

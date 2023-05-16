@@ -1,4 +1,3 @@
-import { Mapper } from 'mapper-ts/lib-esm';
 import {
   createContext,
   Dispatch,
@@ -56,7 +55,7 @@ function CardContextProvider({ children }: CardContextProviderProps) {
 
     dispatchCard({
       type: CardActions.SetCards,
-      payload: new Mapper(CardModel).map(data.items) as CardModel[],
+      payload: data.items,
     });
   }, [status, data]);
 

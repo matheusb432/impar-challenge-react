@@ -8,14 +8,10 @@ export const usePhotoApi = () => {
   const { usePost, usePutId } = useApi<FormData>(url);
 
   function usePhotoPost(queryOptions?: MutationOpts<PostReturn, FormData>) {
-    // const formData = (file);
     return usePost(queryOptions);
   }
 
   function usePhotoPut(queryOptions?: MutationOpts<void, { id: number; body: FormData }>) {
-    // const formData = createPhotoFormData(file);
-
-    // if (id == null) return usePut(formData);
     return usePutId(queryOptions);
   }
 
