@@ -15,6 +15,7 @@ export enum CardActions {
   AddCard = 'ADD_CARD',
   EditCard = 'EDIT_CARD',
   RemoveCard = 'REMOVE_CARD',
+  RemoveById = 'REMOVE_BY_ID',
   SetFormCard = 'SET_FORM_CARD',
   SetCards = 'SET_CARDS',
   SetPhotoUpload = 'SET_PHOTO_UPLOAD',

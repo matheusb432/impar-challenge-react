@@ -1,8 +1,13 @@
-import { MutationFunction, useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { AppContextProps } from '../store';
 import { EnvKeys } from '../types/env-keys.enum';
-import { MutationRes, UseAxiosMutationOptions, UseAxiosOptions } from '../types/query-types';
+import {
+  MutationOpts,
+  MutationRes,
+  UseAxiosMutationOptions,
+  UseAxiosOptions,
+} from '../types/query-types';
 import { getEnvValue } from '../utils';
 import useAppContext from './use-app-context';
 
@@ -12,31 +17,36 @@ function useAxios<TResponse = unknown, TBody = void>(options: UseAxiosOptions<TR
   const { config, queryOptions = {} } = options;
 
   return useQuery<TResponse, AxiosError<TResponse>>({
-    queryKey: queryKey(config),
-    queryFn: queryFn<TResponse>(config),
+    queryKey: defaultQueryKey(config),
+    queryFn: defaultQueryFn<TResponse>(config),
     ...onErrorOptions(useAppContext()),
     ...queryOptions,
   });
 }
 
-function useAxiosMutation<
-  TResponse = unknown,
-  TBody = unknown,
-  TVariables = AxiosRequestConfig<unknown>,
->(
+function useDefaultAxiosMutation<TResponse = unknown, TBody = unknown, TVariables = unknown>(
   options: UseAxiosMutationOptions<TResponse, TBody, TVariables>,
 ): MutationRes<TResponse, TVariables> {
   const { config, queryOptions = {} } = options;
 
   return useMutation({
-    mutationKey: queryKey(config),
-    mutationFn: mutationFn<TResponse, TBody, TVariables>(config),
+    mutationKey: defaultQueryKey(config),
+    mutationFn: (requestConfig: TVariables) =>
+      axiosRequest<TResponse, TBody>({ ...config, ...requestConfig }),
     ...onErrorOptions<TResponse, TBody>(useAppContext()),
     ...queryOptions,
   });
 }
 
-function queryKey(config: AxiosRequestConfig) {
+function useAxiosMutation<TResponse, TBody, TVariables>(
+  queryOptions: MutationOpts<TResponse, TBody, TVariables>,
+) {
+  return useMutation({
+    ...queryOptions,
+  });
+}
+
+function defaultQueryKey(config: AxiosRequestConfig) {
   const { url, params } = config;
   return [...buildUniqueKeyFromUrl(url), params].filter((x) => !!x);
 }
@@ -51,7 +61,7 @@ function buildUniqueKeyFromUrl(url: string | undefined): string[] {
  * @param config Os paramêtros da requisição
  * @returns Uma função que faz a requisição para a API
  */
-function queryFn<TResponse>(config: AxiosRequestConfig): () => Promise<TResponse> {
+function defaultQueryFn<TResponse>(config: AxiosRequestConfig): () => Promise<TResponse> {
   return async () => {
     const res = await axios.request<TResponse>(config);
 
@@ -59,14 +69,10 @@ function queryFn<TResponse>(config: AxiosRequestConfig): () => Promise<TResponse
   };
 }
 
-function mutationFn<TResponse, TBody, TVariables>(
-  baseConfig: AxiosRequestConfig<TBody>,
-): MutationFunction<TResponse, TVariables> {
-  return async (requestConfig: TVariables) => {
-    const res = await axios.request<TResponse>({ ...baseConfig, ...requestConfig });
+async function axiosRequest<TResponse, TVariables>(requestConfig: AxiosRequestConfig<TVariables>) {
+  const res = await axios.request<TResponse>(requestConfig);
 
-    return res.data;
-  };
+  return res.data;
 }
 
 function onErrorOptions<TResponse, TBody>(context: AppContextProps) {
@@ -77,4 +83,11 @@ function onErrorOptions<TResponse, TBody>(context: AppContextProps) {
   };
 }
 
-export { buildUniqueKeyFromUrl, useAxios, useAxiosMutation };
+export {
+  axiosRequest,
+  buildUniqueKeyFromUrl,
+  defaultQueryFn,
+  useAxios,
+  useDefaultAxiosMutation,
+  useAxiosMutation,
+};

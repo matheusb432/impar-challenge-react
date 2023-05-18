@@ -1,9 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosRequestConfig } from 'axios';
 import { HttpMethods, ODataParams, PostReturn } from '../types';
-import { buildUniqueKeyFromUrl, useAxios, useAxiosMutation } from './use-axios';
-import { MutationOpts, MutationRes, QueryOpts, QueryRes } from '../types/query-types';
-import { transformMutateFns } from '../utils';
+import { MutationOpts, QueryOpts, QueryRes, UseApiMutationOptions } from '../types/query-types';
+import { axiosRequest, buildUniqueKeyFromUrl, useAxios, useAxiosMutation } from './use-axios';
 
 /**
  * Hook criador de todas as possíveis requisições para endpoints da API
@@ -17,9 +16,9 @@ export function useApi<TEntity>(featureUrl: string) {
 
   type PostEntity = Omit<TEntity, 'id'>;
 
-  function useGet<TResponse = TEntity>(
+  function useGet<TResponse = TEntity, TParams = object>(
     urlSuffix = '',
-    params: Record<string, any> = {},
+    params?: TParams,
     queryOptions?: QueryOpts<TResponse>,
   ): QueryRes<TResponse> {
     return useAxios<TResponse>({
@@ -39,115 +38,82 @@ export function useApi<TEntity>(featureUrl: string) {
     return useGet('/odata', params, queryOptions);
   }
 
-  function useApiMutation<TResponse = void, TBody = unknown>(
-    config: AxiosRequestConfig,
-    queryOptions?: MutationOpts<TResponse, TBody>,
-  ): MutationRes<TResponse, AxiosRequestConfig<TBody>> {
+  function useApiMutation<TResponse = void, TBody = unknown, TVariables = unknown>(
+    options: UseApiMutationOptions<TResponse, TBody, TVariables>,
+  ) {
+    const { queryOptions, config, initialMutationFn } = options;
+    const baseConfig = {
+      url: featureUrl,
+    };
+
     return useAxiosMutation({
-      config: {
-        url: featureUrl,
-        ...config,
-      },
-      queryOptions: {
-        onSettled: invalidateFeatureQueries,
-        ...queryOptions,
-      },
+      mutationFn: (payload: TVariables) =>
+        initialMutationFn(payload, {
+          ...baseConfig,
+          ...config,
+        }),
+      ...queryOptions,
     });
   }
 
-  function usePost<TResponse = PostReturn>(
-    queryOptions?: MutationOpts<TResponse, PostEntity>,
-  ): MutationRes<TResponse, PostEntity> {
-    const mutation = useAxiosMutation({
+  function usePost(queryOptions?: MutationOpts<PostReturn, PostEntity>) {
+    return useApiMutation({
       config: {
-        url: featureUrl,
         method: HttpMethods.Post,
       },
-      queryOptions: {
-        onSettled: invalidateFeatureQueries,
-        ...queryOptions,
-      },
+      initialMutationFn: postFn,
+      queryOptions,
     });
-
-    return returnBodyMutation(mutation);
   }
 
-  function usePut<TResponse = void>(
-    queryOptions?: MutationOpts<TResponse, TEntity>,
-  ): MutationRes<TResponse, TEntity> {
-    const mutation = useAxiosMutation({
+  function usePut(queryOptions?: MutationOpts<void, TEntity, { id: number; body: TEntity }>) {
+    return useApiMutation({
       config: {
-        url: featureUrl,
         method: HttpMethods.Put,
       },
-      queryOptions: {
-        onSettled: invalidateFeatureQueries,
-        ...queryOptions,
-      },
+      initialMutationFn: putFn,
+      queryOptions,
     });
-
-    return returnBodyMutation(mutation);
   }
 
-  function usePutId<TResponse = void>(
-    queryOptions?: MutationOpts<TResponse, { id: number; body: PostEntity }>,
-  ): MutationRes<TResponse, { id: number; body: PostEntity }> {
-    const mutation = useAxiosMutation({
+  function useRemove(queryOptions?: MutationOpts<void, number>) {
+    return useApiMutation({
       config: {
-        url: featureUrl,
-        method: HttpMethods.Put,
-      },
-      queryOptions: {
-        onSettled: invalidateFeatureQueries,
-        ...queryOptions,
-      },
-    });
-
-    return returnIdBodyMutation(mutation);
-  }
-
-  function useRemove<TResponse = void>(
-    queryOptions?: MutationOpts<TResponse, number>,
-  ): MutationRes<TResponse, number> {
-    const mutation = useAxiosMutation({
-      config: {
-        url: featureUrl,
         method: HttpMethods.Delete,
       },
+      initialMutationFn: deleteFn,
       queryOptions: {
-        onSettled: invalidateFeatureQueries,
         ...queryOptions,
       },
     });
+  }
 
-    return returnIdMutation(mutation);
+  function postFn(body: PostEntity, baseConfig?: AxiosRequestConfig) {
+    return axiosRequest<PostReturn, PostEntity>({
+      ...baseConfig,
+      url: featureUrl,
+      data: body,
+    });
+  }
+
+  function putFn(payload: { id: number; body: TEntity }, baseConfig?: AxiosRequestConfig) {
+    const { id, body } = payload;
+    return axiosRequest<void, TEntity>({
+      ...baseConfig,
+      url: `${featureUrl}/${id}`,
+      data: body,
+    });
+  }
+
+  function deleteFn(id: number, baseConfig?: AxiosRequestConfig) {
+    return axiosRequest<void, number>({
+      ...baseConfig,
+      url: `${featureUrl}/${id}`,
+    });
   }
 
   function invalidateFeatureQueries(): Promise<void> {
     return client.invalidateQueries(baseQueryKey);
-  }
-
-  function returnIdMutation<TResponse>(mutation: MutationRes<unknown, AxiosRequestConfig>) {
-    return {
-      ...mutation,
-      ...transformMutateFns.id(mutation, featureUrl),
-    } as MutationRes<TResponse, number>;
-  }
-
-  function returnBodyMutation<TResponse, TVariables>(
-    mutation: MutationRes<unknown, AxiosRequestConfig>,
-  ) {
-    return {
-      ...mutation,
-      ...transformMutateFns.body(mutation, featureUrl),
-    } as MutationRes<TResponse, TVariables>;
-  }
-
-  function returnIdBodyMutation<TResponse>(mutation: MutationRes<unknown, AxiosRequestConfig>) {
-    return {
-      ...mutation,
-      ...transformMutateFns.idBody(mutation, featureUrl),
-    } as unknown as MutationRes<TResponse, { id: number; body: PostEntity }>;
   }
 
   return {
@@ -156,7 +122,8 @@ export function useApi<TEntity>(featureUrl: string) {
     useApiMutation,
     usePost,
     usePut,
-    usePutId,
     useRemove,
+    baseQueryKey,
+    invalidateFeatureQueries,
   };
 }

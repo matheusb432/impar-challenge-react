@@ -11,13 +11,14 @@ import { useCardApi } from '../hooks/use-card-api';
 import { CardModel } from '../types';
 import { SharedProps } from '../types/shared-props.enum';
 import styles from './style.module.scss';
+import { CardActions } from '../store';
 
 function CardList() {
   const navigate = useNavigate();
   const api = useCardApi();
   const { showToast } = useAppContext();
+  const { dispatchCard } = useCardContext();
 
-  // TODO to reducer?
   const [modalState, setModalState] = useState<{ id: number | null; show: boolean }>({
     id: null,
     show: false,
@@ -27,14 +28,22 @@ function CardList() {
   const { isLoading: isLoadingDelete, mutate: deleteRequest } = api.useRemove({
     onSuccess: () => {
       showToast(ToastData.success('Card excluído com sucesso!'));
+      const cardId = id;
+      if (cardId == null) {
+        api.invalidateFeatureQueries();
+      } else {
+        dispatchCard({
+          type: CardActions.RemoveById,
+          payload: cardId,
+        });
+      }
       changeModalStateById(null);
-      resetCardsPage();
     },
   });
 
   const [renderedCards, setRenderedCards] = useState<ReactNode[]>([]);
 
-  const { cardState, resetCardsPage } = useCardContext();
+  const { cardState } = useCardContext();
 
   const { cards } = cardState;
 

@@ -2,7 +2,8 @@ import { PhotoUpload } from '../types/photo-upload';
 import { CardModel } from '../types/card-model';
 import { CardAction, CardActions, CardState } from './types';
 
-const { AddCard, EditCard, RemoveCard, SetFormCard, SetCards, SetPhotoUpload } = CardActions;
+const { AddCard, EditCard, RemoveCard, RemoveById, SetFormCard, SetCards, SetPhotoUpload } =
+  CardActions;
 
 const initialCardState = (): CardState => ({
   cards: [],
@@ -39,6 +40,14 @@ const cardReducer = (state: CardState, action: CardAction): CardState => {
         cards: cards.filter((c) => c !== (payload as CardModel)),
       };
 
+    case RemoveById: {
+      const id = payload as number;
+
+      return {
+        ...state,
+        cards: cards.filter((c) => c.id !== id),
+      };
+    }
     case SetFormCard:
       return { ...state, formCard: payload as CardModel };
 

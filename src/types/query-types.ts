@@ -6,18 +6,16 @@ import {
 } from '@tanstack/react-query';
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
-type QueryOpts<TResponse> = Omit<
-  UseQueryOptions<TResponse, AxiosError<TResponse>>,
-  'queryKey' | 'queryFn'
->;
-type MutationOpts<TResponse, TBody, TVariables = AxiosRequestConfig<TBody>> = Omit<
-  UseMutationOptions<TResponse, AxiosError<TResponse>, TVariables>,
-  'mutationKey' | 'mutationFn'
+type QueryOpts<TResponse> = UseQueryOptions<TResponse, AxiosError<TResponse>>;
+type MutationOpts<TResponse, TBody, TVariables = TBody> = UseMutationOptions<
+  TResponse,
+  AxiosError<TResponse>,
+  TVariables
 >;
 
-type QueryRes<TResponse = any> = UseQueryResult<TResponse, AxiosError<TResponse>>;
+type QueryRes<TResponse = unknown> = UseQueryResult<TResponse, AxiosError<TResponse>>;
 
-type MutationRes<TResponse = any, TVariables = any> = UseMutationResult<
+type MutationRes<TResponse = unknown, TVariables = unknown> = UseMutationResult<
   TResponse,
   AxiosError<TResponse>,
   TVariables
@@ -30,7 +28,13 @@ interface UseAxiosOptions<TResponse = unknown, TBody = void> {
 
 interface UseAxiosMutationOptions<TResponse = unknown, TBody = void, TVariables = void> {
   config: AxiosRequestConfig<TBody>;
-  queryOptions?: MutationOpts<TResponse, TBody, TVariables>;
+  queryOptions?: Omit<MutationOpts<TResponse, TBody, TVariables>, 'mutationFn' | 'mutationKey'>;
+}
+
+interface UseApiMutationOptions<TResponse, TBody, TVariables> {
+  initialMutationFn: (vars: TVariables, config: AxiosRequestConfig<TBody>) => Promise<TResponse>;
+  queryOptions?: Omit<MutationOpts<TResponse, TVariables>, 'mutationFn'>;
+  config?: AxiosRequestConfig<TBody>;
 }
 
 export type {
@@ -40,4 +44,5 @@ export type {
   MutationRes,
   UseAxiosOptions,
   UseAxiosMutationOptions,
+  UseApiMutationOptions,
 };

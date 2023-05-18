@@ -1,4 +1,4 @@
-import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
+import { SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { FileInput, Input } from '../../../components';
@@ -66,8 +66,6 @@ function CardForm({ isEditing }: CardFormProps) {
   const { cardState, dispatchCard } = useCardContext();
   const { cards, formCard, photoUpload } = cardState;
 
-  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
-
   const { data: getData, status: getStatus } = cardApi.useOData<CardModel[]>(
     { $filter: buildEqId(id) },
     { enabled: isEditing },
@@ -76,43 +74,58 @@ function CardForm({ isEditing }: CardFormProps) {
   const {
     isLoading: isLoadingPhotoUpload,
     data: uploadPhotoData,
-    mutateAsync: uploadPhoto,
-  } = photoApi.usePost();
+    mutate: uploadPhoto,
+  } = photoApi.usePost({
+    onSuccess: (res) => {
+      createCard(CardModel.forPost(name, status, res.id));
+    },
+  });
 
-  const { isLoading: isLoadingUpdatePhoto, mutateAsync: updatePhoto } = photoApi.usePut();
+  const { isLoading: isLoadingUpdatePhoto, mutate: updatePhoto } = photoApi.usePut({
+    onSuccess: () => {
+      updateCard(updateCardPayload);
+    },
+  });
 
-  const {
-    isLoading: isLoadingCreateCard,
-    data: createdCardData,
-    mutateAsync: createCard,
-  } = cardApi.usePost();
+  const { isLoading: isLoadingCreateCard, mutate: createCard } = cardApi.usePost({
+    onSuccess: (res, vars) => {
+      const uploadPhotoId = vars.photoId;
 
-  const { isLoading: isLoadingUpdateCard, mutateAsync: updateCard } = cardApi.usePutId();
+      if (!uploadPhotoId) return cardApi.invalidateFeatureQueries();
 
-  // TODO refactor payloads logic
-  const createCardPayload = CardModel.forPost(name, status, uploadPhotoData?.id);
-  const updateCardPayload = {
-    id: formCard?.id ?? 0,
-    body: CardModel.forPut(formCard?.id, name, status, uploadPhotoData?.id ?? formCard?.photoId),
-  };
-  const uploadPhotoPayload = PhotoModel.createPhotoFormData(photoUpload?.file);
-  const updatePhotoPayload = {
-    id: formCard.photoId!,
-    body: PhotoModel.createPhotoFormData(photoUpload?.file),
-  };
+      return handleCreatedCard(res.id, uploadPhotoId);
+    },
+  });
+
+  const { isLoading: isLoadingUpdateCard, mutate: updateCard } = cardApi.usePut({
+    onSuccess(_, variables) {
+      const card = variables;
+
+      const updatedId = card?.id;
+      const photoId = card.body?.photoId;
+
+      if (!updatedId || !photoId) return cardApi.invalidateFeatureQueries();
+
+      return dispatchUpdatedCard(updatedId, photoId);
+    },
+  });
+
+  const isLoadingSubmit =
+    isLoadingCreateCard || isLoadingUpdateCard || isLoadingPhotoUpload || isLoadingUpdatePhoto;
+
+  const updateCardPayload = useMemo(
+    () => ({
+      id: formCard.id ?? 0,
+      body: CardModel.forPut(formCard?.id, name, status, uploadPhotoData?.id ?? formCard.photoId),
+    }),
+    [formCard.id, name, status, uploadPhotoData?.id, formCard.photoId],
+  );
 
   const getDispatchBase64Photo = useCallback(async (): Promise<string | unknown> => {
     const file = photoUpload?.file;
 
     return file != null ? toBase64(file) : formCard?.photo?.base64 ?? '';
   }, [formCard?.photo?.base64, photoUpload?.file]);
-
-  // TODO refactor (does not need to be an effect)
-  useEffect(() => {
-    setIsLoadingSubmit(
-      isLoadingCreateCard || isLoadingUpdateCard || isLoadingPhotoUpload || isLoadingUpdatePhoto,
-    );
-  }, [isLoadingCreateCard, isLoadingPhotoUpload, isLoadingUpdateCard, isLoadingUpdatePhoto]);
 
   const setInputs = useCallback(
     (card: CardModel) => {
@@ -199,7 +212,7 @@ function CardForm({ isEditing }: CardFormProps) {
     handleSubmit();
   };
 
-  async function dispatchCreatedCard(): Promise<void> {
+  async function handleCreatedCard(cardId: number, photoId: number): Promise<void> {
     showToast(ToastData.success('Card criado com sucesso!'));
 
     let photoBase64: string | unknown = '';
@@ -210,19 +223,13 @@ function CardForm({ isEditing }: CardFormProps) {
     }
     dispatchCard({
       type: CardActions.AddCard,
-      payload: CardModel.fromApiUpdate(
-        createdCardData?.id!,
-        name,
-        status,
-        photoBase64 as string,
-        uploadPhotoData?.id!,
-      ),
+      payload: CardModel.fromApiUpdate(cardId, name, status, photoBase64 as string, photoId),
     });
 
     navigate(RouteUrls.Cards);
   }
 
-  async function dispatchUpdatedCard(): Promise<void> {
+  async function dispatchUpdatedCard(updatedId: number, photoId: number): Promise<void> {
     showToast(ToastData.success('Card atualizado com sucesso!'));
 
     let photoBase64: string | unknown = '';
@@ -234,37 +241,27 @@ function CardForm({ isEditing }: CardFormProps) {
 
     dispatchCard({
       type: CardActions.EditCard,
-      payload: CardModel.fromApiUpdate(
-        formCard?.id!,
-        name,
-        status,
-        photoBase64 as string,
-        formCard?.photoId!,
-      ),
+      payload: CardModel.fromApiUpdate(updatedId, name, status, photoBase64 as string, photoId),
     });
 
     navigate(RouteUrls.Cards);
   }
 
-  async function handleSubmit() {
+  function handleSubmit() {
     if (!formIsValid) {
-      showToast(ToastData.warning('Formulário inválido, não é possível submeter!'));
-      return;
+      return showToast(ToastData.warning('Formulário inválido, não é possível submeter!'));
     }
 
     if (!isEditing) {
-      // TODO to onSuccess mutate calls
-      const res = await uploadPhoto(uploadPhotoPayload);
-      await createCard({ ...createCardPayload, photoId: res.id });
-      await dispatchCreatedCard();
-      return;
+      return uploadPhoto(PhotoModel.createPhotoFormData(photoUpload?.file));
     }
     if (imageChanged) {
-      // TODO to onSuccess mutate calls
-      await updatePhoto(updatePhotoPayload);
+      return updatePhoto({
+        id: formCard.photoId!,
+        body: PhotoModel.createPhotoFormData(photoUpload?.file),
+      });
     }
-    await updateCard(updateCardPayload);
-    await dispatchUpdatedCard();
+    return updateCard(updateCardPayload);
   }
 
   const handlePhotoChange = (event: ChangeInputEvent) => {
