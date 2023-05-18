@@ -14,7 +14,7 @@ function CardHeader() {
   return (
     <header className={styles['card-header']}>
       <Title text="Resultado de busca" />
-      <Button type="button" onClick={handleNewCardClick}>
+      <Button name="header-new-card" type="button" onClick={handleNewCardClick}>
         Novo Card
       </Button>
     </header>

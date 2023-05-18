@@ -69,7 +69,7 @@ const FileInput = forwardRef<FileInputForwardRef, FileInputProps>(
         className={`${styles['file-input']} ${className ?? ''}`}
         ref={fileInputRef}
       >
-        <Button onClick={selectFile} outlineStyle style={{ width: '100%' }}>
+        <Button name={`${id}-button`} onClick={selectFile} outlineStyle style={{ width: '100%' }}>
           {fileName || 'Escolher arquivo'}
         </Button>
       </Input>

@@ -118,11 +118,12 @@ const Input = forwardRef<InputForwardRef, InputProps>(
           ref={inputRef}
           type={type}
           id={id}
+          name={id}
           onBlur={handleBlur}
           onChange={handleChange}
           accept={accept}
           value={value}
-          placeholder={placeholder ?? ''}
+          placeholder={placeholder}
           onKeyDown={(e) => onKeyDown?.(e)}
         />
         {renderedHelper}

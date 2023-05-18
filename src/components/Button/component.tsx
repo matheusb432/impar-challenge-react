@@ -12,6 +12,7 @@ interface ButtonProps {
   outlineStyle?: boolean;
   disabledReason?: string;
   colorTheme?: string;
+  name?: string;
   onClick?: () => void;
 }
 
@@ -25,6 +26,7 @@ function Button({
   disabledReason,
   outlineStyle,
   disabled,
+  name,
   type,
 }: ButtonProps) {
   return (
@@ -37,6 +39,7 @@ function Button({
         border: colorTheme ? `1px solid ${colorTheme}` : '',
         ...style,
       }}
+      name={name}
       className={`${styles.button} ${className ?? ''} ${outlineStyle ? styles.outline : ''}`}
       onClick={onClick}
     >
@@ -59,6 +62,7 @@ Button.defaultProps = {
   outlineStyle: false,
   disabledReason: '',
   colorTheme: '',
+  name: '',
   onClick: undefined,
 };
 

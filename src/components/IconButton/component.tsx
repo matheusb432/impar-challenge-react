@@ -8,14 +8,16 @@ interface IconButtonProps {
   label?: string;
   disabled?: boolean;
   theme?: string;
+  name?: string;
 }
 
-function IconButton({ icon, onClick, disabled, label, theme }: IconButtonProps) {
+function IconButton({ icon, onClick, name, disabled, label, theme }: IconButtonProps) {
   const { hovering, onMouseEnter, onMouseLeave } = useHovering();
 
   return (
     <button
       type="button"
+      name={name}
       className={styles['icon-button']}
       onClick={onClick}
       disabled={disabled}

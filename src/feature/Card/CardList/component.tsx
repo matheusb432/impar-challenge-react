@@ -67,8 +67,14 @@ function CardList() {
   const renderCards = useCallback(() => {
     sortArrayByProp(cards, SharedProps.Id);
 
-    return cards.map((c) => (
-      <CardItem key={c.id ?? Math.random()} card={c} onEdit={handleEdit} onDelete={handleDelete} />
+    return cards.map((c, i) => (
+      <CardItem
+        key={c.id ?? Math.random()}
+        card={c}
+        name={`card-item${i}`}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
     ));
   }, [cards, handleEdit, handleDelete]);
 

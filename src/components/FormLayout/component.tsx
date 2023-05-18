@@ -32,11 +32,12 @@ function FormLayout({
       {children}
       <footer>
         {onCancel ? (
-          <Button type="button" onClick={onCancel} outlineStyle>
+          <Button name="form-cancel" type="button" onClick={onCancel} outlineStyle>
             Cancelar
           </Button>
         ) : null}
         <Button
+          name="form-submit"
           type="button"
           onClick={onSubmit}
           disabled={!canSubmit || isLoadingSubmit}

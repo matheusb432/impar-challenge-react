@@ -47,6 +47,7 @@ export const Modal = ({
         <article className={styles.body}>{children}</article>
         <footer className={styles.footer}>
           <Button
+            name="modal-confirm"
             onClick={onConfirm}
             style={{
               backgroundColor: colorTheme ?? '',
@@ -56,7 +57,7 @@ export const Modal = ({
           >
             {confirmText}
           </Button>
-          <Button onClick={onClose} colorTheme={colorTheme} outlineStyle>
+          <Button name="modal-cancel" onClick={onClose} colorTheme={colorTheme} outlineStyle>
             Cancelar
           </Button>
         </footer>
