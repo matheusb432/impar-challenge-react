@@ -19,7 +19,7 @@ function useAxios<TResponse = unknown, TBody = void>(options: UseAxiosOptions<TR
   return useQuery<TResponse, AxiosError<TResponse>>({
     queryKey: defaultQueryKey(config),
     queryFn: defaultQueryFn<TResponse>(config),
-    ...onErrorOptions(useAppContext()),
+    onError: onErrorOptions(useAppContext()),
     ...queryOptions,
   });
 }
@@ -33,7 +33,7 @@ function useDefaultAxiosMutation<TResponse = unknown, TBody = unknown, TVariable
     mutationKey: defaultQueryKey(config),
     mutationFn: (requestConfig: TVariables) =>
       axiosRequest<TResponse, TBody>({ ...config, ...requestConfig }),
-    ...onErrorOptions<TResponse, TBody>(useAppContext()),
+    onError: onErrorOptions<TResponse, TBody>(useAppContext()),
     ...queryOptions,
   });
 }
@@ -42,6 +42,7 @@ function useAxiosMutation<TResponse, TBody, TVariables>(
   queryOptions: MutationOpts<TResponse, TBody, TVariables>,
 ) {
   return useMutation({
+    onError: onErrorOptions<TResponse, TBody>(useAppContext()),
     ...queryOptions,
   });
 }
@@ -76,10 +77,8 @@ async function axiosRequest<TResponse, TVariables>(requestConfig: AxiosRequestCo
 }
 
 function onErrorOptions<TResponse, TBody>(context: AppContextProps) {
-  return {
-    onError: (error: AxiosError<TResponse, TBody>) => {
-      context.changeError(error);
-    },
+  return (error: AxiosError<TResponse, TBody>) => {
+    context.changeError(error);
   };
 }
 
