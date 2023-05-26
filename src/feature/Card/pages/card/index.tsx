@@ -24,14 +24,13 @@ function Card() {
 
   const debouncedValue = useDebounce<string>(searchText, 500);
 
-  const { data: getCardsData } = api.useOData<PaginatedResult<CardModel>>(
-    debouncedValue
-      ? {
-          ...paginationQuery(currentCardsPage),
-          $filter: buildContains(SharedProps.Name, debouncedValue),
-        }
-      : paginationQuery(currentCardsPage),
-  );
+  const queryParams = debouncedValue
+    ? {
+        ...paginationQuery(currentCardsPage),
+        $filter: buildContains(SharedProps.Name, debouncedValue),
+      }
+    : paginationQuery(currentCardsPage);
+  const { data: getCardsData } = api.useOData<PaginatedResult<CardModel>>(queryParams);
 
   const filterCards = useCallback(() => {
     changeCurrentCardsPage(1);

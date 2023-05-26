@@ -1,8 +1,14 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosRequestConfig } from 'axios';
 import { HttpMethods, ODataParams, PostReturn } from '../types';
-import { MutationOpts, QueryOpts, QueryRes, UseApiMutationOptions } from '../types/query-types';
-import { axiosRequest, buildUniqueKeyFromUrl, useAxios, useAxiosMutation } from './use-axios';
+import {
+  MutationOpts,
+  QueryConfig,
+  QueryOpts,
+  QueryRes,
+  UseApiMutationOptions,
+} from '../types/query-types';
+import { axiosRequest, buildKeyFromUrl, useAxios, useAxiosMutation } from './use-axios';
 
 /**
  * Hook criador de todas as possíveis requisições para endpoints da API
@@ -12,30 +18,30 @@ import { axiosRequest, buildUniqueKeyFromUrl, useAxios, useAxiosMutation } from 
 
 export function useApi<TEntity>(featureUrl: string) {
   const client = useQueryClient();
-  const baseQueryKey = buildUniqueKeyFromUrl(featureUrl);
+  const baseQueryKey = buildKeyFromUrl(featureUrl);
 
   type PostEntity = Omit<TEntity, 'id'>;
 
   function useGet<TResponse = TEntity, TParams = object>(
-    urlSuffix = '',
-    params?: TParams,
-    queryOptions?: QueryOpts<TResponse>,
-  ): QueryRes<TResponse> {
-    return useAxios<TResponse>({
-      config: {
-        url: `${featureUrl}${urlSuffix}`,
-        method: HttpMethods.Get,
-        params,
-      },
+    queryOptions?: QueryOpts<TResponse, TParams>,
+  ) {
+    return useAxios({
+      config: buildQueryConfig(queryOptions?.reqConfig),
       queryOptions,
     });
   }
 
   function useOData<TResponse = TEntity[]>(
     params: ODataParams,
-    queryOptions?: QueryOpts<TResponse>,
+    queryOptions?: Omit<QueryOpts<TResponse, ODataParams>, 'reqConfig'>,
   ): QueryRes<TResponse> {
-    return useGet('/odata', params, queryOptions);
+    return useGet({
+      ...queryOptions,
+      reqConfig: {
+        urlSuffix: '/odata',
+        params,
+      },
+    });
   }
 
   function useApiMutation<TResponse = void, TBody = unknown, TVariables = unknown>(
@@ -114,6 +120,16 @@ export function useApi<TEntity>(featureUrl: string) {
 
   function invalidateFeatureQueries(): Promise<void> {
     return client.invalidateQueries(baseQueryKey);
+  }
+
+  function buildQueryConfig(reqConfig?: QueryConfig<unknown>) {
+    const { urlSuffix = '', params } = reqConfig || {};
+
+    return {
+      url: `${featureUrl}${urlSuffix}`,
+      method: HttpMethods.Get,
+      params,
+    };
   }
 
   return {
